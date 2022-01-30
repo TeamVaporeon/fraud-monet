@@ -6,7 +6,7 @@ const GameLogic = () => {
   const [currentViewer, setCurrentViewer] = useState(data.dummyData.viewers[0]);
 
   const [host, setHost] = useState(false); //true when player is host
-  const [player, setPlayer] = useState(false); //false when they are the fraud
+  const [player, setPlayer] = useState(false); //true when playing false when spectating
   const [color, setColor] = useState(null); //player drawing color
 
   const [prompt, setPrompt] = useState('Bulbasaur');
@@ -40,10 +40,12 @@ const GameLogic = () => {
       </select>
       <div>{`Category: ${category}`}</div>
       {player ? (
-        <div>{`Prompt: ${prompt}`}</div>
-      ) : (
-        <div>You are the Fraud!</div>
-      )}
+        currentViewer.fraud ? (
+          <span>You are the Fraud!</span>
+        ) : (
+          <span>{`Prompt: ${prompt}`}</span>
+        )
+      ) : null}
     </>
   );
 };

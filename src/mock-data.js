@@ -76,6 +76,7 @@ function createPlayer(i) {
   player.role = 'player';
   player.color = colors[i];
   i === 0 ? (player.host = true) : (player.host = false);
+  i === 9 ? (player.fraud = true) : (player.fraud = false);
   return player;
 }
 
