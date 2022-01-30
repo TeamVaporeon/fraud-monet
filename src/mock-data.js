@@ -46,10 +46,7 @@ function makeRoomData() {
   for (let i = 0; i < 10; i++) {
     roomData.viewers.push(createPlayer(i));
   }
-<<<<<<< HEAD:server/mock-data.js
-  for (let i = 11; i < 20; i++) {
-    roomData.spectators.push(names[i]);
-=======
+  
   for (let i = 10; i < 20; i++) {
     roomData.viewers.push({
       id: i,
@@ -58,7 +55,6 @@ function makeRoomData() {
       color: null,
       host: false,
     });
->>>>>>> c24f009a43aa6712c87dc9979b35f6c1598155a7:src/mock-data.js
   }
   return roomData;
 }
