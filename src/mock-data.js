@@ -20,8 +20,8 @@ const names = [
   'Zaniyah Oneill',
   'Nehemiah Douglas',
   'Regan Gilbert',
-  'Haylie Stevenson'
-]
+  'Haylie Stevenson',
+];
 
 const colors = [
   'Cotton Candy',
@@ -33,43 +33,51 @@ const colors = [
   'Wild Blue Yonder',
   'Wisteria',
   'Lilac',
-  'Cadet Blue Crayola'
-]
+  'Cadet Blue Crayola',
+];
 
 function makeRoomData() {
   let roomData = {
     room_id: '',
-    players: [],
-    spectators: []
-  }
+    viewers: [],
+  };
   roomData.room_id = makeid(Math.floor(Math.random() * 100));
 
   for (let i = 0; i < 10; i++) {
-    roomData.players.push(createPlayer(i))
+    roomData.viewers.push(createPlayer(i));
   }
-  for (i = 11; i < 20; i++) {
-    roomData.spectators.push(names[i]);
+  for (let i = 10; i < 20; i++) {
+    roomData.viewers.push({
+      id: i,
+      username: names[i],
+      role: 'spectator',
+      color: null,
+      host: false,
+    });
   }
-  return roomData
+  return roomData;
 }
 
 function makeid(length) {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var result = '';
+  var characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
+  for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
- return result;
+  return result;
 }
 
 function createPlayer(i) {
-  let player = {}
-  player.username = names[i]
-  player.role = 'player'
-  player.color = colors[i]
-  i === 0 ? player.host = true : player.host = false;
-  return player
+  let player = {};
+  player.id = i;
+  player.username = names[i];
+  player.role = 'player';
+  player.color = colors[i];
+  i === 0 ? (player.host = true) : (player.host = false);
+  i === 9 ? (player.fraud = true) : (player.fraud = false);
+  return player;
 }
 
-console.log(makeRoomData())
+export default makeRoomData;
