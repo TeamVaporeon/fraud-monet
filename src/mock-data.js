@@ -46,6 +46,7 @@ function makeRoomData() {
   for (let i = 0; i < 10; i++) {
     roomData.viewers.push(createPlayer(i));
   }
+  
   for (let i = 10; i < 20; i++) {
     roomData.viewers.push({
       id: i,
