@@ -1,12 +1,25 @@
 import './App.css';
-import Chat from './Components/chat/Chat.jsx';
+import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
+import makeRoomData from './mock-data.js';
+import { createContext } from 'react';
+
+export const AppContext = createContext();
 
 function App() {
+  const dummyData = makeRoomData();
+
+  console.log(dummyData);
+
   return (
-    <div className='App'>
-      <header className='App-header'></header>
-      <Chat />
-    </div>
+    <AppContext.Provider value={{ dummyData }}>
+      <div className='App'>
+        <header className='App-header'></header>
+        <GameMain />
+        {/* <Players />
+        <div>canvas goes here</div>
+        <Chat /> */}
+      </div>
+    </AppContext.Provider>
   );
 }
 
