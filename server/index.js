@@ -1,6 +1,7 @@
 const path = require('path');
 const cors = require('cors');
 const express = require('express');
+const router = require('./routes.js');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
 
@@ -11,11 +12,8 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname + './build')));
 
-//fraudmonet.com/room?[hash code here]
-app.get('/room/:id', (req, res) => {
-  console.log(req.params);
-  res.send(req.params.id);
-});
+// Base endpoint
+app.use('/room/', router);
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
