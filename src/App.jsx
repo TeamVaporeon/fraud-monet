@@ -1,8 +1,5 @@
 import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
-import GameLogic from './Components/GameLogic.jsx';
-import Players from './Components/Players.jsx';
-import Chat from './Components/Chat.jsx';
 import makeRoomData from './mock-data';
 import { createContext } from 'react';
 
