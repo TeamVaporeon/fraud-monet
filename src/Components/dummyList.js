@@ -1,25 +1,29 @@
-const dummyList = {
-	room_id: 'fightclub',
-	players: [
-		{
-			username: 'firstloser',
-			role: 'player', // player, spectator or host -> can only have 1 host
-			color: 'red',
-			score: null
-		},
-		{
-			username: 'secondloser',
-			role: 'player', // player, spectator or host -> can only have 1 host
-			color: 'green',
-			score: null
-		},
-		{
-			username: 'thirdloser',
-			role: 'player', // player, spectator or host -> can only have 1 host
-			color: 'blue',
-			score: null
-		}
-	],
-};
+const dummyList = [
+  {
+    username: 'Flareon',
+    role: 'player',
+    color: 'candy pink',
+    score: 0
+  },
+  {
+    username: 'Jolteon',
+    role: 'player',
+    color: 'green yellow crayola',
+    score: 1
+  },
+  {
+    username: 'Vaporeon',
+    role: 'host',
+    color: 'wild blue yonder',
+    score: 0
+  },
+  {
+    username: 'Eevee',
+    role: 'spectator',
+    color: 'sandy brown',
+    score: 0
+  }
+
+]
 
 export default dummyList;

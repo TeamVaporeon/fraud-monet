@@ -47,7 +47,7 @@ function makeRoomData() {
   for (let i = 0; i < 10; i++) {
     roomData.players.push(createPlayer(i))
   }
-  for (i = 11; i < 20; i++) {
+  for (let i = 11; i < 20; i++) {
     roomData.spectators.push(names[i]);
   }
   return roomData

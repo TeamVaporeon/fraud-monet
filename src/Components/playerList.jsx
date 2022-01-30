@@ -1,11 +1,12 @@
 import React from 'react';
 import dummyList from './dummyList.js';
+// import Players from './Players.jsx';
 
 class PlayerList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list : {}
+      list : []
     }
   }
 
@@ -15,10 +16,31 @@ class PlayerList extends React.Component {
     })
   }
 
+  // countPlayers() {
+  //   var count = 0;
+  //   dummyList.map(player =>
+  //     if (player.role !== 'spectator') {
+  //       count++;
+  //     }
+  //     return count;
+  //   )
+  // }
+
   render() {
     return(
       <>
       <h3>Players List</h3>
+      {this.state.list.map(player =>
+      <div className="each-player">
+        <div>Name: {player.username}</div>
+        <div>Color: {player.color}</div>
+        <div>Score: {player.score}</div>
+      </div>
+      )}
+      <div>
+        <button>Join</button>
+        <button>Start</button>
+      </div>
       </>
     )
   }
