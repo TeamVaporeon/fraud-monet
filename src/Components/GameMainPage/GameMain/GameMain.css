@@ -1,0 +1,41 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.game > *:first-child {
+  align-self: center;
+}
+
+.game_topbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.game_body {
+  display: grid;
+  grid-template-columns: repeat(12, 80px);
+  grid-template-rows: repeat(1, 620px);
+  grid-template-areas: 'a a a b b b b b b c c c';
+  justify-content: center;
+  gap: 2rem;
+}
+
+.game_players {
+  grid-area: a;
+  background-color: rgb(148, 177, 232);
+}
+
+.game_canvas {
+  grid-area: b;
+  background-color: rgb(173, 151, 205);
+}
+
+.game_chat {
+  grid-area: c;
+  background-color: rgb(217, 171, 213);
+}
