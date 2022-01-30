@@ -39,16 +39,21 @@ const colors = [
 function makeRoomData() {
   let roomData = {
     room_id: '',
-    players: [],
-    spectators: [],
+    viewers: [],
   };
   roomData.room_id = makeid(Math.floor(Math.random() * 100));
 
   for (let i = 0; i < 10; i++) {
-    roomData.players.push(createPlayer(i));
+    roomData.viewers.push(createPlayer(i));
   }
-  for (let i = 11; i < 20; i++) {
-    roomData.spectators.push(names[i]);
+  for (let i = 10; i < 20; i++) {
+    roomData.viewers.push({
+      id: i,
+      username: names[i],
+      role: 'spectator',
+      color: null,
+      host: false,
+    });
   }
   return roomData;
 }
@@ -66,6 +71,7 @@ function makeid(length) {
 
 function createPlayer(i) {
   let player = {};
+  player.id = i;
   player.username = names[i];
   player.role = 'player';
   player.color = colors[i];
