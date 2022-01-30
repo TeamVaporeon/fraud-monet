@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { AppContext } from '../App';
 
 const GameLogic = () => {
+  const data = useContext(AppContext);
+
   const [gameStart, setGameStart] = useState(false); //true when host starts game
   const [host, setHost] = useState(false); //true when player is host
   const [player, setPlayer] = useState(false); //false when they are the fraud
@@ -9,13 +12,11 @@ const GameLogic = () => {
   const [category, setCategory] = useState('Pokemon');
   const [prompt, setPrompt] = useState('Bulbasaur');
 
-  const toggle = () => {
-    setPlayer(!player);
-  };
+  useEffect();
 
   return (
     <>
-      <button onClick={toggle}>Click</button>
+      <select></select>
       <div>{`Category: ${category}`}</div>
       {player ? (
         <div>{`Prompt: ${prompt}`}</div>
