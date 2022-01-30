@@ -16,11 +16,11 @@ const GameLogic = () => {
   return (
     <>
       <button onClick={toggle}>Click</button>
-      <div>{`Category: ${category}`}</div>
+      <span>{`Category: ${category}`}</span>
       {player ? (
-        <div>{`Prompt: ${prompt}`}</div>
+        <span>{`Prompt: ${prompt}`}</span>
       ) : (
-        <div>You are the Fraud!</div>
+        <span>You are the Fraud!</span>
       )}
     </>
   );
