@@ -1,1 +1,16 @@
+/* ----- CHAT ----- */
+#display-container {
+  background-color: beige;
+  border: solid 1px black;
+  border-radius: 5%;
+  height: 60vh;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  overflow-y: scroll;
+  width: 30vw;
+}
 
+#display-messages {
+  list-style-type: none;
+}
+/* ----- END OF CHAT ----- */
