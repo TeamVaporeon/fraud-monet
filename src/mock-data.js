@@ -69,6 +69,7 @@ function createPlayer(i) {
   player.username = names[i];
   player.role = 'player';
   player.color = colors[i];
+  i === 0 ? (player.host = true) : (player.host = false);
   return player;
 }
 
