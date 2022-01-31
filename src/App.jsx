@@ -17,9 +17,6 @@ function App() {
       <div className='App'>
         <header className='App-header'></header>
         <GameMain />
-        {/* <Players />
-        <div>canvas goes here</div>
-        <Chat /> */}
       </div>
     </AppContext.Provider>
   );
