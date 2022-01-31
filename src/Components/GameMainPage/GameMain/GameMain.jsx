@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, createContext, useEffect, useContext } from 'react';
 import './GameMain.css';
-import PlayerList from '../../playerList.jsx';
+import PlayerList from '../../PlayerList/playerList.jsx';
 import Chat from '../../Chat/Chat.jsx';
 import GameLogic from '../../GameLogic';
 import UsernameModal from '../UsernameModal/UsernameModal';
