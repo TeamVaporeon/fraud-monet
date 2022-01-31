@@ -11,6 +11,7 @@
 
 .game_logo {
   margin: 2.5rem;
+  margin-bottom: 0.8rem;
 }
 
 .game_topbar {
@@ -29,6 +30,7 @@
   justify-content: center;
   gap: 2rem;
   margin: 0 5rem;
+  margin-bottom: 5rem;
 }
 
 .game_players {
@@ -44,4 +46,8 @@
 .game_chat {
   grid-area: c;
   background-color: rgb(217, 171, 213);
+}
+
+.game_rules {
+  cursor: pointer;
 }
