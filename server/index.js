@@ -34,6 +34,8 @@ io.on('connection', (socket) => {
   socket.on('room', (room) => {
     const subRoom = room.substr(5);
     socket.join(subRoom);
+
+    // Put your client socket emits below
     socket.on('draw', (mouseData) => {
       // Broadcast mouseData to all connected sockets
       socket.broadcast.to(subRoom).emit('draw', mouseData);
