@@ -2,11 +2,11 @@ const rooms = require('../models/index.js');
 const argon2 = require('argon2');
 
 module.exports = {
-  getHomePage: async function(req, res) {
+  getHomePage: async function (req, res) {
     console.log(req.url);
     res.status(200).send('Fraud money home page!');
   },
-  generateRoomCode: async function(req, res) {
+  generateRoomCode: async function (req, res) {
     console.log(req.params);
     // get random string from req.params
     try {
@@ -18,7 +18,7 @@ module.exports = {
     }
     res.status(201).send('Fraud money generate code!');
   },
-  getRoomInfo: async function(req, res) {
+  getRoomInfo: async function (req, res) {
     console.log(req.params);
     try {
       const testCode = await argon2.hash(req.params);
@@ -30,15 +30,14 @@ module.exports = {
     } catch (err) {
       res.status(404).send(err);
     }
-    // res.status(200).send(req.params.id);
   },
-  addUser: async function(req, res) {
+  addUser: async function (req, res) {
     res.status(201).send('User added');
   },
-  updateUser: async function(req, res) {
+  updateUser: async function (req, res) {
     res.status(204).send('Updated user');
   },
-  getPrompt: async function(req, res) {
+  getPrompt: async function (req, res) {
     res.status(200).send('Here\'s your prompt');
   }
 }
