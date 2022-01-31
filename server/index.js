@@ -25,7 +25,11 @@ app.use('/room', router);
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000',
+  }
+});
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
@@ -41,6 +45,12 @@ io.on('connection', (socket) => {
       socket.broadcast.to(subRoom).emit('draw', mouseData);
     });
   });
+
+  /* ----- CHATROOM Code ----- */
+  socket.on('send_message', (userMessage) => {
+    socket.to(userMessage.room).emit('receive_message', userMessage);
+  });
+  /* ----- End of CHATROOM Code ----- */
 
   // On user disconnecting
   socket.on('disconnect', () => {
