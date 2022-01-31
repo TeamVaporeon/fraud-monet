@@ -2,12 +2,19 @@
 import React, { useState, createContext, useEffect, useContext } from 'react';
 import './GameMain.css';
 import PlayerList from '../../playerList.jsx';
-import Chat from '../../Chat';
+import Chat from '../../chat/Chat.jsx';
 import GameLogic from '../../GameLogic';
 import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
 import StartModal from '../StartModal/StartModal';
 import ResultsModal from '../ResultsModal/ResultsModal';
+
+import io from 'socket.io-client';
+const socket = io.connect('http://localhost:8080');
+
+// TEMPORARY: Pending identification of how to receive room & usernames
+const room = 'temporary';
+const username = 'tempUser';
 
 const GameMain = () => {
   // if host, const [openUsername, setOpenUsername] = useState(false);
@@ -46,7 +53,7 @@ const GameMain = () => {
         </div>
         <div className='game_canvas'>Canvas</div>
         <div className='game_chat'>
-          <Chat />
+          <Chat socket={socket} room={room} username={playerUsername} />
         </div>
       </div>
     </div>
