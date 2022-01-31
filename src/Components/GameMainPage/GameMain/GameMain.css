@@ -48,6 +48,16 @@
   background-color: rgb(217, 171, 213);
 }
 
+.each-player {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.each-spectator {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .game_rules {
   cursor: pointer;
 }
