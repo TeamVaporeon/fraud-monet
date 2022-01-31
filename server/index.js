@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname + './build')));
 
 // Base endpoint
-app.use('/room/', router);
+app.use('', router);
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
