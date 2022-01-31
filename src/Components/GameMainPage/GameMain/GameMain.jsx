@@ -4,14 +4,11 @@ import './GameMain.css';
 import PlayerList from '../../playerList.jsx';
 import Chat from '../../Chat';
 import GameLogic from '../../GameLogic';
-<<<<<<< HEAD
-import Canvas from '../Canvas/Canvas.jsx';
-=======
 import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
 import StartModal from '../StartModal/StartModal';
 import ResultsModal from '../ResultsModal/ResultsModal';
->>>>>>> ea4e40486832ea16bd0ce5462b8af0bc473054b5
+import Canvas from '../Canvas/Canvas.jsx';
 
 const GameMain = () => {
   // if host, const [openUsername, setOpenUsername] = useState(false);

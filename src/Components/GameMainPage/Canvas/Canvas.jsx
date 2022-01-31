@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Sketch from 'react-p5';
 import { io } from 'socket.io-client';
 
 const Canvas = (props) => {
+
+  const [turn, setTurn] = useState('test');
 
   const socket = io.connect('http://127.0.0.1:8080');
 
@@ -11,9 +13,8 @@ const Canvas = (props) => {
     p5.background(220);
 
     socket.on('mouse', data => {
-      console.log(data);
-      p5.strokeWeight(10);
-      p5.line(data.x, data.y, data.px, p5.py);
+      p5.fill('black');
+      p5.ellipse(data.x, data.y, 15, 15);
     })
   }
 
@@ -23,14 +24,15 @@ const Canvas = (props) => {
   const mouseDragged = (p5) => {
     var data = {
       x: p5.mouseX,
-      y: p5.mouseY,
-      px: p5.pmouseX,
-      py: p5.pmouseY
+      y: p5.mouseY
     }
 
     socket.emit('mouse', data);
-    p5.strokeWeight(10);
-    p5.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
+    p5.ellipse(p5.mouseX, p5.mouseY, 15, 15);
+  }
+
+  const mouseReleased = p5 => {
+    setTurn('ligma');
   }
 
   return <Sketch setup={setup} draw={draw} mouseDragged={mouseDragged} />

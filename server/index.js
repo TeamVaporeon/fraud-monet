@@ -29,7 +29,6 @@ io.on('connection', (socket) => {
   console.log(`Socket Connected With Id: `, socket.id);
   // Set socket event handlers
   socket.on('mouse', data => {
-    console.log(data);
     socket.broadcast.emit('mouse', data);
   });
 });
