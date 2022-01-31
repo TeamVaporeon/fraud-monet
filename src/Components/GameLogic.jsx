@@ -18,6 +18,7 @@ const GameLogic = () => {
     setHost(currentViewer.host);
     setPlayer(currentViewer.role === 'player' ? true : false);
     setColor(currentViewer.color);
+    console.log(currentViewer.color);
   }, [currentViewer]);
 
   const changeView = (e) => {
@@ -26,9 +27,9 @@ const GameLogic = () => {
 
   return (
     <>
-      <header>{`CURRENT VIEW: ${
-        currentViewer.host ? 'Host' : currentViewer.role
-      } COLOR: ${currentViewer.color}`}</header>
+      <header style={{ fontWeight: 'bolder', color: color }}>{`CURRENT VIEW: ${
+        host ? 'Host' : currentViewer.role
+      }`}</header>
       <select onChange={(e) => changeView(e)}>
         {data.dummyData.viewers.map((viewer) => {
           return (
