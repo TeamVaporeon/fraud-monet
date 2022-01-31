@@ -1,3 +1,5 @@
+/*eslint no-unused-vars: 0*/
+
 import './App.css';
 // import PlayerList from './Components/playerList.jsx';
 // import GameLogic from './Components/GameLogic.jsx';
