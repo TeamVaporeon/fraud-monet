@@ -3,6 +3,12 @@ import React, { useState, createContext, useEffect, useContext } from 'react';
 import './UsernameModal.css';
 
 const UsernameModal = ({ setPlayerUsername, setOpenUsername }) => {
+  const handleInputChange = (e) => {
+    e.preventDefault();
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <div className='usernameModal'>
       <div className='usernameContainer'>
@@ -11,7 +17,7 @@ const UsernameModal = ({ setPlayerUsername, setOpenUsername }) => {
           <input
             className='usernameForm_input'
             placeholder='Please leave your username before enter the game...'
-            name='usernameForm_name'
+            name='username'
           ></input>
           <button
             className='usernameForm_submit'
