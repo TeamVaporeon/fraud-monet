@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
-    socket.to(userMessage.room).emit('receive_message', userMessage);
+    socket.to(socket.room).emit('receive_message', userMessage);
   });
   /* ----- End of CHATROOM Code ----- */
 
