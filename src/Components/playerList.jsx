@@ -43,7 +43,6 @@ class PlayerList extends React.Component {
   // }
 
   render() {
-    // console.log(dummyList.length);
     return(
       <>
       <h3>Players List</h3>
