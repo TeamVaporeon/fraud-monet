@@ -1,3 +1,5 @@
+const chats = require('../models/index.js');
+
 module.exports = {
   getChats: async function(req, res) {
     //

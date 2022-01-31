@@ -4,6 +4,8 @@ const express = require('express');
 const router = require('./routes.js');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
+const { createClient } = require('redis');
+const { createAdapter } = require('@socket.io/redis-adapter');
 
 // Express Server
 const app = express();
