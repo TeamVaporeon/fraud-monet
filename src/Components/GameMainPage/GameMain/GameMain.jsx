@@ -2,7 +2,7 @@
 import React, { useState, createContext, useEffect, useContext } from 'react';
 import './GameMain.css';
 import Rules from '../Rules/Rules.jsx';
-import Players from '../../Players';
+import PlayerList from '../../playerList.jsx';
 import Chat from '../../Chat';
 import GameLogic from '../../GameLogic';
 
@@ -20,7 +20,7 @@ const GameMain = () => {
       </div>
       <div className='game_body'>
         <div className='game_players'>
-          <Players />
+          <PlayerList/>
         </div>
         <div className='game_canvas'>Canvas</div>
         <div className='game_chat'>
