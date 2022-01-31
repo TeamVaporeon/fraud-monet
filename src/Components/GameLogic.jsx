@@ -1,3 +1,5 @@
+/*eslint no-unused-vars: 0*/
+
 import { useState } from 'react';
 
 const GameLogic = () => {
