@@ -29,7 +29,6 @@ module.exports = {
     } catch (err) {
       res.status(404).send(err);
     }
-    // res.status(200).send(req.params.id);
   },
   addUser: async function(req, res) {
     res.status(201).send('User added');
