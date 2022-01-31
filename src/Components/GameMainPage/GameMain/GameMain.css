@@ -45,7 +45,7 @@
 
 .game_chat {
   grid-area: c;
-  background-color: rgb(217, 171, 213);
+  background-color: rgba(217, 171, 213, 0.322);
 }
 
 .game_rules {
