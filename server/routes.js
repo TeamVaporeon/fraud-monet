@@ -2,8 +2,9 @@ const router = require('express').Router();
 const controller = require('./controllers');
 
 // Creating game room endpoints fraudmonet.com/room
-router.get('/room', controller.rooms.getHomePage);
-router.post('/room', controller.rooms.generateRoomCode);
+router.get('/', controller.rooms.getHomePage);
+router.post('/', controller.rooms.generateRoomCode);
+
 // Room specific endpoints fraudmonet.com/room?[hash code here]
 router.get('/room/:id', controller.rooms.getRoomInfo);
 router.post('/room/:id', controller.rooms.addUser);
