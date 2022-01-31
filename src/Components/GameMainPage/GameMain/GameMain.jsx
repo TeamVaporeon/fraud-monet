@@ -5,6 +5,7 @@ import Rules from '../Rules/Rules.jsx';
 import PlayerList from '../../playerList.jsx';
 import Chat from '../../Chat';
 import GameLogic from '../../GameLogic';
+import Canvas from '../Canvas/Canvas.jsx';
 
 const GameMain = () => {
   // const [d, setD] = useState(null);
@@ -22,7 +23,9 @@ const GameMain = () => {
         <div className='game_players'>
           <PlayerList/>
         </div>
-        <div className='game_canvas'>Canvas</div>
+        <div className='game_canvas'>Canvas
+        <Canvas />
+        </div>
         <div className='game_chat'>
           <Chat />
         </div>
