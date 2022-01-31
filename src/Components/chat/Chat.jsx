@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import './Chat.css';
 // import io from 'socket.io-client';
 
 // const socket = io.connect('http://localhost:8080');
