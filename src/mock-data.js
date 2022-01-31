@@ -24,16 +24,17 @@ const names = [
 ];
 
 const colors = [
-  'Cotton Candy',
-  'Candy Pink',
-  'Sandy Brown',
-  'Green Yellow Crayola',
-  'Granny Smith Apple',
-  'Turquoise',
-  'Wild Blue Yonder',
-  'Wisteria',
-  'Lilac',
-  'Cadet Blue Crayola',
+  '#FFCCEB', // 'Cotton Candy',
+  '#DF6770', // 'Candy Pink',
+  '#EA9F4E', // 'Sandy Brown',
+  '#FBE89B', // 'Green Yellow Crayola',
+  '#B9E49F', // 'Granny Smith Apple',
+  '#73E5DA', // 'Turquoise',
+  '#94B1E9', // 'Wild Blue Yonder',
+  '#AE97CD', // 'Wisteria',
+  '#D9ABD6', // 'Lilac',
+  '#A9B3BF', // 'Cadet Blue Crayola',
+  '#000', //Black for Spectators
 ];
 
 function makeRoomData() {
@@ -43,19 +44,10 @@ function makeRoomData() {
   };
   roomData.room_id = makeid(Math.floor(Math.random() * 100));
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 20; i++) {
     roomData.viewers.push(createPlayer(i));
   }
-  
-  for (let i = 10; i < 20; i++) {
-    roomData.viewers.push({
-      id: i,
-      username: names[i],
-      role: 'spectator',
-      color: null,
-      host: false,
-    });
-  }
+  console.log(roomData);
   return roomData;
 }
 
@@ -74,10 +66,10 @@ function createPlayer(i) {
   let player = {};
   player.id = i;
   player.username = names[i];
-  player.role = 'player';
-  player.color = colors[i];
-  i === 0 ? (player.host = true) : (player.host = false);
-  i === 9 ? (player.fraud = true) : (player.fraud = false);
+  player.role = i < 10 ? 'player' : 'spectator';
+  player.color = player.role === 'player' ? colors[i] : colors[10];
+  player.host = i === 0 ? true : false;
+  player.fraud = i === 9 ? true : false;
   return player;
 }
 
