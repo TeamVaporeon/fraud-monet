@@ -17,12 +17,21 @@ app.use('', router);
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
   console.log(`Socket Connected With Id: `, socket.id);
   // Set socket event handlers
+  socket.on('mouse', data => {
+    console.log(data);
+    socket.broadcast.emit('mouse', data);
+  });
 });
 
 // Starting The Server That Has Express and Socket.io
