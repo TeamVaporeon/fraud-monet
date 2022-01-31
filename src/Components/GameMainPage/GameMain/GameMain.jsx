@@ -6,6 +6,13 @@ import PlayerList from '../../playerList.jsx';
 import Chat from '../../Chat/Chat.jsx';
 import GameLogic from '../../GameLogic';
 
+import io from 'socket.io-client';
+const socket = io.connect('http://localhost:8080');
+
+// TEMPORARY: Pending identification of how to receive room & usernames
+const room = 'temporary';
+const username = 'tempUser';
+
 const GameMain = () => {
   // const [d, setD] = useState(null);
   return (
@@ -23,7 +30,7 @@ const GameMain = () => {
           <PlayerList/>
         </div>
         <div className='game_canvas'>Canvas</div>
-        <Chat />
+        <Chat socket={socket} room={room} username={username} />
       </div>
     </div>
   );

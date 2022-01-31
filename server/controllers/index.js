@@ -1,1 +1,1 @@
-exports.rooms = require('.rooms.js');
+exports.rooms = require('./rooms.js');
