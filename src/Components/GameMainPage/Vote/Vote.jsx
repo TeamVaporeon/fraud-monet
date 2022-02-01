@@ -8,6 +8,11 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
     <div className='voteModal'>
       <div className='voteContainer'>
         Vote Form
+        <form className='voteForm' name='voteForm'>
+          <div type='checkbox' name='check' value='xxx'>
+            xxx
+          </div>
+        </form>
         <button
           className='voteSubmitBtn'
           type='submit'

@@ -12,13 +12,14 @@ import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
 
 const GameMain = ({ data }) => {
-
-  const { playerUsername, setPlayerUsername, round, setRound, socket } = useContext(AppContext);
+  const { playerUsername, setPlayerUsername, round, setRound, socket } =
+    useContext(AppContext);
 
   // socket.io.engine.on('packet', ({ type, data }) => {
   //   console.log('Type:: ', type, '\nData:: ', data);
   // });
 
+  /* Need to find a way to get host status*/
   const [openUsername, setOpenUsername] = useState(true);
   // const [openUsername, setOpenUsername] = useState(false);
   const [openRules, setOpenRules] = useState(false);

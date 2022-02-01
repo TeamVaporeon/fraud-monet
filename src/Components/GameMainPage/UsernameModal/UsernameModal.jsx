@@ -21,9 +21,11 @@ const UsernameModal = ({ setOpenUsername }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // setPlayerUsername(paramsBody.username);
+    // check username duplicate
     socket.emit('username', paramsBody.username);
-    setSubmitted(true);
-    document.getElementsByClassName('usernameForm').reset();
+    // setSubmitted(true);
+    setOpenUsername(false);
+    // document.getElementsByClassName('usernameForm').reset();
     // // can send paramsBody aka invited user's username input to server
   };
   return (
@@ -41,10 +43,10 @@ const UsernameModal = ({ setOpenUsername }) => {
             Submit
           </button>
         </form>
-        {submitted ? (
+        {/* {submitted ? (
           <div className='confirm'>
             <p>
-              You will enter the game room as <b>{playerUsername}</b>
+              You will enter the game room as <b>{paramsBody.username}</b>
             </p>
             <p>
               Click 'Join' in the 'Player List' to join the game as a player
@@ -59,7 +61,7 @@ const UsernameModal = ({ setOpenUsername }) => {
               Confirm
             </button>
           </div>
-        ) : null}
+        ) : null} */}
       </div>
     </div>
   );
