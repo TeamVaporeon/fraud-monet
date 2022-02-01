@@ -35,7 +35,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
   return (
     <div className='voteModal'>
       <div className='voteContainer'>
-        Vote Form
+        <h3>Vote</h3>
         <form className='voteForm' name='voteForm' method='post'>
           {players.map((player, i) => (
             <label>
@@ -65,7 +65,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
           >
             Submit
           </button>
-          <button onClick={() => setOpenVote(false)}>X</button>
+          {/* <button onClick={() => setOpenVote(false)}>X</button> */}
         </div>
       </div>
     </div>
