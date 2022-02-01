@@ -4,6 +4,8 @@ import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
 import makeRoomData from './mock-data.js';
 import { useState, createContext } from 'react';
+import CreateRoom from './Components/CreateRoom.jsx';
+import { Link } from 'react-router-dom';
 import io from 'socket.io-client';
 
 export const AppContext = createContext();
@@ -27,7 +29,7 @@ function App() {
     >
       <div className='App'>
         <header className='App-header'></header>
-        <GameMain socket={socket} />
+        <GameMain data={dummyData} />
       </div>
       {console.log('test invited player input username:::', playerUsername)}
     </AppContext.Provider>
