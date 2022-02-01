@@ -1,13 +1,14 @@
 const path = require('path');
 const cors = require('cors');
 const express = require('express');
-const router = require('./routes.js');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
-// const { createClient } = require('redis');
-// const { Emitter } = require('@socket.io/redis-emitter');
-// const { createAdapter } = require('@socket.io/redis-adapter');
+const { createClient } = require('redis');
+const { Emitter } = require('@socket.io/redis-emitter');
+const { createAdapter } = require('@socket.io/redis-adapter');
 const cookieParser = require('cookie-parser');
+const cookie = require('cookie');
+const users = []
 
 // Express Server
 const app = express();
@@ -18,15 +19,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('build'));
 
 app.get('/', (req, res) => {
-  res.cookie('name', 'express', { maxAge: 360000 });
   res.sendFile(path.join(__dirname + '../build/index.html'));
+})
+
+app.post('/', (req, res) => {
+  const user = req.body;
+  users.push(user)
+  console.log(user);
+  res.status(201).send(users);
 })
 
 app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
 })
 
-app.use('', router);
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -36,48 +42,41 @@ const io = new Server(httpServer, {
 });
 
 // Redis adapters
-// const redisClient = createClient({ url: 'redis://localhost:6379' })
-// const pubClient = createClient({ url: 'redis://localhost:6379' });
-// const subClient = pubClient.duplicate();
-// Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
-//   io.adapter(createAdapter(pubClient, subClient));
-//   io.listen(3001);
-// })
+const pubClient = createClient({ url: 'redis://localhost:6379' });
+const subClient = pubClient.duplicate();
+Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+  io.adapter(createAdapter(pubClient, subClient));
+  io.listen(3001);
+})
+
+const session = {}
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
+
   // Store session middleware
-  socket.use(next => {
-    const sessionID = socket.handshake.auth.sessionID;
-    console.log('SESSION', sessionID);
+  io.use((socket, next) => {
+    let parsedCookie = cookie.parse(socket.handshake.headers.cookie);
+    let sessionID = parsedCookie.sessionid;
     if (sessionID) {
-      const session = sessionStore.findSession(sessionID);
-      if(session) {
+      if (session[sessionID]) {
         socket.sessionID = sessionID;
-        socket.userID = session.userID;
-        socket.username = session.username;
-        socket.color = data.color;
-        socket.host = data.host;
-        socket.fraud = data.fraud;
-        socket.role = data.role;
-        return next();
+        return next()
+      } else {
+         session[sessionID] = sessionID;
+         return next()
       }
-      const username = socket.handshake.auth.username;
-      if (!username) {
-        return next(new Error('invalid username!'));
-      }
-      socket.sessionID = sessionID;
-      socket.userID = session.userID;
-      socket.username = session.username;
-      socket.color = data.color;
-      socket.host = data.host;
-      socket.fraud = data.fraud;
-      socket.role = data.role;
-      return next();
+      // const username = socket.handshake.auth.username;
+      // if (!username) {
+      //   return next(new Error('invalid username'));
+      // }
+      // socket.username = username
+      next()
     }
   })
 
   console.log(`Socket Connected With Id: `, socket.id);
+  socket.broadcast.emit(`Socket Connected With Id: ${socket.id}`);
   // Join a room based on room id
   socket.on('room', (url) => {
     socket.room = url;
@@ -86,18 +85,17 @@ io.on('connection', (socket) => {
 
   // Emit handlers
   socket.on('createRoom', (data, next) => {
-    const cookie = socket.handshake.headers.cookie;
     const adapter = io.of('createRoom').adapter;
     adapter.pubClient.publish(data);
-    // socket.emit('session', {
-    //   sessionID: socket.sessionID,
-    //   userID: socket.userID,
-    //   username: socket.username,
-    //   color: socket.color,
-    //   host: socket.host,
-    //   fraud: socket.fraud,
-    //   role: socket.role,
-    // })
+    socket.emit('session', {
+      sessionID: socket.sessionID,
+      userID: socket.userID,
+      username: socket.username,
+      color: socket.color,
+      host: socket.host,
+      fraud: socket.fraud,
+      role: socket.role,
+    })
     socket.emit('packet', data);
   });
 

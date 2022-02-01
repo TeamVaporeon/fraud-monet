@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
-
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 var generateRandString = () => {
   var result = '';
@@ -18,6 +18,24 @@ var CreateRoom = (props) => {
   const navigate = useNavigate();
   const routeChange = () => {
     const roomID = generateRandString();
+    const userInfo = {
+        username: name,
+        roomID,
+        color: '#000',
+        host: true,
+        fraud: false,
+        role: 'player',
+        score: 0
+      }
+    axios.post(`/`, userInfo, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then((res) => {
+      // setUsers(res.data);
+    })
+    navigate(`/${roomID}`)
+
     // socket.emit('createRoom', {
     //   username: name,
     //   roomID,
@@ -26,7 +44,6 @@ var CreateRoom = (props) => {
     //   fraud: false,
     //   role: 'player',
     // })
-    navigate(`/${roomID}`)
   };
 
   return (

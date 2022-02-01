@@ -12,6 +12,11 @@ export const AppContext = createContext();
 
 
 function App() {
+  const [round, setRound] = useState(0);
+  const [users, setUsers] = useState([]);
+
+  console.log('PATH', window.location.pathname);
+
   const socket = io();
   socket.emit('room', window.location.pathname);
   socket.on('session', (userInfo) => {
@@ -37,7 +42,7 @@ function App() {
 
   return (
     <AppContext.Provider
-      value={{ dummyData, playerUsername, setPlayerUsername, round, setRound, socket }}
+      value={{ dummyData, playerUsername, setPlayerUsername, round, setRound, socket, users, setUsers }}
     >
       <div className='App'>
         <header className='App-header'></header>
