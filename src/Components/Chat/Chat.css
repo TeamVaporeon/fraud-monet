@@ -37,6 +37,7 @@
 }
 .chat-container .chat-body .message {
   display: flex;
+  flex-direction: column;
   height: auto;
   padding: 10px;
 }
