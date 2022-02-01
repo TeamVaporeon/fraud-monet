@@ -18,7 +18,7 @@ function App() {
     <AppContext.Provider value={{ dummyData }}>
       <div className='App'>
         <header className='App-header'></header>
-        <GameMain />
+        <GameMain data={dummyData}/>
       </div>
     </AppContext.Provider>
   );
