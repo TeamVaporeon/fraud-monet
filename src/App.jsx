@@ -12,16 +12,31 @@ export const AppContext = createContext();
 
 
 function App() {
+  const [round, setRound] = useState(0);
+
   console.log('PATH', window.location.pathname);
   const socket = io();
   socket.emit('room', window.location.pathname);
-  const dummyData = makeRoomData();
+  socket.on('session', (userInfo) => {
+    console.log('USERINFO', userInfo);
+    /** Utilize userInfo to extract the data you need
+    and set state accordingly */
 
-  console.log(dummyData);
+    // socket.auth = userInfo.sessionID,
+    // // Required
+    // localStorage.setItem('sessionID', userInfo.sessionId);
+    // // May be unnecessary
+    // localStorage.setItem('userID', userInfo.userID);
+    // localStorage.setItem('username', userInfo.username);
+    // localStorage.setItem('color', userInfo.color);
+    // localStorage.setItem('host', userInfo.host);
+    // localStorage.setItem('fraud', userInfo.fraud);
+    // localStorage.setItem('role', userInfo.role);
+  })
+  const dummyData = makeRoomData();
   const [playerUsername, setPlayerUsername] = useState('');
 
   // Initial 0; after clicked Start, 1; after first vote, 2; after second vote, 3 >> Game End, Show result modal
-  const [round, setRound] = useState(0);
 
   return (
     <AppContext.Provider

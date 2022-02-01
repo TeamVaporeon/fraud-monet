@@ -46,6 +46,36 @@ Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
+  // Store session middleware
+  socket.use(next => {
+    const sessionID = socket.handshake.auth.sessionID;
+    console.log('SESSION', sessionID);
+    if (sessionID) {
+      const session = sessionStore.findSession(sessionID);
+      if(session) {
+        socket.sessionID = sessionID;
+        socket.userID = session.userID;
+        socket.username = session.username;
+        socket.color = data.color;
+        socket.host = data.host;
+        socket.fraud = data.fraud;
+        socket.role = data.role;
+        return next();
+      }
+      const username = socket.handshake.auth.username;
+      if (!username) {
+        return next(new Error('invalid username!'));
+      }
+      socket.sessionID = sessionID;
+      socket.userID = session.userID;
+      socket.username = session.username;
+      socket.color = data.color;
+      socket.host = data.host;
+      socket.fraud = data.fraud;
+      socket.role = data.role;
+      return next();
+    }
+  })
 
   console.log(`Socket Connected With Id: `, socket.id);
   // Join a room based on room id
@@ -55,11 +85,20 @@ io.on('connection', (socket) => {
   });
 
   // Emit handlers
-  socket.on('createRoom', (data) => {
+  socket.on('createRoom', (data, next) => {
     const cookie = socket.handshake.headers.cookie;
     const adapter = io.of('createRoom').adapter;
-
-    socket.broadcast.emit('packet', adapter.pubClient.publish(data));
+    adapter.pubClient.publish(data);
+    // socket.emit('session', {
+    //   sessionID: socket.sessionID,
+    //   userID: socket.userID,
+    //   username: socket.username,
+    //   color: socket.color,
+    //   host: socket.host,
+    //   fraud: socket.fraud,
+    //   role: socket.role,
+    // })
+    socket.emit('packet', data);
   });
 
   socket.on('newUser', (user) => {
