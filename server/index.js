@@ -4,13 +4,21 @@ const express = require('express');
 const router = require('./routes.js');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
-// const { createClient } = require('redis');
-// const { Emitter } = require('@socket.io/redis-emitter');
-// const { createAdapter } = require('@socket.io/redis-adapter');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const { v4: uuidv4 } = require('uuid');
 
 // Express Server
 const app = express();
+app.use(session({
+  genid: function (req) {
+    return uuidv4();
+  },
+  secret: 'cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 360000 }
+}));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -18,7 +26,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('build'));
 
 app.get('/', (req, res) => {
-  res.cookie('name', 'express', { maxAge: 360000 });
   res.sendFile(path.join(__dirname + '../build/index.html'));
 })
 
@@ -35,30 +42,38 @@ const io = new Server(httpServer, {
   },
 });
 
-// Redis adapters
-// const redisClient = createClient({ url: 'redis://localhost:6379' })
-// const pubClient = createClient({ url: 'redis://localhost:6379' });
-// const subClient = pubClient.duplicate();
-// Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
-//   io.adapter(createAdapter(pubClient, subClient));
-//   io.listen(3001);
-// })
+
+// Persistent Session
+io.use((socket, next) => {
+  const user = socket.handshake.auth.user;
+  // const sessionID = socket.handshake.auth;
+  // console.log('SESSION', sessionID);
+  socket.user = user;
+  socket.emit('name', user.username);
+  next();
+});
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
 
+  const users = [];
   console.log(`Socket Connected With Id: `, socket.id);
   // Join a room based on room id
-  socket.on('room', (url) => {
+  socket.on('joinRoom', async (url) => {
+    // users.push(socket.username);
     socket.room = url;
     socket.join(socket.room);
+    let userSockets = await io.in(socket.room).fetchSockets();
+    userSockets.forEach(sock => {
+      users.push(sock.user);
+    });
+    socket.emit('users', users);
+    socket.broadcast.to(socket.room).emit('newUser', socket.user);
   });
 
   // Emit handlers
   socket.on('createRoom', (data) => {
-    const cookie = socket.handshake.headers.cookie;
     const adapter = io.of('createRoom').adapter;
-
     socket.broadcast.emit('packet', adapter.pubClient.publish(data));
   });
 

@@ -4,17 +4,22 @@ import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
 import makeRoomData from './mock-data.js';
 import { useState, createContext } from 'react';
-import CreateRoom from './Components/CreateRoom.jsx';
-import { Link } from 'react-router-dom';
 import io from 'socket.io-client';
 
 export const AppContext = createContext();
 
-
 function App() {
 
-  const socket = io();
-  socket.emit('room', window.location.pathname);
+  const socket = io({
+    withCredentials: true,
+    autoConnect: false
+  });
+  socket.on('users', (users) => {
+    console.log('FRONT USERS', users);
+  });
+  socket.on('newUser', (user) => {
+    console.log('New User:', user);
+  })
   const dummyData = makeRoomData();
 
   console.log(dummyData);
