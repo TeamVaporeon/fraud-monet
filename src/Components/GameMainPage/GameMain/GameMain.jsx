@@ -9,9 +9,6 @@ import Rules from '../Rules/Rules';
 import StartModal from '../StartModal/StartModal';
 import ResultsModal from '../ResultsModal/ResultsModal';
 
-import io from 'socket.io-client';
-const socket = io.connect('http://localhost:8080');
-
 // TEMPORARY: Pending identification of how to receive room & usernames
 const username = 'tempUser';
 

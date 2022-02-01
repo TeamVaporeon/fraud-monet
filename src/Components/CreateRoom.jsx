@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react';
 import AppContext from '../App.jsx';
 import { io } from 'socket.io-client';
-import { Link, useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 const getHome = async () => {
   const response = await fetch('http://localhost:8080');
@@ -34,16 +33,15 @@ var CreateRoom = (props) => {
       role: 'player',
     })
     navigate(`/${roomID}`)
-  }
+  };
+
   return (
     <div>
       <form>
         <label>
           Enter Your Username:
           <input type='text' onChange={(e) => { setName(e.target.value); }} />
-          <button onClick={routeChange} >
-            Create Room{' '}
-          </button>
+          <button onClick={routeChange} >Create Room</button>
         </label>
       </form>
     </div>

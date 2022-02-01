@@ -17,11 +17,17 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('build'));
 
-// Room endpoint
 app.use('', router);
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000',
+  }
+});
+
+// Redis adapters
 const redisClient = createClient({ url : 'redis://localhost:6379' })
 const pubClient = createClient({ url: 'redis://localhost:6379' });
 const subClient = pubClient.duplicate();
@@ -29,11 +35,6 @@ Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
   io.adapter(createAdapter(pubClient, subClient));
   io.listen(3000);
 })
-const io = new Server(httpServer, {
-  cors: {
-    origin: 'http://localhost:3000',
-  }
-});
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
@@ -41,7 +42,7 @@ io.on('connection', (socket) => {
   console.log(`Socket Connected With Id: `, socket.id);
   // Join a room based on room id
   socket.on('room', (url) => {
-    socket.room = url.substr(5);
+    socket.room = url;
     socket.join(socket.room);
   });
 
@@ -66,7 +67,7 @@ io.on('connection', (socket) => {
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
-    socket.to(userMessage.room).emit('receive_message', userMessage);
+    socket.broadcast.to(socket.room).emit('receive_message', userMessage);
   });
   /* ----- End of CHATROOM Code ----- */
 
