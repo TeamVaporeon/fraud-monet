@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import './Chat.css';
 
-const Chat = ({ socket, username }) => {
+const Chat = ({ socket }) => {
   const [currentMsg, setCurrentMsg] = useState('');
   const [messageList, setMessageList] = useState([]);
+  const [username, setUsername] = useState('Anonymous');
 
   const sendMessage = async () => {
     if (currentMsg !== '') {
@@ -25,7 +26,10 @@ const Chat = ({ socket, username }) => {
   useEffect(() => {
     socket.on('receive_message', (receivedMessage) => {
       setMessageList((list) => [...list, receivedMessage]);
-    })
+    });
+    socket.on('name', (username) => {
+      setUsername(username);
+    });
   }, [socket]);
 
   return (
