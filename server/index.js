@@ -6,10 +6,6 @@ const { createServer } = require('http');
 const cookieParser = require('cookie-parser');
 // const session = require('express-session');
 // const { v4: uuidv4 } = require('uuid');
-const { createClient } = require('redis');
-const { Emitter } = require('@socket.io/redis-emitter');
-const { createAdapter } = require('@socket.io/redis-adapter');
-const cookieParser = require('cookie-parser');
 const cookie = require('cookie');
 const users = [];
 
@@ -63,40 +59,27 @@ io.use((socket, next) => {
   socket.emit('name', user.username);
   next();
 });
-// Redis adapters
-const pubClient = createClient({ url: 'redis://localhost:6379' });
-const subClient = pubClient.duplicate();
-Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
-  io.adapter(createAdapter(pubClient, subClient));
-  io.listen(3001);
-})
 
-const session = {}
+// const session = {}
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
 
   let users = [];
   // Store session middleware
-  io.use((socket, next) => {
-    let parsedCookie = cookie.parse(socket.handshake.headers.cookie);
-    let sessionID = parsedCookie.sessionid;
-    if (sessionID) {
-      if (session[sessionID]) {
-        socket.sessionID = sessionID;
-        return next()
-      } else {
-        session[sessionID] = sessionID;
-        return next()
-      }
-      // const username = socket.handshake.auth.username;
-      // if (!username) {
-      //   return next(new Error('invalid username'));
-      // }
-      // socket.username = username
-      next()
-    }
-  })
+  // io.use((socket, next) => {
+  //   let parsedCookie = cookie.parse(socket.handshake.headers.cookie);
+  //   let sessionID = parsedCookie.sessionid;
+  //   if (sessionID) {
+  //     if (session[sessionID]) {
+  //       socket.sessionID = sessionID;
+  //       return next()
+  //     } else {
+  //       session[sessionID] = sessionID;
+  //       return next()
+  //     }
+  //   }
+  // })
 
   console.log(`Socket Connected With Id: `, socket.id);
   socket.broadcast.emit(`Socket Connected With Id: ${socket.id}`);
