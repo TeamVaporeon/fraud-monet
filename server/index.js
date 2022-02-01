@@ -27,15 +27,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('build'));
 
 app.get('/', (req, res) => {
-<<<<<<< HEAD
-  console.log(`CREATE PAGE`);
-  res.cookie('name', 'express', { maxAge: 360000 });
-  res.sendFile(path.join(__dirname + '../build/index.html'));
-});
-
-// Room endpoint
-app.use('/room', router);
-=======
   res.sendFile(path.join(__dirname + '../build/index.html'));
 })
 
@@ -52,7 +43,6 @@ app.get('/host/:id', (req, res) => {
 app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
 })
->>>>>>> main
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
@@ -77,8 +67,6 @@ io.use((socket, next) => {
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
-<<<<<<< HEAD
-=======
 
   let users = [];
   // Store session middleware
@@ -96,18 +84,12 @@ io.on('connection', (socket) => {
   //   }
   // })
 
->>>>>>> main
   console.log(`Socket Connected With Id: `, socket.id);
   socket.broadcast.emit(`Socket Connected With Id: ${socket.id}`);
   // Join a room based on room id
-<<<<<<< HEAD
-  socket.on('room', (url) => {
-    socket.room = url.substr(5); // example: /room_id
-=======
   socket.on('joinRoom', async (url) => {
     // users.push(socket.username);
     socket.room = url;
->>>>>>> main
     socket.join(socket.room);
     let userSockets = await io.in(socket.room).fetchSockets();
     userSockets.forEach(sock => {
@@ -118,13 +100,6 @@ io.on('connection', (socket) => {
   });
 
   // Emit handlers
-<<<<<<< HEAD
-  socket.on('createRoom', (data) => {
-    console.log('CREATE ROOM!!!!!')
-    const cookie = socket.handshake.headers.cookie;
-    console.log('COOkie', cookie);
-
-=======
   socket.on('createRoom', (data, next) => {
     const adapter = io.of('createRoom').adapter;
     adapter.pubClient.publish(data);
@@ -144,7 +119,6 @@ io.on('connection', (socket) => {
     const adapter = io.of('room').adapter;
     adapter.pubClient.publish(user);
     console.log('new user added!')
->>>>>>> main
   })
 
   socket.on('draw', (mouseData) => {

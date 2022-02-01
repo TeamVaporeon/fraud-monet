@@ -2,21 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-<<<<<<< HEAD
-// const getHome = async () => {
-//   const response = await fetch('http://localhost:8080');
-//   console.log(response);
-// }
-// getHome();
-
-// Connect client's socket to server
-const socket = io();
-// Get the room id
-console.log(window.location.pathname);
-// Emit the room id to the server so client can be put in a room
-socket.emit('room', window.location.pathname);
-=======
->>>>>>> main
 var generateRandString = () => {
   var result = '';
   var characters =
