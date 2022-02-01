@@ -2,13 +2,15 @@
 import React, { useState, createContext, useEffect, useContext } from 'react';
 import './GameMain.css';
 import PlayerList from '../../playerList.jsx';
-import Chat from '../../chat/Chat.jsx';
+import Chat from '../../Chat/Chat.jsx';
 import GameLogic from '../../GameLogic';
 import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
 import StartModal from '../StartModal/StartModal';
 import ResultsModal from '../ResultsModal/ResultsModal';
 
+import io from 'socket.io-client';
+const socket = io.connect('http://localhost:8080');
 // TEMPORARY: Pending identification of how to receive room & usernames
 const username = 'tempUser';
 

@@ -17,8 +17,16 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('build'));
 
-app.use('', router);
+app.get('/', (req, res) => {
+  res.cookie('name', 'express', { maxAge: 360000 });
+  res.sendFile(path.join(__dirname + '../build/index.html'));
+})
 
+app.get('/:id', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build/index.html'));
+})
+
+app.use('', router);
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
