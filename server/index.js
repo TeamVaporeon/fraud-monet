@@ -28,21 +28,21 @@ app.use(express.static('build'));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '../build/index.html'));
-})
+});
 
 app.post('/', (req, res) => {
   const user = req.body;
   users.push(user)
   res.status(201).send(user);
-})
+});
 
 app.get('/host/:id', (req, res) => {
   res.send(users);
-})
+});
 
 app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
-})
+});
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
@@ -59,7 +59,7 @@ io.use((socket, next) => {
   // const sessionID = socket.handshake.auth;
   // console.log('SESSION', sessionID);
   socket.user = user;
-  socket.emit('name', user.username);
+  socket.emit('user_object', user);
   next();
 });
 
@@ -129,10 +129,6 @@ io.on('connection', (socket) => {
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
     socket.broadcast.to(socket.room).emit('receive_message', userMessage);
-  });
-
-  socket.on('username', (username) => {
-    socket.emit('name', username);
   });
   /* ----- End of CHATROOM Code ----- */
 
