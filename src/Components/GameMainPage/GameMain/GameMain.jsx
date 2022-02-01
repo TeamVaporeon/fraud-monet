@@ -8,6 +8,7 @@ import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
 import StartModal from '../StartModal/StartModal';
 import ResultsModal from '../ResultsModal/ResultsModal';
+import { AppContext } from '../../../App';
 
 import io from 'socket.io-client';
 const socket = io.connect('http://localhost:8080');
@@ -22,28 +23,20 @@ const GameMain = () => {
   const [openRules, setOpenRules] = useState(false);
   const [openStart, setOpenStart] = useState(false);
   const [openResults, setOpenResults] = useState(false);
-  const [playerUsername, setPlayerUsername] = useState(null);
+  const { playerUsername, setPlayerUsername } = useContext(AppContext);
 
   return (
     <div className='game'>
-      <h1 className='game_logo'>Fraud Monet</h1>
+      <h1 className='game_logo'>Fraud Monet </h1>
       {openRules ? <Rules setOpenRules={setOpenRules} /> : null}
       {openUsername ? (
-        <UsernameModal
-          setPlayerUsername={setPlayerUsername}
-          setOpenUsername={setOpenUsername}
-        />
+        <UsernameModal setOpenUsername={setOpenUsername} />
       ) : null}
       <div className='game_topbar'>
         <div>
           <GameLogic />
         </div>
-        <div
-          className='game_rules'
-          onClick={() => {
-            setOpenRules(true);
-          }}
-        >
+        <div className='game_rules' onClick={() => setOpenRules(true)}>
           Rules
         </div>
       </div>

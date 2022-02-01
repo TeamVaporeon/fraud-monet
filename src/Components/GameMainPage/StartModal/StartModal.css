@@ -1,0 +1,71 @@
+div#notice {
+  position: fixed;
+  top: 1.5em;
+  left: 25%;
+  width: 50%;
+  z-index: 10000;
+}
+
+div#notice:not(.ui-state-error) {
+  color: black;
+  background-color: #6edfee;
+  border: 1px solid #456594;
+  padding: 5px;
+  text-align: center;
+}
+
+div#notice.hidden {
+  opacity: 0;
+}
+
+.fade-out {
+  animation: fadeOut ease 8s;
+  -webkit-animation: fadeOut ease 8s;
+  -moz-animation: fadeOut ease 8s;
+  -o-animation: fadeOut ease 8s;
+  -ms-animation: fadeOut ease 8s;
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-moz-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-o-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@-ms-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

@@ -4,11 +4,7 @@ import React, { useState, createContext, useEffect, useContext } from 'react';
 
 const StartModal = () => {
   // const [d, setD] = useState(null);
-  return (
-    <>
-      <div>Start Modal</div>
-    </>
-  );
+  return <div className='hidden'>Round N Start</div>;
 };
 
 export default StartModal;
