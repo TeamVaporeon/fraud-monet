@@ -20,9 +20,9 @@ app.use(express.static('build'));
 app.get('/', (req, res) => {
   console.log(`CREATE PAGE`);
   res.cookie('name', 'express', { maxAge: 360000 });
-  // console.log('Made it to /: Cookie is ', newCookie);
   res.sendFile(path.join(__dirname + '../build/index.html'));
 });
+
 // Room endpoint
 app.use('/room', router);
 
@@ -45,25 +45,18 @@ Promise.all([pubClient.connect(), subClient.connect()])
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
-
   console.log(`Socket Connected With Id: `, socket.id);
   // Join a room based on room id
   socket.on('room', (url) => {
-    socket.room = url.substr(5);
+    socket.room = url.substr(5); // example: /room_id
     socket.join(socket.room);
   });
   // Emit handlers
   socket.on('createRoom', (data) => {
     console.log('CREATE ROOM!!!!!')
-    // console.log(socket.handshake.headers.cookie);
     const cookie = socket.handshake.headers.cookie;
-    // console.log('SOCKET', socket);
-    // console.log('DATA', data);
     console.log('COOkie', cookie);
 
-    // data.username
-    // data.roomId
-    // check/set cookie
   })
   socket.on('draw', (mouseData) => {
     // Broadcast mouseData to all connected sockets
