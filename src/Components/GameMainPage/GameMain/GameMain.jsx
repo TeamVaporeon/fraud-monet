@@ -6,7 +6,7 @@ import Chat from '../../chat/Chat.jsx';
 import GameLogic from '../../GameLogic';
 import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
-import StartModal from '../StartModal/StartModal';
+import FinalResultsModal from '../FinalResultsModal/FinalResultsModal';
 import ResultsModal from '../ResultsModal/ResultsModal';
 import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
@@ -22,9 +22,9 @@ const GameMain = () => {
   const [openUsername, setOpenUsername] = useState(true);
   // const [openUsername, setOpenUsername] = useState(false);
   const [openRules, setOpenRules] = useState(false);
-  const [openStart, setOpenStart] = useState(false);
   const [openResults, setOpenResults] = useState(false);
   const [openVote, setOpenVote] = useState(false);
+  const [openFinal, setOpenFinal] = useState(false);
   const { playerUsername, setPlayerUsername, round, setRound } =
     useContext(AppContext);
 
@@ -41,7 +41,7 @@ const GameMain = () => {
       {openUsername ? (
         <UsernameModal setOpenUsername={setOpenUsername} />
       ) : null}
-      {/* {openStart ? <StartModal setOpenStart={setOpenStart} /> : null} */}
+      {openFinal ? <FinalResultsModal setOpenFinal={setOpenFinal} /> : null}
       {openVote ? (
         <Vote setOpenVote={setOpenVote} setOpenResults={setOpenResults} />
       ) : null}
@@ -49,6 +49,7 @@ const GameMain = () => {
         <ResultsModal
           setOpenVote={setOpenVote}
           setOpenResults={setOpenResults}
+          setOpenFinal={setOpenFinal}
         />
       ) : null}
       <div className='game_topbar'>
@@ -57,9 +58,10 @@ const GameMain = () => {
         </div>
         <div className='game_round'>
           <div>Round: {round}</div>
+          <span>buttons for tests, will delete later</span>
           <button onClick={() => setRound(round + 1)}>Round+1</button>
           <button onClick={() => setOpenVote(true)}>Vote:R=3</button>
-          <button onClick={() => setOpenResults(true)}>Res</button>
+          <button onClick={() => setOpenFinal(true)}>FinalRes</button>
         </div>
         <div className='game_rules' onClick={() => setOpenRules(true)}>
           Rules

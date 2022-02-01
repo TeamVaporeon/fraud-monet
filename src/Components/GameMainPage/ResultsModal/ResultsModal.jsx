@@ -3,7 +3,7 @@ import React, { useState, createContext, useEffect, useContext } from 'react';
 import './ResultsModal.css';
 import { AppContext } from '../../../App';
 
-const ResultsModal = ({ setOpenResults, setOpenVote }) => {
+const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
   const { round, setRound } = useContext(AppContext);
   return (
     <div className='resultsModal'>
@@ -22,6 +22,7 @@ const ResultsModal = ({ setOpenResults, setOpenVote }) => {
         >
           X
         </button>
+        <button>Jump to Final</button>
       </div>
     </div>
   );
