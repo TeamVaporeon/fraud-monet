@@ -23,7 +23,8 @@ const GameMain = () => {
   const [openRules, setOpenRules] = useState(false);
   const [openStart, setOpenStart] = useState(false);
   const [openResults, setOpenResults] = useState(false);
-  const { playerUsername, setPlayerUsername } = useContext(AppContext);
+  const { playerUsername, setPlayerUsername, round, setRound } =
+    useContext(AppContext);
 
   return (
     <div className='game'>

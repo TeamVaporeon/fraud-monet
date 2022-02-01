@@ -12,10 +12,11 @@ function App() {
 
   console.log(dummyData);
   const [playerUsername, setPlayerUsername] = useState('');
+  const [round, setRound] = useState(0);
 
   return (
     <AppContext.Provider
-      value={{ dummyData, playerUsername, setPlayerUsername }}
+      value={{ dummyData, playerUsername, setPlayerUsername, round, setRound }}
     >
       <div className='App'>
         <header className='App-header'></header>
