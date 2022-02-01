@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, createContext, useEffect, useContext } from 'react';
 import './GameMain.css';
-import PlayerList from '../../playerList.jsx';
-import Chat from '../../chat/Chat.jsx';
+import PlayerList from '../../PlayerList/PlayerList.jsx';
+import Chat from '../../Chat/Chat.jsx';
 import GameLogic from '../../GameLogic';
 import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
@@ -15,7 +15,7 @@ const socket = io.connect('http://localhost:8080');
 // TEMPORARY: Pending identification of how to receive room & usernames
 const username = 'tempUser';
 
-const GameMain = () => {
+const GameMain = (props) => {
   // if host, const [openUsername, setOpenUsername] = useState(false);
   const [openUsername, setOpenUsername] = useState(true);
   const [openRules, setOpenRules] = useState(false);
@@ -48,7 +48,7 @@ const GameMain = () => {
       </div>
       <div className='game_body'>
         <div className='game_players'>
-          <PlayerList />
+          <PlayerList data={props.data} />
         </div>
         <div className='game_canvas'>Canvas</div>
         <div className='game_chat'>
