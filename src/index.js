@@ -1,11 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import './index.css';
 import App from './App';
+import CreateRoom from './Components/CreateRoom.jsx';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+const root = document.getElementById('root');
+
+render(
+  <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<CreateRoom />} />
+      <Route path='/:id' element={<App />} />
+    </Routes>
+  </BrowserRouter>,
+  root
 );
