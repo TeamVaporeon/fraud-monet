@@ -20,7 +20,7 @@ const UsernameModal = ({ setOpenUsername }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // setPlayerUsername(paramsBody.username);
+    setPlayerUsername(paramsBody.username);
     // check username duplicate
     socket.emit('username', paramsBody.username);
     // setSubmitted(true);
