@@ -47,7 +47,7 @@ function makeRoomData() {
   for (let i = 0; i < 20; i++) {
     roomData.viewers.push(createPlayer(i));
   }
-  console.log(roomData);
+  // console.log(roomData);
   return roomData;
 }
 
