@@ -2,7 +2,7 @@
 import React, { useState, createContext, useEffect, useContext } from 'react';
 import './GameMain.css';
 import PlayerList from '../../playerList.jsx';
-import Chat from '../../Chat/Chat.jsx';
+import Chat from '../../chat/Chat.jsx';
 import GameLogic from '../../GameLogic';
 import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
@@ -14,6 +14,15 @@ const socket = io.connect('http://localhost:8080');
 
 // TEMPORARY: Pending identification of how to receive room & usernames
 const username = 'tempUser';
+
+socket.on('connect', () => {
+  const engine = socket.io.engine;
+  console.log(engine.transport.name);
+
+  engine.on('packet', ({type, data}) => {
+    console.log('Type:: ', type, '\nData:: ', data);
+  })
+})
 
 const GameMain = () => {
   // if host, const [openUsername, setOpenUsername] = useState(false);

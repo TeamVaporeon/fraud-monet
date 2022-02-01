@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import AppContext from '../App.jsx';
 import { io } from 'socket.io-client';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 const getHome = async () => {
   const response = await fetch('http://localhost:8080');
-  console.log(response);
 };
 getHome();
 var socket = io();
@@ -17,15 +18,12 @@ var generateRandString = () => {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-<<<<<<< HEAD
-}
-
-=======
 };
->>>>>>> main
 
 var CreateRoom = (props) => {
   const [name, setName] = useState('');
+
+  let navigate = useNavigate();
   return (
     <div>
       <form>
@@ -39,6 +37,7 @@ var CreateRoom = (props) => {
           />
           <button
             type='submit'
+            className='start-game-button'
             text='Create Room'
             onClick={(e) => {
               e.preventDefault();
@@ -50,6 +49,8 @@ var CreateRoom = (props) => {
                 host: true,
                 fraud: false,
                 role: 'player',
+              }, () => {
+                navigate(idString);
               });
             }}
           >

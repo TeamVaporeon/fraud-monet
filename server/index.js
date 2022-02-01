@@ -39,8 +39,6 @@ const io = new Server(httpServer, {
   }
 });
 
-
-
 // On Client Connecting To Server
 io.on('connection', (socket) => {
   var client = io.of('createRoom');
@@ -53,23 +51,17 @@ io.on('connection', (socket) => {
 
   // Emit handlers
   socket.on('createRoom', (data) => {
-
-
-    try {
-
-      // redisClient.connect().then(() => {
-      //   const emitter = new Emitter(redisClient);
-      //   setInterval(() => {
-      //     emitter.emit('users', data);
-      //     console.log('sent user data', data);
-      //   }, 1000);
-      // })
-    } catch (err) {
-      console.error(err);
-    }
-
     const cookie = socket.handshake.headers.cookie;
+    const adapter = io.of('createRoom').adapter;
+
+    socket.broadcast.emit('packet', adapter.pubClient.publish(data));
   });
+
+  socket.on('newUser', (user) => {
+    const adapter = io.of('room').adapter;
+    adapter.pubClient.publish(data);
+    console.log('new user added!')
+  })
 
   socket.on('draw', (mouseData) => {
     // Broadcast mouseData to all connected sockets
