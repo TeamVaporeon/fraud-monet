@@ -64,10 +64,10 @@ io.on('connection', (socket) => {
 
   socket.on('newUser', (user) => {
     const adapter = io.of('room').adapter;
-    adapter.pubClient.publish(data);
+    adapter.pubClient.publish(user);
     console.log('new user added!')
   })
-  
+
   socket.on('draw', (mouseData) => {
     // Broadcast mouseData to all connected sockets
     socket.broadcast.to(socket.room).emit('draw', mouseData);
