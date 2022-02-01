@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, createContext, useEffect, useContext } from 'react';
+import React, { useState, createContext, useEffect, useContext, useRef } from 'react';
 import './GameMain.css';
 import PlayerList from '../../playerList.jsx';
-import Chat from '../../Chat/Chat.jsx';
+import Chat from '../../chat/Chat.jsx';
 import GameLogic from '../../GameLogic';
 import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
@@ -18,6 +18,7 @@ const room = 'temporary';
 const username = 'tempUser';
 
 const GameMain = () => {
+  const ref = useRef(null);
   // if host, const [openUsername, setOpenUsername] = useState(false);
   const [openUsername, setOpenUsername] = useState(true);
   const [openRules, setOpenRules] = useState(false);
@@ -52,8 +53,9 @@ const GameMain = () => {
         <div className='game_players'>
           <PlayerList />
         </div>
-        <div className='game_canvas'>
-          <Canvas />
+        <div className='game_canvas' ref={ref}>
+          Canvas
+          {ref.current?.offsetWidth ? <Canvas width={ref.current.offsetWidth} height={ref.current.offsetHeight}/> : null}
         </div>
         <Chat socket={socket} room={room} username={username} />
       </div>
