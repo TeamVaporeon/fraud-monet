@@ -3,7 +3,7 @@
 import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
 import makeRoomData from './mock-data.js';
-import { createContext } from 'react';
+import { useState, createContext } from 'react';
 import io from 'socket.io-client';
 
 export const AppContext = createContext();
