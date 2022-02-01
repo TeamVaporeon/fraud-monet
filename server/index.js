@@ -53,8 +53,7 @@ io.on('connection', (socket) => {
 
   // Emit handlers
   socket.on('createRoom', (data) => {
-    io.adapter()
-      .then(stuff => console.log(stuff))
+
 
     try {
 
@@ -70,7 +69,7 @@ io.on('connection', (socket) => {
     }
 
     const cookie = socket.handshake.headers.cookie;
-  })
+  });
 
   socket.on('draw', (mouseData) => {
     // Broadcast mouseData to all connected sockets

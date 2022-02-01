@@ -13,7 +13,6 @@ import io from 'socket.io-client';
 const socket = io.connect('http://localhost:8080');
 
 // TEMPORARY: Pending identification of how to receive room & usernames
-const room = 'temporary';
 const username = 'tempUser';
 
 const GameMain = () => {
@@ -52,7 +51,7 @@ const GameMain = () => {
           <PlayerList />
         </div>
         <div className='game_canvas'>Canvas</div>
-        <Chat socket={socket} room={room} username={username} />
+        <Chat socket={socket} username={username} />
       </div>
     </div>
   );
