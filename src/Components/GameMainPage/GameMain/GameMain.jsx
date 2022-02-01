@@ -12,9 +12,10 @@ import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
 
 const GameMain = ({ data }) => {
-  const { round, setRound, socket } = useContext(AppContext);
+  const { round, setRound, socket, users } = useContext(AppContext);
 
-  /* Need to find a way to get host status*/
+  // const [openUsername, setOpenUsername] = useState(!users[0].host);
+  // console.log('users:::: game main:::', users);
   const [openUsername, setOpenUsername] = useState(true);
   const [openRules, setOpenRules] = useState(false);
   const [openResults, setOpenResults] = useState(false);
