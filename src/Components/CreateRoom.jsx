@@ -16,34 +16,28 @@ var generateRandString = () => {
 var CreateRoom = (props) => {
   const [name, setName] = useState('');
   const navigate = useNavigate();
-  const routeChange = () => {
+  const routeChange = (e) => {
+    e.preventDefault();
     const roomID = generateRandString();
     const userInfo = {
-        username: name,
-        roomID,
-        color: '#000',
-        host: true,
-        fraud: false,
-        role: 'player',
-        score: 0
-      }
+      username: name,
+      roomID,
+      color: '#000',
+      host: true,
+      fraud: false,
+      role: 'player',
+      score: 0
+    }
     axios.post(`/`, userInfo, {
       headers: {
         'Content-Type': 'application/json'
       },
-    }).then((res) => {
-      // setUsers(res.data);
     })
-    navigate(`/${roomID}`)
-
-    // socket.emit('createRoom', {
-    //   username: name,
-    //   roomID,
-    //   color: '#000',
-    //   host: true,
-    //   fraud: false,
-    //   role: 'player',
-    // })
+      .then((data) => {
+        console.log(data);
+        navigate(`/${roomID}`);
+      })
+      .catch(err => console.log('ERROR', err.message));
   };
 
   return (

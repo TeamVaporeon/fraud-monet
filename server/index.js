@@ -33,8 +33,11 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
   const user = req.body;
   users.push(user)
-  console.log(user);
-  res.status(201).send(users);
+  res.status(201).send(user);
+})
+
+app.get('/host/:id', (req, res) => {
+  res.send(users);
 })
 
 app.get('/:id', (req, res) => {
