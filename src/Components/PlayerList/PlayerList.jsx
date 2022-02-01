@@ -1,70 +1,56 @@
 import React from 'react';
 import './PlayerList.css';
-// import dummyList from './dummyList.js';
 
 class PlayerList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       list : [],
-      players : [],
-      spectatorsList : [],
-      playersCount : null
+      playersList : [],
+      spectatorsList : []
     }
-    this.countPlayers = this.countPlayers.bind(this);
-    // this.getPlayers = this.getPlayers.bind(this);
+    this.sortLobby = this.sortLobby.bind(this);
   }
 
   componentDidMount() {
+    this.sortLobby(this.props.data.viewers);
+  }
+
+  sortLobby(arr) {
+    var playersArr = arr.filter(player => player.role !== 'spectator');
+    var specArr = arr.filter(player => player.role === 'spectator');
     this.setState({
-      list : this.props.data.viewers,
-      playersCount : this.countPlayers(this.props.data.viewers)
-      // players : this.getPlayers(dummyList)
+      playersList : playersArr,
+      spectatorsList : specArr
     })
   }
-
-  countPlayers(arr) {
-    var count = 0;
-    for (var i = 0; i < arr.length; i++) {
-      var eachPlayerObj = arr[i];
-      if (eachPlayerObj.role !== 'spectator') {
-        count++;
-      }
-    }
-    return count;
-  }
-
-  // getPlayers(arr) {
-  //   var playersArr = arr.map(player => {
-  //     if (player.role !== 'spectator') {
-  //       playersArr.push(player);
-  //     }
-  //     return playersArr;
-  //   })
-  // }
 
   render() {
     return(
       <>
-      <h3>Players List</h3>
-      <div className="players-list">
-        {this.state.list.map((player, index) =>
-        (player.role !== 'spectator' ?
-        <div className="each-player" key={index}>
-          <div>{player.username}</div>
-          {/* <div>Color: {player.color}</div> */}
-          <div>Score: {player.score}</div>
-        </div> :
-        <div className="each-spectator" key={index}>
-          <div>{player.username} (Spectating)</div>
-        </div>))}
-      </div>
-      <div>
-        Players in Game {this.state.playersCount}/10
-      </div>
-      <div>
-        <button>Join</button>
-        <button>Start</button>
+      <div className="total-game-list">
+        <div className="players-list">
+          <h3>Players</h3>
+          <div className="just-players">
+            {this.state.playersList.map((player, index) =>
+            <div className="each-player" key={index}>
+              <div>{player.username}</div>
+            </div>)}
+          </div>
+          <h3>Spectating</h3>
+          <div className="just-specs">
+            {this.state.spectatorsList.map((spec, index) =>
+            <div className="each-spectator" key={index}>
+              <div>{spec.username} (Spectating)</div>
+            </div>)}
+          </div>
+        </div>
+        <div>Players in Game: {this.state.playersList.length}/10</div>
+        <div>Number of Spectators: {this.state.spectatorsList.length}</div>
+        <div>
+          <button>Join</button>
+          <button>Start</button>
+        </div>
       </div>
       </>
     )
@@ -72,6 +58,7 @@ class PlayerList extends React.Component {
 }
 
 export default PlayerList;
+
 
 
 
