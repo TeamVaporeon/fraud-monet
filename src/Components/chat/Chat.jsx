@@ -9,11 +9,11 @@ const Chat = ({ socket, username }) => {
   const sendMessage = async () => {
     if (currentMsg !== '') {
       const mins = new Date(Date.now()).getMinutes();
-      const minutes = mins.length === 1 ? ('0' + mins) : mins;
+      const additionalZero = (mins < 10) ? '0' : '';
       const messageDetails = {
         author: username,
         message: currentMsg,
-        time: new Date(Date.now()).getHours() + ':' + minutes,
+        time: new Date(Date.now()).getHours() + ':' + additionalZero + mins,
       };
 
       await socket.emit('send_message', messageDetails);
