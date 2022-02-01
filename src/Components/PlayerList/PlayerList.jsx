@@ -30,26 +30,30 @@ class PlayerList extends React.Component {
       <>
       <div className="total-game-list">
         <div className="players-list">
-          <h3>Players</h3>
+          <h3>Players:</h3>
           <div className="just-players">
             {this.state.playersList.map((player, index) =>
             <div className="each-player" key={index}>
-              <div>{player.username}</div>
+              <div style={{ color: player.color}}>{player.username}</div>
             </div>)}
           </div>
-          <h3>Spectating</h3>
+          <h3>Spectators:</h3>
           <div className="just-specs">
             {this.state.spectatorsList.map((spec, index) =>
             <div className="each-spectator" key={index}>
-              <div>{spec.username} (Spectating)</div>
+              <div>{spec.username}</div>
             </div>)}
           </div>
         </div>
-        <div>Players in Game: {this.state.playersList.length}/10</div>
-        <div>Number of Spectators: {this.state.spectatorsList.length}</div>
-        <div>
-          <button>Join</button>
-          <button>Start</button>
+        <div className="playercount-and-buttons">
+          <div className="players-spec-count">
+            <div>Players in Game: {this.state.playersList.length}/10</div>
+            <div>Number of Spectators: {this.state.spectatorsList.length}</div>
+          </div>
+          <div className="join-start-buttons">
+            <button>Join</button>
+            <button>Start</button>
+          </div>
         </div>
       </div>
       </>
