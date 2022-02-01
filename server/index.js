@@ -32,7 +32,7 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: 'http://localhost:3000',
-  }
+  },
 });
 
 // Redis adapters
@@ -46,7 +46,7 @@ Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
-  var client = io.of('createRoom');
+
   console.log(`Socket Connected With Id: `, socket.id);
   // Join a room based on room id
   socket.on('room', (url) => {
@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
     adapter.pubClient.publish(data);
     console.log('new user added!')
   })
-
+  
   socket.on('draw', (mouseData) => {
     // Broadcast mouseData to all connected sockets
     socket.broadcast.to(socket.room).emit('draw', mouseData);

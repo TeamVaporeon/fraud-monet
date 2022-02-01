@@ -6,8 +6,8 @@
   padding: 0;
 }
 
-.resultsModal {
-  background-color: #faeaab;
+.voteModal {
+  background-color: #ea9f4e;
   /* box-shadow: 0 2px 20px #e0e4ec; */
   position: fixed;
   top: 0;
@@ -19,11 +19,11 @@
   max-width: 90%;
   height: 600px;
   max-height: 90%;
-  z-index: 1200;
+  z-index: 1000;
   color: black;
 }
 
-.resultsContainer {
+.voteContainer {
   position: absolute;
   top: 0;
   left: 0;
@@ -33,5 +33,5 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
 }
