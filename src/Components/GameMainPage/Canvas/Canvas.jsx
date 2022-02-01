@@ -34,7 +34,11 @@ const Canvas = (props) => {
     p5.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
   }
 
-  return <Sketch setup={setup} draw={draw} mouseDragged={mouseDragged} />
+  const windowResized = p5 => {
+    p5.resizeCanvas(props.width, props.height-100);
+  }
+
+  return <Sketch setup={setup} draw={draw} mouseDragged={mouseDragged} windowRezied={windowResized}/>
 }
 
 export default Canvas;
