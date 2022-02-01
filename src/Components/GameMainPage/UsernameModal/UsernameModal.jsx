@@ -7,7 +7,7 @@ import { AppContext } from '../../../App';
 const UsernameModal = ({ setOpenUsername }) => {
   const [paramsBody, setParamsBody] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const { playerUsername, setPlayerUsername } = useContext(AppContext);
+  const { playerUsername, setPlayerUsername, socket } = useContext(AppContext);
 
   const handleInputChange = (e) => {
     e.preventDefault();
@@ -20,7 +20,8 @@ const UsernameModal = ({ setOpenUsername }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setPlayerUsername(paramsBody.username);
+    // setPlayerUsername(paramsBody.username);
+    socket.emit('username', paramsBody.username);
     setSubmitted(true);
     document.getElementsByClassName('usernameForm').reset();
     // // can send paramsBody aka invited user's username input to server
@@ -28,13 +29,13 @@ const UsernameModal = ({ setOpenUsername }) => {
   return (
     <div className='usernameModal'>
       <div className='usernameContainer'>
-        <form className='usernameForm' onSubmit={(e) => handleSubmit(e)}>
+        <form className='usernameForm' onSubmit={handleSubmit}>
           <label>Username:</label>
           <input
             className='usernameForm_input'
             placeholder='Please fill in...'
             name='username'
-            onChange={(e) => handleInputChange(e)}
+            onChange={handleInputChange}
           ></input>
           <button className='usernameForm_submit' type='submit' value='submit'>
             Submit
