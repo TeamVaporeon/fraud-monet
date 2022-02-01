@@ -34,14 +34,14 @@ const io = new Server(httpServer, {
   }
 });
 
-const pubClient = createClient({ url: 'redis://localhost:6379' });
-const subClient = pubClient.duplicate();
+// const pubClient = createClient({ url: 'redis://localhost:6379' });
+// const subClient = pubClient.duplicate();
 
-Promise.all([pubClient.connect(), subClient.connect()])
-  .then(() => {
-    io.adapter(createAdapter(pubClient, subClient));
-    io.listen(3000);
-  })
+// Promise.all([pubClient.connect(), subClient.connect()])
+//   .then(() => {
+//     io.adapter(createAdapter(pubClient, subClient));
+//     io.listen(3000);
+//   })
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
-    socket.to(userMessage.room).emit('receive_message', userMessage);
+    socket.to(socket.room).emit('receive_message', userMessage);
   });
   /* ----- End of CHATROOM Code ----- */
 
