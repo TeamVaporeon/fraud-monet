@@ -1,13 +1,29 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, createContext, useEffect, useContext } from 'react';
-// import './ResultsModal.css';
+import './ResultsModal.css';
+import { AppContext } from '../../../App';
 
-const ResultsModal = () => {
-  // const [d, setD] = useState(null);
+const ResultsModal = ({ setOpenResults, setOpenVote }) => {
+  const { round, setRound } = useContext(AppContext);
   return (
-    <>
-      <div>Results Modal</div>
-    </>
+    <div className='resultsModal'>
+      <div className='resultsContainer'>
+        <div>
+          Most Voted: <span>Miso</span>
+        </div>
+        <div>
+          Fraud Monet: <span>Miso</span>
+        </div>
+        <button
+          onClick={() => {
+            setOpenResults(false);
+            setOpenVote(false);
+          }}
+        >
+          X
+        </button>
+      </div>
+    </div>
   );
 };
 
