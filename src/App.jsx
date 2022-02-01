@@ -1,9 +1,11 @@
-/*eslint no-unused-vars: 0*/
+/*eslint-disable no-unused-vars*/
 
 import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
 import makeRoomData from './mock-data.js';
 import { useState, createContext } from 'react';
+import CreateRoom from './Components/CreateRoom.jsx';
+import { Link } from 'react-router-dom';
 
 export const AppContext = createContext();
 
