@@ -11,7 +11,7 @@ import ResultsModal from '../ResultsModal/ResultsModal';
 import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
 
-const GameMain = ({ data }) => {
+const GameMain = ({ dummyData, actualData }) => {
 
   const { round, setRound, socket } = useContext(AppContext);
 
@@ -62,7 +62,7 @@ const GameMain = ({ data }) => {
       </div>
       <div className='game_body'>
         <div className='game_players'>
-          <PlayerList data={data} />
+          <PlayerList dummyData={dummyData} actualData={actualData}/>
         </div>
         <div className='game_canvas'>Canvas</div>
         <div className='game_chat'>

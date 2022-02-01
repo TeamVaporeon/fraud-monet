@@ -1,6 +1,7 @@
 .each-player {
   margin-top: 5px;
   margin-bottom: 5px;
+  border: 0.5px solid black
 }
 
 .each-spectator {
@@ -16,7 +17,8 @@
   margin: auto;
   width: 100%;
   padding: 10px;
-  /* border: 2px solid white */
+  font-weight: 500;
+
 }
 
 .just-players::-webkit-scrollbar {
@@ -40,5 +42,5 @@
 }
 
 .playercount-and-buttons {
-margin-top: 30px;
+margin-top: 25px;
 }
