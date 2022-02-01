@@ -22,7 +22,15 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
         >
           X
         </button>
-        <button>Jump to Final</button>
+        <button
+          onClick={() => {
+            setOpenVote(false);
+            setOpenResults(false);
+            setOpenFinal(true);
+          }}
+        >
+          Jump to Final
+        </button>
       </div>
     </div>
   );
