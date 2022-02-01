@@ -48,8 +48,9 @@ app.get('/:id', (req, res) => {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:3000',
-  },
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
 });
 
 
@@ -85,6 +86,10 @@ io.on('connection', (socket) => {
   // })
 
   console.log(`Socket Connected With Id: `, socket.id);
+  // Set socket event handlers
+  socket.on('mouse', data => {
+    socket.broadcast.emit('mouse', data);
+  });
   socket.broadcast.emit(`Socket Connected With Id: ${socket.id}`);
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
