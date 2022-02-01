@@ -11,30 +11,20 @@ import ResultsModal from '../ResultsModal/ResultsModal';
 import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
 
-import io from 'socket.io-client';
-const socket = io.connect('http://localhost:8080');
-// TEMPORARY: Pending identification of how to receive room & usernames
-const username = 'tempUser';
+const GameMain = ({ data }) => {
 
-socket.on('connect', () => {
-  const engine = socket.io.engine;
-  console.log(engine.transport.name);
+  const { playerUsername, setPlayerUsername, round, setRound, socket } = useContext(AppContext);
 
-  engine.on('packet', ({type, data}) => {
-    console.log('Type:: ', type, '\nData:: ', data);
-  })
-})
+  // socket.io.engine.on('packet', ({ type, data }) => {
+  //   console.log('Type:: ', type, '\nData:: ', data);
+  // });
 
-const GameMain = (props) => {
-  // if host, const [openUsername, setOpenUsername] = useState(false);
   const [openUsername, setOpenUsername] = useState(true);
   // const [openUsername, setOpenUsername] = useState(false);
   const [openRules, setOpenRules] = useState(false);
   const [openResults, setOpenResults] = useState(false);
   const [openVote, setOpenVote] = useState(false);
   const [openFinal, setOpenFinal] = useState(false);
-  const { playerUsername, setPlayerUsername, round, setRound } =
-    useContext(AppContext);
 
   useEffect(() => {
     if (round === 3) {
@@ -47,7 +37,7 @@ const GameMain = (props) => {
       <h1 className='game_logo'>Fraud Monet </h1>
       {openRules ? <Rules setOpenRules={setOpenRules} /> : null}
       {openUsername ? (
-        <UsernameModal setOpenUsername={setOpenUsername} />
+        <UsernameModal setOpenUsername={setOpenUsername} socket={socket} />
       ) : null}
       {openFinal ? <FinalResultsModal setOpenFinal={setOpenFinal} /> : null}
       {openVote ? (
@@ -77,11 +67,11 @@ const GameMain = (props) => {
       </div>
       <div className='game_body'>
         <div className='game_players'>
-          <PlayerList data={props.data} />
+          <PlayerList data={data} />
         </div>
         <div className='game_canvas'>Canvas</div>
         <div className='game_chat'>
-          <Chat socket={socket} username={playerUsername} />
+          <Chat socket={socket} />
         </div>
       </div>
     </div>
