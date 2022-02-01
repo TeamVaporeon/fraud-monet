@@ -3,7 +3,7 @@ const controller = require('./controllers');
 
 // Creating game room endpoints fraudmonet.com/room
 router.get('/', controller.rooms.getHomePage);
-router.post('/', controller.rooms.generateRoomCode);
+router.post('/', controller.rooms.initializeGame);
 // Room specific endpoints fraudmonet.com/room?[hash code here]
 router.get('/:id', controller.rooms.getRoomInfo);
 router.post('/:id', controller.rooms.addUser);

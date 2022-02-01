@@ -3,10 +3,11 @@ const argon2 = require('argon2');
 
 module.exports = {
   getHomePage: async function (req, res) {
-    console.log(req.url);
-    res.status(200).send('Fraud money home page!');
+    res.cookie('name', 'express', { maxAge: 360000 });
+    res.status(200).send('This is the Create Game Page');
   },
-  generateRoomCode: async function (req, res) {
+  // run when first user ('host') creates a game
+  initializeGame: async function (req, res) {
     console.log(req.params);
     // get random string from req.params
     try {
@@ -31,7 +32,18 @@ module.exports = {
       res.status(404).send(err);
     }
   },
+  // On non-host user join
   addUser: async function (req, res) {
+    // build user object according to data model
+    // assign them their cookie -> assign to the id
+    // {
+    // 	username: string,
+    // 	color: string,
+    // 	socket-id: string//?
+    // 	host: boolean,
+    // 	fraud: boolean,
+    // 	role: string // spectator/player
+    // },
     res.status(201).send('User added');
   },
   updateUser: async function (req, res) {

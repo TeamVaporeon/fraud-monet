@@ -15,12 +15,26 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname + './build')));
+app.use('', router);
 
-// Create Room Page
-app.get('/', (req, res) => {
-  res.cookie('name', 'express', { maxAge: 360000 });
-  res.send('This is the Create Game Page');
-});
+// Live data
+// Countdown timer
+// Drawing
+// Voting
+// Chat
+//
+// Host get's cookie right away
+// Test host emit event on create game
+// Store first player in user data model
+// Redirect player to game room
+//
+// On non-host join
+// make get request -> checks for cookie
+  // if no cookie set on
+  // if cookie don't matter
+  // send html
+// Set up their connection via emit
+// on username submit -> store as new user
 
 // Room endpoint
 app.use('/room', router);
@@ -29,9 +43,17 @@ app.use('/room', router);
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
+
 // On Client Connecting To Server
 io.on('connection', (socket) => {
   console.log(`Socket Connected With Id: `, socket.id);
+  console.log(socket);
+
+  // Check cookies
+  const cookief = socket.handshake.headers.cookie;
+  const cookies = cookie.parse(socket.handshake.headers.cookie);
+  console.log(cookies);
+
   // Join a room based on room id
   socket.on('room', (room) => {
     const subRoom = room.substr(5);
