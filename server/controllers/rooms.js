@@ -1,10 +1,11 @@
 const rooms = require('../models/index.js');
+const path = require('path');
 const argon2 = require('argon2');
 
 module.exports = {
   getHomePage: async function (req, res) {
     res.cookie('name', 'express', { maxAge: 360000 });
-    res.status(200).send('This is the Create Game Page');
+    res.sendFile(path.join(__dirname + '../build/index.html'));
   },
   // run when first user ('host') creates a game
   initializeGame: async function (req, res) {
@@ -32,7 +33,6 @@ module.exports = {
       res.status(404).send(err);
     }
   },
-<<<<<<< HEAD
   // On non-host user join
   addUser: async function (req, res) {
     // build user object according to data model
@@ -45,9 +45,6 @@ module.exports = {
     // 	fraud: boolean,
     // 	role: string // spectator/player
     // },
-=======
-  addUser: async function (req, res) {
->>>>>>> 8f09df6cb2e4061b8eee498d4e64a38216d8ff76
     res.status(201).send('User added');
   },
   updateUser: async function (req, res) {

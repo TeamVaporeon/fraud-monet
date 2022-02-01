@@ -16,15 +16,8 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('build'));
 
-// Create Room Page
-app.get('/', (req, res) => {
-  console.log(`CREATE PAGE`);
-  res.cookie('name', 'express', { maxAge: 360000 });
-  // console.log('Made it to /: Cookie is ', newCookie);
-  res.sendFile(path.join(__dirname + '../build/index.html'));
-});
 // Room endpoint
-app.use('/room', router);
+app.use('', router);
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
@@ -36,6 +29,7 @@ const io = new Server(httpServer, {
 
 const pubClient = createClient({ url: 'redis://localhost:6379' });
 const subClient = pubClient.duplicate();
+
 
 Promise.all([pubClient.connect(), subClient.connect()])
   .then(() => {
@@ -54,17 +48,12 @@ io.on('connection', (socket) => {
   });
   // Emit handlers
   socket.on('createRoom', (data) => {
-    console.log('CREATE ROOM!!!!!')
-    // console.log(socket.handshake.headers.cookie);
+    // io.adapter.clients(['createRoom'], (err, clients) => {
+    //   console.log(clients);
+    // })
     const cookie = socket.handshake.headers.cookie;
-    // console.log('SOCKET', socket);
-    // console.log('DATA', data);
-    console.log('COOkie', cookie);
-
-    // data.username
-    // data.roomId
-    // check/set cookie
   })
+
   socket.on('draw', (mouseData) => {
     // Broadcast mouseData to all connected sockets
     socket.broadcast.to(socket.room).emit('draw', mouseData);
