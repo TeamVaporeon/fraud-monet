@@ -11,7 +11,7 @@ render(
   <BrowserRouter>
     <Routes>
       <Route path='/' element={<CreateRoom />} />
-      <Route path='/play' element={<App />} />
+      <Route path='/:id' element={<App />} />
     </Routes>
   </BrowserRouter>,
   root

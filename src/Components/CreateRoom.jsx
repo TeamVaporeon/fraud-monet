@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { io } from 'socket.io-client';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const getHome = async () => {
   const response = await fetch('http://localhost:8080');
@@ -21,6 +21,21 @@ var generateRandString = () => {
 
 var CreateRoom = (props) => {
   const [name, setName] = useState('');
+
+  const navigate = useNavigate();
+  const routeChange = () => {
+    const roomID = generateRandString();
+    socket.emit('createRoom', {
+      username: name,
+      roomID,
+      color: '#000',
+      host: true,
+      fraud: false,
+      role: 'player',
+    })
+    navigate(`/${roomID}`)
+  };
+
   return (
     <div>
       <form>
@@ -35,24 +50,12 @@ var CreateRoom = (props) => {
           <button
             type='submit'
             text='Create Room'
-            onClick={(e) => {
-              e.preventDefault();
-              var idString = generateRandString();
-              socket.emit('createRoom', {
-                username: name,
-                roomId: idString,
-                color: '#000',
-                host: true,
-                fraud: false,
-                role: 'player',
-              });
-            }}
+            onClick={routeChange}
           >
-            Create Room{' '}
+            Create Room
           </button>
         </label>
       </form>
-      <Link to='/play'>Play</Link>
     </div>
   );
 };
