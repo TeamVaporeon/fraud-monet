@@ -1,5 +1,6 @@
 import React from 'react';
-import dummyList from './dummyList.js';
+import './PlayerList.css';
+// import dummyList from './dummyList.js';
 
 class PlayerList extends React.Component {
   constructor(props) {
@@ -16,8 +17,8 @@ class PlayerList extends React.Component {
 
   componentDidMount() {
     this.setState({
-      list : dummyList,
-      playersCount : this.countPlayers(dummyList)
+      list : this.props.data.viewers,
+      playersCount : this.countPlayers(this.props.data.viewers)
       // players : this.getPlayers(dummyList)
     })
   }
@@ -46,18 +47,18 @@ class PlayerList extends React.Component {
     return(
       <>
       <h3>Players List</h3>
-      {this.state.list.map((player, index) =>
-      (player.role !== 'spectator' ?
-      <div className="each-player" key={index}>
-        <div>{player.username}</div>
-        <div>Color: {player.color}</div>
-        <div>Score: {player.score}</div>
-      </div> :
-      <div className="each-spectator" key={index}>
-        <div>{player.username} (Spectating)</div>
+      <div className="players-list">
+        {this.state.list.map((player, index) =>
+        (player.role !== 'spectator' ?
+        <div className="each-player" key={index}>
+          <div>{player.username}</div>
+          {/* <div>Color: {player.color}</div> */}
+          <div>Score: {player.score}</div>
+        </div> :
+        <div className="each-spectator" key={index}>
+          <div>{player.username} (Spectating)</div>
+        </div>))}
       </div>
-        )
-      )}
       <div>
         Players in Game {this.state.playersCount}/10
       </div>

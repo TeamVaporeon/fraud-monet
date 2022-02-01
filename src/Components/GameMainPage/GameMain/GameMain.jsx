@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, createContext, useEffect, useContext } from 'react';
 import './GameMain.css';
-import PlayerList from '../../PlayerList/playerList.jsx';
+import PlayerList from '../../PlayerList/PlayerList.jsx';
 import Chat from '../../Chat/Chat.jsx';
 import GameLogic from '../../GameLogic';
 import UsernameModal from '../UsernameModal/UsernameModal';
@@ -16,7 +16,7 @@ const socket = io.connect('http://localhost:8080');
 const room = 'temporary';
 const username = 'tempUser';
 
-const GameMain = () => {
+const GameMain = (props) => {
   // if host, const [openUsername, setOpenUsername] = useState(false);
   const [openUsername, setOpenUsername] = useState(true);
   const [openRules, setOpenRules] = useState(false);
@@ -49,7 +49,7 @@ const GameMain = () => {
       </div>
       <div className='game_body'>
         <div className='game_players'>
-          <PlayerList />
+          <PlayerList data={props.data}/>
         </div>
         <div className='game_canvas'>Canvas</div>
         <Chat socket={socket} room={room} username={username} />
