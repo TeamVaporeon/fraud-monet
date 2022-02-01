@@ -5,20 +5,20 @@ const router = require('./routes.js');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const { v4: uuidv4 } = require('uuid');
+// const session = require('express-session');
+// const { v4: uuidv4 } = require('uuid');
 
 // Express Server
 const app = express();
-app.use(session({
-  genid: function (req) {
-    return uuidv4();
-  },
-  secret: 'cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 360000 }
-}));
+// app.use(session({
+//   genid: function (req) {
+//     return uuidv4();
+//   },
+//   secret: 'cat',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: { maxAge: 360000 }
+// }));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
