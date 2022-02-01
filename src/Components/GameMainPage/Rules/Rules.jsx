@@ -7,12 +7,7 @@ const Rules = ({ setOpenRules }) => {
   return (
     <div className='rules'>
       <div className='rulesContainer'>
-        <button
-          className='ruleCloseBtn'
-          onClick={() => {
-            setOpenRules(false);
-          }}
-        >
+        <button className='ruleCloseBtn' onClick={() => setOpenRules(false)}>
           X
         </button>
         <div className='ruleText'>

@@ -1,0 +1,40 @@
+.each-player {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.each-spectator {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.just-players {
+  max-width: 100%;
+  max-height: 350px;
+  overflow-y: auto;
+  text-align: justify;
+  margin: auto;
+  width: 100%;
+  padding: 10px;
+  /* border: 2px solid white */
+}
+
+.just-players::-webkit-scrollbar {
+  display: none;
+}
+
+.just-specs {
+  max-width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  text-align: justify;
+  margin: auto;
+  width: 100%;
+  padding: 10px;
+  /* border: 2px solid white */
+}
+
+.just-specs::-webkit-scrollbar {
+  display: none;
+}
+

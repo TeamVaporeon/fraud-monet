@@ -1,7 +1,7 @@
 /* ----- CHAT ----- */
-.chat-container{
+.chat-container {
   height: 50vh;
-  width: 25vw;
+  width: 100%;
 }
 .chat-container p {
   margin: 0;
@@ -37,6 +37,7 @@
 }
 .chat-container .chat-body .message {
   display: flex;
+  flex-direction: column;
   height: auto;
   padding: 10px;
 }
@@ -96,7 +97,7 @@
   border: 0;
   border-right: 1px dotted #607d8b;
   flex: 85%;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 1em;
   height: 100%;
   outline: none;

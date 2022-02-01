@@ -6,7 +6,7 @@
   padding: 0;
 }
 
-.resultsModal {
+.finalModal {
   background-color: #faeaab;
   /* box-shadow: 0 2px 20px #e0e4ec; */
   position: fixed;
@@ -19,11 +19,11 @@
   max-width: 90%;
   height: 600px;
   max-height: 90%;
-  z-index: 1200;
+  z-index: 1300;
   color: black;
 }
 
-.resultsContainer {
+.finalContainer {
   position: absolute;
   top: 0;
   left: 0;
