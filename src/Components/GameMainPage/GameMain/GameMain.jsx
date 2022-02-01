@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, createContext, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './GameMain.css';
 import PlayerList from '../../PlayerList/PlayerList.jsx';
 import Chat from '../../Chat/Chat.jsx';
@@ -13,14 +13,9 @@ import { AppContext } from '../../../App';
 
 const GameMain = ({ data }) => {
 
-  const { playerUsername, setPlayerUsername, round, setRound, socket } = useContext(AppContext);
-
-  // socket.io.engine.on('packet', ({ type, data }) => {
-  //   console.log('Type:: ', type, '\nData:: ', data);
-  // });
+  const { round, setRound, socket } = useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(true);
-  // const [openUsername, setOpenUsername] = useState(false);
   const [openRules, setOpenRules] = useState(false);
   const [openResults, setOpenResults] = useState(false);
   const [openVote, setOpenVote] = useState(false);
