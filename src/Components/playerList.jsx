@@ -5,21 +5,21 @@ class PlayerList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list : [],
-      players : [],
-      spectatorsList : [],
-      playersCount : null
-    }
+      list: [],
+      players: [],
+      spectatorsList: [],
+      playersCount: null,
+    };
     this.countPlayers = this.countPlayers.bind(this);
     // this.getPlayers = this.getPlayers.bind(this);
   }
 
   componentDidMount() {
     this.setState({
-      list : dummyList,
-      playersCount : this.countPlayers(dummyList)
+      list: dummyList,
+      playersCount: this.countPlayers(dummyList),
       // players : this.getPlayers(dummyList)
-    })
+    });
   }
 
   countPlayers(arr) {
@@ -43,47 +43,39 @@ class PlayerList extends React.Component {
   // }
 
   render() {
-    return(
+    return (
       <>
-      <h3>Players List</h3>
-      {this.state.list.map((player, index) =>
-      (player.role !== 'spectator' ?
-      <div className="each-player" key={index}>
-        <div>{player.username}</div>
-        <div>Color: {player.color}</div>
-        <div>Score: {player.score}</div>
-      </div> :
-      <div className="each-spectator" key={index}>
-        <div>{player.username} (Spectating)</div>
-      </div>
-        )
-      )}
-      <div>
-        Players in Game {this.state.playersCount}/10
-      </div>
-      <div>
-        <button>Join</button>
-        <button>Start</button>
-      </div>
+        <h3>Players List</h3>
+        {this.state.list.map((player, index) =>
+          player.role !== 'spectator' ? (
+            <div className='each-player' key={index}>
+              <div>{player.username}</div>
+              <div>Color: {player.color}</div>
+              <div>Score: {player.score}</div>
+            </div>
+          ) : (
+            <div className='each-spectator' key={index}>
+              <div>{player.username} (Spectating)</div>
+            </div>
+          )
+        )}
+        <div>Players in Game {this.state.playersCount}/10</div>
+        <div>
+          <button>Join</button>
+          <button
+          // onClick={() => {
+          //   this.props.gameStartWarning();
+          // }}
+          >
+            Start
+          </button>
+        </div>
       </>
-    )
+    );
   }
 }
 
 export default PlayerList;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, {useState, useEffect} from 'react';
 

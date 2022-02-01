@@ -45,17 +45,7 @@
 
 .game_chat {
   grid-area: c;
-  background-color: rgb(217, 171, 213);
-}
-
-.each-player {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.each-spectator {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  background-color: rgba(217, 171, 213, 0.322);
 }
 
 .game_rules {
