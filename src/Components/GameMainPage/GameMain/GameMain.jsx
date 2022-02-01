@@ -2,7 +2,7 @@
 import React, { useState, createContext, useEffect, useContext } from 'react';
 import './GameMain.css';
 import PlayerList from '../../PlayerList/PlayerList.jsx';
-import Chat from '../../Chat/Chat.jsx';
+import Chat from '../../chat/Chat.jsx';
 import GameLogic from '../../GameLogic';
 import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
