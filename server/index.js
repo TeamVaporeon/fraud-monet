@@ -4,9 +4,9 @@ const express = require('express');
 const router = require('./routes.js');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
-const { createClient } = require('redis');
-const { Emitter } = require('@socket.io/redis-emitter');
-const { createAdapter } = require('@socket.io/redis-adapter');
+// const { createClient } = require('redis');
+// const { Emitter } = require('@socket.io/redis-emitter');
+// const { createAdapter } = require('@socket.io/redis-adapter');
 const cookieParser = require('cookie-parser');
 
 // Express Server
@@ -37,13 +37,13 @@ const io = new Server(httpServer, {
 });
 
 // Redis adapters
-const redisClient = createClient({ url : 'redis://localhost:6379' })
-const pubClient = createClient({ url: 'redis://localhost:6379' });
-const subClient = pubClient.duplicate();
-Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
-  io.adapter(createAdapter(pubClient, subClient));
-  io.listen(3001);
-})
+// const redisClient = createClient({ url: 'redis://localhost:6379' })
+// const pubClient = createClient({ url: 'redis://localhost:6379' });
+// const subClient = pubClient.duplicate();
+// Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+//   io.adapter(createAdapter(pubClient, subClient));
+//   io.listen(3001);
+// })
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
@@ -81,6 +81,10 @@ io.on('connection', (socket) => {
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
     socket.broadcast.to(socket.room).emit('receive_message', userMessage);
+  });
+
+  socket.on('username', (username) => {
+    socket.emit('name', username);
   });
   /* ----- End of CHATROOM Code ----- */
 
