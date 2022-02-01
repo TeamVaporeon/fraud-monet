@@ -32,6 +32,7 @@ module.exports = {
       res.status(404).send(err);
     }
   },
+<<<<<<< HEAD
   // On non-host user join
   addUser: async function (req, res) {
     // build user object according to data model
@@ -44,6 +45,9 @@ module.exports = {
     // 	fraud: boolean,
     // 	role: string // spectator/player
     // },
+=======
+  addUser: async function (req, res) {
+>>>>>>> 8f09df6cb2e4061b8eee498d4e64a38216d8ff76
     res.status(201).send('User added');
   },
   updateUser: async function (req, res) {

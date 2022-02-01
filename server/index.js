@@ -14,8 +14,22 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+<<<<<<< HEAD
 app.use(express.static(path.join(__dirname + './build')));
 app.use('', router);
+=======
+app.use(express.static('build'));
+
+// Create Room Page
+app.get('/', (req, res) => {
+  console.log(`CREATE PAGE`);
+  res.cookie('name', 'express', { maxAge: 360000 });
+  // console.log('Made it to /: Cookie is ', newCookie);
+  res.sendFile(path.join(__dirname + '../build/index.html'));
+});
+// Room endpoint
+app.use('/room', router);
+>>>>>>> 8f09df6cb2e4061b8eee498d4e64a38216d8ff76
 
 // Live data
 // Countdown timer
@@ -41,12 +55,27 @@ app.use('/room', router);
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000',
+  }
+});
+
+const pubClient = createClient({ url: 'redis://localhost:6379' });
+const subClient = pubClient.duplicate();
+
+Promise.all([pubClient.connect(), subClient.connect()])
+  .then(() => {
+    io.adapter(createAdapter(pubClient, subClient));
+    io.listen(3000);
+  })
 
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
+
   console.log(`Socket Connected With Id: `, socket.id);
+<<<<<<< HEAD
   console.log(socket);
 
   // Check cookies
@@ -63,6 +92,36 @@ io.on('connection', (socket) => {
       socket.broadcast.to(subRoom).emit('draw', mouseData);
     });
   });
+=======
+  // Join a room based on room id
+  socket.on('room', (url) => {
+    socket.room = url.substr(5);
+    socket.join(socket.room);
+  });
+  // Emit handlers
+  socket.on('createRoom', (data) => {
+    console.log('CREATE ROOM!!!!!')
+    // console.log(socket.handshake.headers.cookie);
+    const cookie = socket.handshake.headers.cookie;
+    // console.log('SOCKET', socket);
+    // console.log('DATA', data);
+    console.log('COOkie', cookie);
+
+    // data.username
+    // data.roomId
+    // check/set cookie
+  })
+  socket.on('draw', (mouseData) => {
+    // Broadcast mouseData to all connected sockets
+    socket.broadcast.to(socket.room).emit('draw', mouseData);
+  });
+
+  /* ----- CHATROOM Code ----- */
+  socket.on('send_message', (userMessage) => {
+    socket.to(userMessage.room).emit('receive_message', userMessage);
+  });
+  /* ----- End of CHATROOM Code ----- */
+>>>>>>> 8f09df6cb2e4061b8eee498d4e64a38216d8ff76
 
   // On user disconnecting
   socket.on('disconnect', () => {
