@@ -5,6 +5,7 @@ const router = require('./routes.js');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
 const { createClient } = require('redis');
+const { Emitter } = require('@socket.io/redis-emitter');
 const { createAdapter } = require('@socket.io/redis-adapter');
 const cookieParser = require('cookie-parser');
 
@@ -16,16 +17,16 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('build'));
 
-// Create Room Page
 app.get('/', (req, res) => {
-  console.log(`CREATE PAGE`);
   res.cookie('name', 'express', { maxAge: 360000 });
-  // console.log('Made it to /: Cookie is ', newCookie);
   res.sendFile(path.join(__dirname + '../build/index.html'));
-});
-// Room endpoint
-app.use('/room', router);
+})
 
+app.get('/:id', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build/index.html'));
+})
+
+app.use('', router);
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -34,36 +35,39 @@ const io = new Server(httpServer, {
   },
 });
 
-// const pubClient = createClient({ url: 'redis://localhost:6379' });
-// const subClient = pubClient.duplicate();
-
-// Promise.all([pubClient.connect(), subClient.connect()])
-//   .then(() => {
-//     io.adapter(createAdapter(pubClient, subClient));
-//     io.listen(3000);
-//   })
+// Redis adapters
+const redisClient = createClient({ url : 'redis://localhost:6379' })
+const pubClient = createClient({ url: 'redis://localhost:6379' });
+const subClient = pubClient.duplicate();
+Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+  io.adapter(createAdapter(pubClient, subClient));
+  io.listen(3000);
+})
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
+
   console.log(`Socket Connected With Id: `, socket.id);
   // Join a room based on room id
   socket.on('room', (url) => {
-    socket.room = url.substr(5);
+    socket.room = url;
     socket.join(socket.room);
   });
+
   // Emit handlers
   socket.on('createRoom', (data) => {
-    console.log('CREATE ROOM!!!!!');
-    // console.log(socket.handshake.headers.cookie);
     const cookie = socket.handshake.headers.cookie;
-    // console.log('SOCKET', socket);
-    // console.log('DATA', data);
-    console.log('COOkie', cookie);
+    const adapter = io.of('createRoom').adapter;
 
-    // data.username
-    // data.roomId
-    // check/set cookie
+    socket.broadcast.emit('packet', adapter.pubClient.publish(data));
   });
+
+  socket.on('newUser', (user) => {
+    const adapter = io.of('room').adapter;
+    adapter.pubClient.publish(data);
+    console.log('new user added!')
+  })
+  
   socket.on('draw', (mouseData) => {
     // Broadcast mouseData to all connected sockets
     socket.broadcast.to(socket.room).emit('draw', mouseData);
@@ -71,7 +75,7 @@ io.on('connection', (socket) => {
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
-    socket.to(socket.room).emit('receive_message', userMessage);
+    socket.broadcast.to(socket.room).emit('receive_message', userMessage);
   });
   /* ----- End of CHATROOM Code ----- */
 

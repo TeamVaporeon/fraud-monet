@@ -13,9 +13,17 @@ import { AppContext } from '../../../App';
 
 import io from 'socket.io-client';
 const socket = io.connect('http://localhost:8080');
-
 // TEMPORARY: Pending identification of how to receive room & usernames
 const username = 'tempUser';
+
+socket.on('connect', () => {
+  const engine = socket.io.engine;
+  console.log(engine.transport.name);
+
+  engine.on('packet', ({type, data}) => {
+    console.log('Type:: ', type, '\nData:: ', data);
+  })
+})
 
 const GameMain = (props) => {
   // if host, const [openUsername, setOpenUsername] = useState(false);
