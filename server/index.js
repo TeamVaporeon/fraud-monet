@@ -31,7 +31,7 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: 'http://localhost:3000',
-  }
+  },
 });
 
 // const pubClient = createClient({ url: 'redis://localhost:6379' });
@@ -45,7 +45,6 @@ const io = new Server(httpServer, {
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
-
   console.log(`Socket Connected With Id: `, socket.id);
   // Join a room based on room id
   socket.on('room', (url) => {
@@ -54,7 +53,7 @@ io.on('connection', (socket) => {
   });
   // Emit handlers
   socket.on('createRoom', (data) => {
-    console.log('CREATE ROOM!!!!!')
+    console.log('CREATE ROOM!!!!!');
     // console.log(socket.handshake.headers.cookie);
     const cookie = socket.handshake.headers.cookie;
     // console.log('SOCKET', socket);
@@ -64,7 +63,7 @@ io.on('connection', (socket) => {
     // data.username
     // data.roomId
     // check/set cookie
-  })
+  });
   socket.on('draw', (mouseData) => {
     // Broadcast mouseData to all connected sockets
     socket.broadcast.to(socket.room).emit('draw', mouseData);
