@@ -24,13 +24,8 @@
     "redis-adapter": "^0.2.0",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
-<<<<<<< HEAD
-    "web-vitals": "^2.1.0",
-    "yarn": "^1.22.17"
-=======
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.0"
->>>>>>> 49791aea61d86de3aca48bb179cb9126b1a22949
   },
   "scripts": {
     "start": "react-scripts start",

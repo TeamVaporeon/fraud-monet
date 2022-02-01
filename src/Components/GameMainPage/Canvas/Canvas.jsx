@@ -9,7 +9,10 @@ const Canvas = (props) => {
   const setup = (p5, canvasParentRef) => {
     const canva = p5.createCanvas(props.width, props.height-100).parent(canvasParentRef);
     p5.background(220);
-
+    const save = p5.createButton('Download').parent(canvasParentRef);
+    save.mouseClicked(() => {
+      p5.saveCanvas(canva, 'our drawing', 'jpg');
+    })
     socket.on('mouse', data => {
       p5.stroke('black');
       p5.strokeWeight(10);
