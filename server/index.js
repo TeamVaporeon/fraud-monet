@@ -20,10 +20,6 @@ app.use(express.static('build'));
 // Room endpoint
 app.use('', router);
 
-const rooms = {
-
-}
-
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
 const redisClient = createClient({ url : 'redis://localhost:6379' })

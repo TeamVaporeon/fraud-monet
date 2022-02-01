@@ -22,43 +22,30 @@ var generateRandString = () => {
 
 var CreateRoom = (props) => {
   const [name, setName] = useState('');
-
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const routeChange = () => {
+    const roomID = generateRandString();
+    socket.emit('createRoom', {
+      username: name,
+      roomID,
+      color: '#000',
+      host: true,
+      fraud: false,
+      role: 'player',
+    })
+    navigate(`/${roomID}`)
+  }
   return (
     <div>
       <form>
         <label>
           Enter Your Username:
-          <input
-            type='text'
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          />
-          <button
-            type='submit'
-            className='start-game-button'
-            text='Create Room'
-            onClick={(e) => {
-              e.preventDefault();
-              var idString = generateRandString();
-              socket.emit('createRoom', {
-                username: name,
-                roomId: idString,
-                color: '#000',
-                host: true,
-                fraud: false,
-                role: 'player',
-              }, () => {
-                navigate(idString);
-              });
-            }}
-          >
+          <input type='text' onChange={(e) => { setName(e.target.value); }} />
+          <button onClick={routeChange} >
             Create Room{' '}
           </button>
         </label>
       </form>
-      <Link to='/play'>Play</Link>
     </div>
   );
 };
