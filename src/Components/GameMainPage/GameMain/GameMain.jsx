@@ -59,10 +59,10 @@ const GameMain = () => {
         </div>
         <div className='game_round'>
           <div>Round: {round}</div>
-          <span>buttons for tests, will delete later</span>
-          <button onClick={() => setRound(round + 1)}>Round+1</button>
-          <button onClick={() => setOpenVote(true)}>Vote:R=3</button>
-          <button onClick={() => setOpenFinal(true)}>FinalRes</button>
+          {/* <span>buttons for tests, will delete later</span> */}
+          <button onClick={() => setRound(round + 1)}>
+            Modal Test Round+1
+          </button>
         </div>
         <div className='game_rules' onClick={() => setOpenRules(true)}>
           Rules
