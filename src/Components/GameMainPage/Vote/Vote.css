@@ -8,7 +8,6 @@
 
 .voteModal {
   background-color: #ea9f4e;
-  /* box-shadow: 0 2px 20px #e0e4ec; */
   position: fixed;
   top: 0;
   right: 0;
@@ -33,5 +32,16 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.voteContainer .voteForm {
+  align-self: stretch;
+}
+
+.voteForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
