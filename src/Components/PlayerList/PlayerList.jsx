@@ -13,6 +13,8 @@ class PlayerList extends React.Component {
       spectatorsList : []
     }
     this.sortLobby = this.sortLobby.bind(this);
+    this.joinTest = this.joinTest.bind(this);
+    this.startTest = this.startTest.bind(this);
   }
 
   componentDidMount() {
@@ -28,6 +30,14 @@ class PlayerList extends React.Component {
       spectatorsList : specArr,
       host : hostArr
     })
+  }
+
+  joinTest() {
+    console.log('I joined the game!');
+  }
+
+  startTest() {
+    console.log('Game Started!');
   }
 
   render() {
@@ -46,7 +56,7 @@ class PlayerList extends React.Component {
               <div style={{ background: player.color}}>{player.username}</div>
             </div>)}
           </div>
-          <h3>Spectators:</h3>
+          <h3 className="spec-title">Spectators:</h3>
           <div className="just-specs">
             {this.state.spectatorsList.map((spec, index) =>
             <div className="each-spectator" key={index}>
@@ -60,8 +70,8 @@ class PlayerList extends React.Component {
             <div>Number of Spectators: {this.state.spectatorsList.length}</div>
           </div>
           <div className="join-start-buttons">
-            <Button variant="success" size="sm">Join</Button>
-            <Button variant="success" size="sm">Start</Button>
+            <Button onClick={this.joinTest} variant="success" size="sm">Join</Button>
+            <Button onClick={this.startTest} variant="success" size="sm">Start</Button>
           </div>
         </div>
       </div>

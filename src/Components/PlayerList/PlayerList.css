@@ -40,7 +40,6 @@
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  /* border: 2px solid white */
 }
 
 .just-specs::-webkit-scrollbar {
@@ -64,4 +63,17 @@
 
 .players-list {
   max-height: 520px;
+}
+
+.players-spec-count {
+  font-weight: 400;
+}
+
+.player-title {
+  margin-top: 5%;
+  font-size: 20px;
+}
+
+.spec-title {
+  font-size: 20px;
 }
