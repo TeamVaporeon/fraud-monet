@@ -121,12 +121,6 @@ function App() {
         <header className='App-header'></header>
         <GameMain />
       </div>
-<<<<<<< HEAD
-      {/* {console.log(dummyData)}
-      {console.log(users)} */}
-=======
-      {/* {console.log(users)} */}
->>>>>>> main
     </AppContext.Provider>
   );
 }
