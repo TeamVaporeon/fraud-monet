@@ -1,9 +1,7 @@
 import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
-import makeRoomData from './mock-data.js';
 import { useState, createContext, useEffect } from 'react';
 import io from 'socket.io-client';
-import axios from 'axios';
 import { hostSocket } from './Components/CreateRoom';
 
 export const AppContext = createContext();
@@ -33,6 +31,7 @@ function App() {
   );
   const [currentUser, setCurrentUser] = useState({});
   const [availColors, setAvailColors] = useState(colors);
+  const [gameStarted, setStart] = useState(false);
 
   if (hostSocket.id) {
     socket = hostSocket;
@@ -47,31 +46,26 @@ function App() {
     setUsers(newUsers);
   });
 
-  const [playerUsername, setPlayerUsername] = useState('');
-
-  const dummyData = makeRoomData();
-
   useEffect(() => {
     setCurrentUser(
       socket.auth && socket.auth.user
         ? socket.auth.user
         : {
-          username: null,
-          roomID: null,
-          color: '#000',
-          host: false,
-          fraud: false,
-          role: 'spectator',
-          score: 0,
-          id: null,
-        }
+            username: null,
+            roomID: null,
+            color: '#000',
+            host: false,
+            fraud: false,
+            role: 'spectator',
+            score: 0,
+            id: null,
+          }
     );
   }, [users]);
 
   return (
     <AppContext.Provider
       value={{
-        dummyData,
         round,
         setRound,
         socket,
@@ -79,13 +73,14 @@ function App() {
         setUsers,
         currentUser,
         availColors,
+        setStart,
+        gameStarted,
       }}
     >
       <div className='App'>
         <header className='App-header'></header>
         <GameMain />
       </div>
-      {console.log(dummyData)}
       {console.log(users)}
     </AppContext.Provider>
   );

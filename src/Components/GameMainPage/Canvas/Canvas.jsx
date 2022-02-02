@@ -5,15 +5,16 @@ import { AppContext } from '../../../App';
 import './Canvas.css';
 
 const Canvas = (props) => {
-
-  const { socket } = useContext(AppContext);
+  const { socket, gameStarted } = useContext(AppContext);
 
   const setup = (p5, canvasParentRef) => {
-    const canva = p5.createCanvas(props.width, props.height - 100).parent(canvasParentRef);
+    const canva = p5
+      .createCanvas(props.width, props.height - 100)
+      .parent(canvasParentRef);
     p5.background(220);
 
     canva.id('sketchpad');
-    
+
     const save = p5.createButton('Download').parent(canvasParentRef);
     save.mouseClicked(() => {
       p5.saveCanvas(canva, 'our drawing', 'jpg');
