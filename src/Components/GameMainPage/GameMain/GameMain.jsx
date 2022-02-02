@@ -15,7 +15,7 @@ import { hostSocket } from '../../CreateRoom';
 
 const GameMain = () => {
   const ref = useRef(null);
-  const { round, setRound, socket, users, dummyData } = useContext(AppContext);
+  const { round, setRound, socket, users, currentUser } = useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(() => {
     if (hostSocket.id) {
@@ -44,11 +44,7 @@ const GameMain = () => {
       ) : null}
       {openFinal ? <FinalResultsModal setOpenFinal={setOpenFinal} /> : null}
       {openVote ? (
-        <Vote
-          setOpenVote={setOpenVote}
-          setOpenResults={setOpenResults}
-          dummyData={dummyData}
-        />
+        <Vote setOpenVote={setOpenVote} setOpenResults={setOpenResults} />
       ) : null}
       {openResults ? (
         <ResultsModal
@@ -85,7 +81,7 @@ const GameMain = () => {
           ) : null}
         </div>
         <div className='game_chat'>
-          <Chat socket={socket} />
+          <Chat socket={socket} currentUser={currentUser} />
         </div>
       </div>
     </div>

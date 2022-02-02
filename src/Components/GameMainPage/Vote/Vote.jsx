@@ -3,11 +3,11 @@ import React, { useState, createContext, useEffect, useContext } from 'react';
 import './Vote.css';
 import { AppContext } from '../../../App';
 
-const Vote = ({ setOpenVote, setOpenResults, dummyData }) => {
+const Vote = ({ setOpenVote, setOpenResults }) => {
   const { users } = useContext(AppContext);
   const [players, setPlayers] = useState(() => {
     // return users
-    return dummyData.viewers
+    return users
       .filter((user) => {
         return user.role === 'player';
       })
