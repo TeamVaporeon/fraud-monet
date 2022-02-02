@@ -56,6 +56,8 @@ function App() {
         <header className='App-header'></header>
         <GameMain dummyData={dummyData} actualData={users} />
       </div>
+      {console.log(dummyData)}
+      {console.log(users)}
     </AppContext.Provider>
   );
 }
