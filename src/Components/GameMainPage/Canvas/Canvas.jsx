@@ -1,18 +1,23 @@
 import React, {useState, useEffect} from 'react';
 import Sketch from 'react-p5';
 import { io } from 'socket.io-client';
+import { AppContext } from '../../../App.jsx';
 
 const Canvas = (props) => {
 
   const socket = io.connect('http://127.0.0.1:8080');
 
   const setup = (p5, canvasParentRef) => {
-    const canva = p5.createCanvas(props.width, props.height-100).parent(canvasParentRef);
+
+    const canva = p5.createCanvas(props.thingy.offsetWidth, props.thingy.offsetHeight-100).parent(canvasParentRef);
     p5.background(220);
-    const save = p5.createButton('Download').parent(canvasParentRef);
+
+    const save = p5.createButton('Download Drawing').parent(canvasParentRef);
+
     save.mouseClicked(() => {
       p5.saveCanvas(canva, 'our drawing', 'jpg');
     })
+
     socket.on('mouse', data => {
       p5.stroke('black');
       p5.strokeWeight(10);
@@ -38,10 +43,12 @@ const Canvas = (props) => {
   }
 
   const windowResized = p5 => {
-    p5.resizeCanvas(props.width, props.height-100);
+    console.log(props.actualData);
+    p5.resizeCanvas(props.thingy.offsetWidth, props.thingy.offsetHeight-100)
+    p5.background(220);
   }
 
-  return <Sketch setup={setup} draw={draw} mouseDragged={mouseDragged} windowRezied={windowResized}/>
+  return <Sketch setup={setup} draw={draw} mouseDragged={mouseDragged} windowResized={windowResized}/>
 }
 
 export default Canvas;
