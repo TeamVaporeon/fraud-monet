@@ -28,7 +28,7 @@ const Chat = ({ socket }) => {
       setMessageList((list) => [...list, receivedMessage]);
     });
     socket.on('user_object', (user) => {
-      setUsername(user.name);
+      setUsername(user.username);
     });
   }, [socket]);
 
