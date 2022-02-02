@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import React, { useState, useEffect } from 'react';
 import Sketch from 'react-p5';
 import { io } from 'socket.io-client';
