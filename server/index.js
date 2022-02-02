@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
         rooms[socket.room] = {
           category: '',
           prompt: '',
-          colors: defaultColors,
+          colors: Object.assign({}, defaultColors),
         };
         socket.emit('start', rooms[socket.room]);
       }
