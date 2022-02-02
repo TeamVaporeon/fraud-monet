@@ -26,7 +26,9 @@ const PlayerList = () => {
   const update = (e, role) => {
     setColorModal(false);
     currentUser.role = role;
-    currentUser.color = e.target.attributes.color.value;
+    if (e.target.attributes.color.value !== '#000') {
+      currentUser.color = e.target.attributes.color.value;
+    }
     currentUser.id = socket.id;
     socket.emit('update', currentUser);
   };
@@ -39,9 +41,24 @@ const PlayerList = () => {
     kickedPlayer[0].role = 'spectator';
     socket.emit('update', kickedPlayer[0]);
   };
+  // const kick = (e) => {
+  //   setColorModal(false);
+  //   let kickedPlayer = users.filter(
+  //     (player) => player.id === e.target.attributes.playerId.value
+  //   );
+  //   console.log(kickedPlayer[0]);
+  //   kickedPlayer[0].role = 'spectator';
+  //   socket.emit('update', kickedPlayer[0]);
+  // };
+
+  // const claim = () => {
+  //   currentUser.host = true;
+  //   socket.emit('update', currentUser);
+  // };
 
   return (
     <>
+      {/* <button onClick={claim}>Claim Host</button> */}
       <div className='total-game-list'>
         <div className='players-list'>
           <h3 className='player-title'>Players:</h3>
@@ -84,25 +101,55 @@ const PlayerList = () => {
           </div>
           <Stack className="join-start-buttons" direction="horizontal" gap={2}>
             {currentUser.role === 'spectator' ? (
-            <Button onClick={() => setColorModal(true)} variant='success' size="sm">Join</Button>):
-            (<Button variant="success" size="sm" disabled>Join</Button>)}
-            {currentUser.host ?
-            (<Button onClick={handleStart} variant='success' size="sm">Start</Button>) : null}
-          </Stack>
-          {colorModal ?
-          (<div className='colorModal'>
-              {availColors.map((color) => {
-                return (
+              <Button Button onClick={() => setColorModal(true)} variant='success' size="sm">
+                Join
+              </Button>
+            ) : (
+              <Button variant="success" size="sm" disabled>Join</Button>
+            )}
+            {currentUser.host ? (
+              <Button onClick={handleStart} variant='success' size="sm">
+                Start
+              </Button>
+            ) : null}
+            </Stack>
+          </div>
+          {colorModal ? (
+            <div className='colorModal'>
+              {Object.keys(availColors).map((color) => {
+                return availColors[color] ? (
                   <svg width='20' height='20'>
                     <rect
                       width='20'
                       height='20'
                       color={color}
-                      style={{ fill: color, cursor: 'pointer' }}
+                      style={{
+                        fill: color,
+                        stroke: 'darkslategray',
+                        strokeWidth: 2,
+                        cursor: 'pointer',
+                      }}
                       onClick={(e) => update(e, 'player')}
                     ></rect>
-                  </svg>)})}
-            </div>) : null}
+                  </svg>
+                ) : (
+                  <svg width='20' height='20'>
+                    <rect
+                      width='20'
+                      height='20'
+                      color={color}
+                      style={{
+                        fill: color,
+                        opacity: '30%',
+                        stroke: 'darkslategray',
+                        strokeWidth: 2,
+                      }}
+                    ></rect>
+                  </svg>
+                );
+              })}
+            </div>
+          ) : null}
         </div>
       </div>
     </>
