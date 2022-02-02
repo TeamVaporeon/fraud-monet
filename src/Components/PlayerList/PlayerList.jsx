@@ -23,12 +23,6 @@ const PlayerList = () => {
     }
   }, [users]);
 
-  // const joinTest = (e) => {
-  //   e.preventDefault();
-  //   console.log('I joined the game!');
-  // }
-
-  // const join = (e) => {
   const update = (e, role) => {
     setColorModal(false);
     currentUser.role = role;
@@ -37,18 +31,14 @@ const PlayerList = () => {
     socket.emit('update', currentUser);
   };
 
-  // const startTest = (e) => {
-  //   e.preventDefault();
-  //   console.log('Game Started!');
-  // }
-  // const kick = (e) => {
-  //   let kickedPlayer = users.filter(
-  //     (player) => player.id === e.target.attributes.playerId.value
-  //   );
-  //   console.log(kickedPlayer[0]);
-  //   kickedPlayer[0].role = 'spectator';
-  //   socket.emit('update', kickedPlayer[0]);
-  // };
+  const kick = (e) => {
+    let kickedPlayer = users.filter(
+      (player) => player.id === e.target.attributes.playerId.value
+    );
+    console.log(kickedPlayer[0]);
+    kickedPlayer[0].role = 'spectator';
+    socket.emit('update', kickedPlayer[0]);
+  };
 
   return (
     <>
@@ -56,69 +46,48 @@ const PlayerList = () => {
         <div className='players-list'>
           <h3 className='player-title'>Players:</h3>
           <div className='just-players'>
-            {players
-              ? players.map((player, index) => (
-                  <div className='each-player' key={index}>
-                    <div style={{ background: player.color }}>
-                      <span>
-                        {`${player.username} ${player.host ? '👑' : ''}`}
-                      </span>
-                      {player.id === currentUser.id ? (
-                        <span
+            {players ? players.map((player) =>
+              (<div className='each-player' key={player.id}>
+                <div style={{ background: player.color }}>
+                  <span>
+                    {`${player.username} ${player.host ? '👑' : ''}`}
+                  </span>
+                    {player.id === currentUser.id ?
+                        (<span
                           onClick={(e) => update(e, 'spectator')}
                           color='#000'
-                          style={{ float: 'right', marginRight: '5px' }}
-                        >
-                          ❌
-                        </span>
-                      ) : currentUser.host ? (
-                        <span
-                          // onClick={kick}
+                          style={{ float: 'right', marginRight: '5px' }}>❌
+                        </span>) : currentUser.host ?
+                          (<span
+                          onClick={kick}
                           playerId={player.id}
-                          style={{ float: 'right', marginRight: '5px' }}
-                        >
-                          ❌
-                        </span>
-                      ) : null}
+                          style={{ float: 'right', marginRight: '5px' }}>❌
+                        </span>) : null}
                     </div>
-                  </div>
-                ))
-              : null}
+                </div>)): null}
           </div>
           <h3 className='spec-title'>Spectators:</h3>
           <div className='just-specs'>
-            {spectators
-              ? spectators.map((spec, index) => (
-                  <div className='each-spectator' key={index}>
-                    <div>{spec.username}</div>
-                  </div>
-                ))
-              : null}
+            {spectators ? spectators.map((spec, index) =>
+            (<div className='each-spectator' key={index}>
+              <div>{spec.username}</div>
+            </div>)): null}
           </div>
         </div>
         <div className='playercount-and-buttons'>
           <div className='players-spec-count'>
             <div>Players in Game: {players ? players.length : 0}/10</div>
-            <div>
-              Number of Spectators: {spectators ? spectators.length : 0}
-            </div>
+            <div>Number of Spectators: {spectators ? spectators.length : 0}</div>
           </div>
           <Stack className="join-start-buttons" direction="horizontal" gap={2}>
             {currentUser.role === 'spectator' ? (
-              <Button onClick={() => setColorModal(true)} variant='success'>
-                Join
-              </Button>
-            ) : (
-              <Button variant="success" size="sm" disabled>Join</Button>
-            )}
-            {currentUser.host ? (
-              <Button onClick={handleStart} variant='success'>
-                Start
-              </Button>
-            ) : null}
-            </Stack>
-          {colorModal ? (
-            <div className='colorModal'>
+            <Button onClick={() => setColorModal(true)} variant='success' size="sm">Join</Button>):
+            (<Button variant="success" size="sm" disabled>Join</Button>)}
+            {currentUser.host ?
+            (<Button onClick={handleStart} variant='success' size="sm">Start</Button>) : null}
+          </Stack>
+          {colorModal ?
+          (<div className='colorModal'>
               {availColors.map((color) => {
                 return (
                   <svg width='20' height='20'>
@@ -129,11 +98,8 @@ const PlayerList = () => {
                       style={{ fill: color }}
                       onClick={(e) => update(e, 'player')}
                     ></rect>
-                  </svg>
-                );
-              })}
-            </div>
-          ) : null}
+                  </svg>)})}
+            </div>) : null}
         </div>
       </div>
     </>
@@ -141,11 +107,3 @@ const PlayerList = () => {
 };
 
 export default PlayerList;
-
-{/* <Button variant="success" size="sm" disabled>Join</Button> */}
-{/* <Button variant="success" size="sm" disabled>Start</Button>  */}
-
-{/* <Stack className="join-start-buttons" direction="horizontal" gap={2}>
-<Button onClick={joinTest} variant="success" size="sm">Join</Button>
-<Button onClick={null} variant="success" size="sm">Start</Button>
-</Stack> */}
