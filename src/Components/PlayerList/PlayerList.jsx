@@ -115,7 +115,7 @@ const PlayerList = () => {
                       width='20'
                       height='20'
                       color={color}
-                      style={{ fill: color }}
+                      style={{ fill: color, cursor: 'pointer' }}
                       onClick={(e) => update(e, 'player')}
                     ></rect>
                   </svg>
