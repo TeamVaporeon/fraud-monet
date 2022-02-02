@@ -55,10 +55,13 @@ io.use((socket, next) => {
 
   if (sessionID) {
     const session = sessionStore.findSession(sessionID);
+    console.log('SESSION', session);
     if (session) {
       socket.sessionID = sessionID;
-      socket.userID = session.username;
-      socket.username = session.username;
+      socket.userID = session.userID;
+      socket.username = session.username
+      socket.emit('user_object', user);
+      console.log('IN SESSION SOCKET', socket);
       return next();
     }
   }
@@ -76,7 +79,6 @@ io.use((socket, next) => {
       console.error(err);
     }
   }
-
   hashIDs();
   socket.username = username;
   socket.user = user;
@@ -86,45 +88,19 @@ io.use((socket, next) => {
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
-
-  sessionStore.saveSession(socket.sessionID, socket.handshake.auth.user);
-
-  // Initializing
   console.log(`Socket Connected With Id: `, socket.id);
-  let sessionUsers = [];
   let users = [];
-
-  // Persist Session
-  console.log(sessionStore);
-  // sessionStore.findAllSessions().forEach(session => {
-  //   sessionUsers.push({
-  //     userID: session.userID,
-  //     username: session.username,
-  //     connected: session.connected,
-  //   });
-  // });
-
-  // io.to(socket.room).emit('user connected', {
-  //   userID: socket.userID,
-  //   username: socket.username,
-  //   user: socket.handshake.auth.user,
-  //   connected: true,
-  // });
 
   // Print any event received by Client
   socket.onAny((e, ...args) => {
     console.log(e, args);
+    console.log(sessionStore);
   });
-
 
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
     socket.room = url;
     socket.join(socket.room);
-    socket.emit('session', {
-      sessionID: socket.sessionID,
-      userID: socket.userID
-    });
 
     let userSockets = await io.in(socket.room).fetchSockets();
     userSockets.forEach(sock => {
@@ -139,6 +115,13 @@ io.on('connection', (socket) => {
       socket.emit('user_object', socket.user);
     };
     socket.emit('connected');
+
+    // Session emitter
+    sessionStore.saveSession(socket.sessionID, socket.handshake.auth.user);
+    socket.emit('session', {
+      sessionID: socket.sessionID,
+      userID: socket.userID
+    });
   });
 
   // Emit handlers
@@ -162,7 +145,7 @@ io.on('connection', (socket) => {
       sessionStore.saveSession(socket.sessionID, {
         userID: socket.userID,
         username: socket.username,
-        connected: false
+        connected: false,
       })
     }
     console.log(`${socket.id} disconnected`);

@@ -32,24 +32,27 @@ function App() {
   });
 
   socket.on('session', ({ sessionID, userID }) => {
-    console.log('client session');
-    // console.log('CLIENT SESSION', sessionID, userID);
-    // socket.auth.sessionID = sessionID;
-    // localStorage.setItem('sessionID', sessionID);
+    console.log(socket);
+    socket.auth.sessionID = sessionID;
+    localStorage.setItem('sessionID', sessionID);
+    socket.userID = userID;
+    socket.auth.userID = userID;
   })
 
   function checkForSession() {
     const sessionID = localStorage.getItem('sessionID');
     console.log(sessionID);
     if (sessionID) {
-      console.log(socket.auth);
-      // socket.auth.sessionID = sessionID;
-      // socket.connect();
+      console.log(socket);
+      socket.auth.sessionID = sessionID;
+      socket.connect();
     }
   }
-  checkForSession();
 
   const dummyData = makeRoomData();
+  useEffect(() => {
+    checkForSession();
+  }, [])
 
   useEffect(() => {
     setCurrentUser(
