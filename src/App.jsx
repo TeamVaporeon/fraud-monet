@@ -1,9 +1,7 @@
 import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
-import makeRoomData from './mock-data.js';
 import { useState, createContext, useEffect } from 'react';
 import io from 'socket.io-client';
-import axios from 'axios';
 import { hostSocket } from './Components/CreateRoom';
 
 export const AppContext = createContext();
