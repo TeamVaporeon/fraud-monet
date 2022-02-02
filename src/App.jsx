@@ -20,6 +20,22 @@ function App() {
   );
   const [currentUser, setCurrentUser] = useState({});
 
+  if (hostSocket.id) {
+    socket = hostSocket;
+  }
+
+  socket.on('users', (userList) => {
+    setUsers(userList);
+  });
+
+  socket.on('newUser', (newUsers) => {
+    setUsers(newUsers);
+  });
+
+  const [playerUsername, setPlayerUsername] = useState('');
+
+  const dummyData = makeRoomData();
+
   useEffect(() => {
     setCurrentUser(
       socket.auth && socket.auth.user
@@ -36,29 +52,6 @@ function App() {
     );
   }, [socket.auth]);
 
-  if (hostSocket.id) {
-    socket = hostSocket;
-  }
-
-  socket.on('users', (userList) => {
-    setUsers(userList);
-  });
-
-  socket.on('newUser', (newUsers) => {
-    setUsers(newUsers);
-  });
-  const dummyData = makeRoomData();
-
-  // Initial 0; after clicked Start, 1; after first vote, 2; after second vote, 3 >> Game End, Show result modal
-
-  useEffect(() => {
-    axios
-      .get(`/host${window.location.pathname}`)
-      .then((res) => {
-        setUsers(res.data);
-      })
-      .catch((err) => console.log(err.message));
-  }, []);
   return (
     <AppContext.Provider
       value={{
@@ -73,8 +66,10 @@ function App() {
     >
       <div className='App'>
         <header className='App-header'></header>
-        <GameMain dummyData={dummyData} actualData={users} />
+        <GameMain />
       </div>
+      {console.log(dummyData)}
+      {console.log(users)}
     </AppContext.Provider>
   );
 }
