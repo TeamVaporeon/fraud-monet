@@ -1,6 +1,7 @@
 /* ----- CHAT ----- */
 .chat-container {
-  height: 50vh;
+  /* height: 50vh; */
+  height: 100%;
   width: 100%;
 }
 .chat-container p {
@@ -23,7 +24,7 @@
 .chat-container .chat-body {
   background: #fff;
   border: 1px solid #263238;
-  height: calc(50vh - (45px + 40px));
+  height: calc(100% - (45px + 40px));
   position: relative;
 }
 .chat-container .chat-body .message-container {
@@ -37,8 +38,8 @@
 }
 .chat-container .chat-body .message {
   display: flex;
-  /* flex-direction: column; */
-  flex-wrap: wrap;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
   height: auto;
   padding: 10px;
 }
@@ -51,7 +52,8 @@
   height: auto;
   margin-left: 5px;
   margin-right: 5px;
-  max-width: 120px;
+  min-width: 50px;
+  max-width: fit-content;
   min-height: 25px;
   padding-left: 5px;
   padding-right: 5px;
@@ -75,6 +77,7 @@
 #other .message-content {
   justify-content: flex-end;
   background-color: cornflowerblue;
+  margin-left: auto;
 }
 #other .message-meta {
   justify-content: flex-end;
