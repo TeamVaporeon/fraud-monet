@@ -19,25 +19,6 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
   const [players, setPlayers] = useState(fakePlayers);
   const [pick, setPick] = useState('');
 
-  const chkcontrol = (j) => {
-    let total = 0;
-    for (let i = 0; i < document.voteForm.ckb.length; i++) {
-      if (document.voteForm.ckb[i].checked) {
-        total = total + 1;
-      }
-    }
-    if (total > 1) {
-      alert('Please Select Only One Player');
-      document.voteForm.ckb[j].checked = false;
-      return false;
-    } else {
-      if (document.voteForm.ckb[j].checked === true) {
-        const value = document.voteForm.ckb[j].value;
-        setPick(value);
-      }
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     /*---send pick to somewhere to count score---*/
@@ -50,18 +31,18 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
     <div className='voteModal'>
       <div className='voteContainer'>
         <h3>Vote</h3>
-        <form className='voteForm' name='voteForm' method='post'>
+        <form className='voteForm'>
           {players.map((player, i) => (
             <label>
               {player}
               <input
                 className='ckb'
-                type='checkbox'
+                type='radio'
                 name='ckb'
                 value={player}
                 id={player}
                 onClick={() => {
-                  chkcontrol(i);
+                  setPick(player);
                 }}
               />
             </label>
@@ -76,7 +57,6 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
           >
             Submit
           </button>
-          {/* <button onClick={() => setOpenVote(false)}>X</button> */}
         </div>
       </div>
     </div>
