@@ -44,7 +44,11 @@ const GameMain = () => {
       ) : null}
       {openFinal ? <FinalResultsModal setOpenFinal={setOpenFinal} /> : null}
       {openVote ? (
-        <Vote setOpenVote={setOpenVote} setOpenResults={setOpenResults} />
+        <Vote
+          setOpenVote={setOpenVote}
+          setOpenResults={setOpenResults}
+          dummyData={dummyData}
+        />
       ) : null}
       {openResults ? (
         <ResultsModal
