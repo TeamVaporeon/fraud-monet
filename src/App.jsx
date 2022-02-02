@@ -8,6 +8,19 @@ import { hostSocket } from './Components/CreateRoom';
 
 export const AppContext = createContext();
 
+const colors = [
+  '#FFCCEB', // 'Cotton Candy',
+  '#DF6770', // 'Candy Pink',
+  '#EA9F4E', // 'Sandy Brown',
+  '#FBE89B', // 'Green Yellow Crayola',
+  '#B9E49F', // 'Granny Smith Apple',
+  '#73E5DA', // 'Turquoise',
+  '#94B1E9', // 'Wild Blue Yonder',
+  '#AE97CD', // 'Wisteria',
+  '#D9ABD6', // 'Lilac',
+  '#A9B3BF', // 'Cadet Blue Crayola',
+];
+
 var socket = io({
   withCredentials: true,
   autoConnect: false,
@@ -19,12 +32,14 @@ function App() {
     hostSocket.id ? [hostSocket.auth.user] : []
   );
   const [currentUser, setCurrentUser] = useState({});
+  const [availColors, setAvailColors] = useState(colors);
 
   if (hostSocket.id) {
     socket = hostSocket;
   }
 
   socket.on('users', (userList) => {
+    console.log('updated users');
     setUsers(userList);
   });
 
@@ -48,9 +63,10 @@ function App() {
             fraud: false,
             role: 'spectator',
             score: 0,
+            id: null,
           }
     );
-  }, [socket.auth]);
+  }, [users]);
 
   return (
     <AppContext.Provider
@@ -62,6 +78,7 @@ function App() {
         users,
         setUsers,
         currentUser,
+        availColors,
       }}
     >
       <div className='App'>
