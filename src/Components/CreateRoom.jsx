@@ -37,9 +37,7 @@ var CreateRoom = (props) => {
       }
     };
     const sessionID = localStorage.getItem('sessionID');
-    console.log(sessionID);
     if (sessionID) {
-      console.log();
       hostSocket.auth.sessionID = sessionID;
     }
     hostSocket.connect();

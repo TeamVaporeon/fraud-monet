@@ -49,19 +49,16 @@ const io = new Server(httpServer, {
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
   user.id = socket.id;
-  const cookies = socket.handshake.headers.cookie;
-  const s = cookie.parse(cookies);
-  const sessionID = s.sessionid;
+  const sessionID = socket.handshake.auth.sessionID;
 
   if (sessionID) {
     const session = sessionStore.findSession(sessionID);
-    console.log('SESSION', session);
+
     if (session) {
       socket.sessionID = sessionID;
       socket.userID = session.userID;
       socket.username = session.username
       socket.emit('user_object', user);
-      console.log('IN SESSION SOCKET', socket);
       return next();
     }
   }

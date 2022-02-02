@@ -42,7 +42,7 @@ function App() {
   function checkForSession() {
     const sessionID = localStorage.getItem('sessionID');
     console.log(sessionID);
-    if (sessionID) {
+    if (sessionID && socket.auth) {
       console.log(socket);
       socket.auth.sessionID = sessionID;
       socket.connect();
@@ -50,9 +50,10 @@ function App() {
   }
 
   const dummyData = makeRoomData();
+
   useEffect(() => {
     checkForSession();
-  }, [])
+  }, [socket.auth])
 
   useEffect(() => {
     setCurrentUser(
@@ -68,7 +69,7 @@ function App() {
             score: 0,
           }
     );
-  }, [socket.auth]);
+  }, [users]);
 
   return (
     <AppContext.Provider
