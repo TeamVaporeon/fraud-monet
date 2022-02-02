@@ -4,12 +4,14 @@ import Button from 'react-bootstrap/Button';
 import { AppContext } from '../../App';
 
 const PlayerList = () => {
-  const { users, currentUser, socket, availColors } = useContext(AppContext);
+  const { users, currentUser, socket, availColors, setStart } =
+    useContext(AppContext);
   const [players, setPlayers] = useState(null);
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
 
   const handleStart = (e) => {
+    setStart(true);
     socket.emit('start');
   };
 
@@ -20,13 +22,22 @@ const PlayerList = () => {
     }
   }, [users]);
 
-  const join = (e) => {
+  const update = (e, role) => {
     setColorModal(false);
-    currentUser.role = 'player';
+    currentUser.role = role;
     currentUser.color = e.target.attributes.color.value;
     currentUser.id = socket.id;
     socket.emit('update', currentUser);
   };
+
+  // const kick = (e) => {
+  //   let kickedPlayer = users.filter(
+  //     (player) => player.id === e.target.attributes.playerId.value
+  //   );
+  //   console.log(kickedPlayer[0]);
+  //   kickedPlayer[0].role = 'spectator';
+  //   socket.emit('update', kickedPlayer[0]);
+  // };
 
   return (
     <>
@@ -38,7 +49,26 @@ const PlayerList = () => {
               ? players.map((player, index) => (
                   <div className='each-player' key={index}>
                     <div style={{ background: player.color }}>
-                      {`${player.username} ${player.host ? '👑' : ''}`}
+                      <span>
+                        {`${player.username} ${player.host ? '👑' : ''}`}
+                      </span>
+                      {player.id === currentUser.id ? (
+                        <span
+                          onClick={(e) => update(e, 'spectator')}
+                          color='#000'
+                          style={{ float: 'right', marginRight: '5px' }}
+                        >
+                          ❌
+                        </span>
+                      ) : currentUser.host ? (
+                        <span
+                          // onClick={kick}
+                          playerId={player.id}
+                          style={{ float: 'right', marginRight: '5px' }}
+                        >
+                          ❌
+                        </span>
+                      ) : null}
                     </div>
                   </div>
                 ))
@@ -71,7 +101,7 @@ const PlayerList = () => {
               <Button disabled>Join</Button>
             )}
             {currentUser.host ? (
-              <Button onClick={handleStart} variant='success' size='sm'>
+              <Button onClick={handleStart} variant='success'>
                 Start
               </Button>
             ) : null}
@@ -86,7 +116,7 @@ const PlayerList = () => {
                       height='20'
                       color={color}
                       style={{ fill: color }}
-                      onClick={join}
+                      onClick={(e) => update(e, 'player')}
                     ></rect>
                   </svg>
                 );
