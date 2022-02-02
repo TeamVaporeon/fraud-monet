@@ -7,6 +7,18 @@ const cookieParser = require('cookie-parser');
 const cookie = require('cookie');
 const editFile = require('edit-json-file');
 const rooms = {};
+const defaultColors = {
+  '#FFCCEB': true,
+  '#DF6770': true,
+  '#EA9F4E': true,
+  '#FBE89B': true,
+  '#B9E49F': true,
+  '#73E5DA': true,
+  '#94B1E9': true,
+  '#AE97CD': true,
+  '#D9ABD6': true,
+  '#A9B3BF': true
+};
 
 // Data JSON File
 var file = editFile(path.join(__dirname, 'data.json'));
@@ -67,6 +79,14 @@ io.on('connection', (socket) => {
     socket.emit('users', users);
     socket.broadcast.to(socket.room).emit('newUser', users);
     if (socket.user.host) {
+      if (!rooms[socket.room]) {
+        rooms[socket.room] = {
+          category: '',
+          prompt: '',
+          colors: defaultColors
+        };
+      };
+      console.log(rooms);
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
