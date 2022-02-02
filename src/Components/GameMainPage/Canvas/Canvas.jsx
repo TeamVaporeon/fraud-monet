@@ -69,7 +69,6 @@ const Canvas = ({thingy}) => {
   const mouseDragged = (p5) => {
     //draw and emitting functions
     if (userWithId && userWithId.id === users[p5.getItem('turn')].id && gameStarted) {
-      console.log(p5.getItem('turn'));
       var data = {
         x: p5.mouseX,
         y: p5.mouseY,
@@ -82,7 +81,6 @@ const Canvas = ({thingy}) => {
       p5.strokeWeight(10);
       p5.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
     } else if (!gameStarted) {
-      console.log('game not started');
       var data = {
         x: p5.mouseX,
         y: p5.mouseY,
