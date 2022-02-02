@@ -52,35 +52,6 @@ function App() {
     );
   }, [socket.auth]);
 
-  if (hostSocket.id) {
-    socket = hostSocket;
-  }
-
-  socket.on('session', ({ sessionID, userID }) => {
-    socket.auth.user.sessionID = { sessionID };
-    localStorage.setItem('sessionID', sessionID);
-    socket.userID = userID;
-    console.log(localStorage);
-  })
-
-  socket.on('users', (userList) => {
-    setUsers(userList);
-  });
-
-  socket.on('newUser', (newUsers) => {
-    setUsers(newUsers);
-  });
-
-  // Initial 0; after clicked Start, 1; after first vote, 2; after second vote, 3 >> Game End, Show result modal
-
-  useEffect(() => {
-    axios
-      .get(`/host${window.location.pathname}`)
-      .then((res) => {
-        setUsers(res.data);
-      })
-      .catch((err) => console.log(err.message));
-  }, []);
   return (
     <AppContext.Provider
       value={{

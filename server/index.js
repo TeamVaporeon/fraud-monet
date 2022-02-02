@@ -60,7 +60,10 @@ const io = new Server(httpServer, {
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
   user.id = socket.id;
-  const sessionID = socket.handshake.auth.user.sessionID;
+  // const sessionID = socket.handshake.headers
+  const cookies = cookie.parse(socket.handshake.headers)
+  console.log(cookies);
+  const sessionID = cookies.sessionid;
   if (sessionID) {
     const session = sessionStore.findSession(sessionID);
     if (session) {
