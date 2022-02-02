@@ -47,10 +47,6 @@ function App() {
     setUsers(newUsers);
   });
 
-  const [playerUsername, setPlayerUsername] = useState('');
-
-  const dummyData = makeRoomData();
-
   useEffect(() => {
     setCurrentUser(
       socket.auth && socket.auth.user
@@ -71,7 +67,6 @@ function App() {
   return (
     <AppContext.Provider
       value={{
-        dummyData,
         round,
         setRound,
         socket,
@@ -85,7 +80,6 @@ function App() {
         <header className='App-header'></header>
         <GameMain />
       </div>
-      {console.log(dummyData)}
       {console.log(users)}
     </AppContext.Provider>
   );
