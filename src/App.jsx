@@ -1,5 +1,3 @@
-/*eslint-disable no-unused-vars*/
-
 import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
 import makeRoomData from './mock-data.js';
@@ -17,34 +15,44 @@ function App() {
 
   const socket = io({
     withCredentials: true,
-    autoConnect: false
+    autoConnect: false,
   });
   socket.on('users', (users) => {
     console.log('FRONT USERS', users);
   });
   socket.on('newUser', (user) => {
     console.log('New User:', user);
-  })
+  });
   const dummyData = makeRoomData();
   const [playerUsername, setPlayerUsername] = useState('');
 
   // Initial 0; after clicked Start, 1; after first vote, 2; after second vote, 3 >> Game End, Show result modal
 
   useEffect(() => {
-    axios.get(`/host${window.location.pathname}`)
-      .then(res => {
+    axios
+      .get(`/host${window.location.pathname}`)
+      .then((res) => {
         setUsers(res.data);
       })
-      .catch(err => console.log(err.message));
-  }, [])
+      .catch((err) => console.log(err.message));
+  }, []);
 
   return (
     <AppContext.Provider
-      value={{ dummyData, playerUsername, setPlayerUsername, round, setRound, socket, users, setUsers }}
+      value={{
+        dummyData,
+        playerUsername,
+        setPlayerUsername,
+        round,
+        setRound,
+        socket,
+        users,
+        setUsers,
+      }}
     >
       <div className='App'>
         <header className='App-header'></header>
-        <GameMain data={dummyData} />
+        <GameMain />
       </div>
       {console.log('test invited player input username:::', playerUsername)}
     </AppContext.Provider>

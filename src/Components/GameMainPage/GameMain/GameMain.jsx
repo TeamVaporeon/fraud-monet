@@ -12,10 +12,10 @@ import Canvas from '../Canvas/Canvas.jsx';
 import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
 
-const GameMain = ({ data }) => {
+const GameMain = () => {
   const ref = useRef(null);
 
-  const { round, setRound, socket } = useContext(AppContext);
+  const { round, setRound, socket, users, dummyData } = useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(true);
   const [openRules, setOpenRules] = useState(false);
@@ -64,11 +64,16 @@ const GameMain = ({ data }) => {
       </div>
       <div className='game_body'>
         <div className='game_players'>
-          <PlayerList data={data} />
+          <PlayerList data={dummyData} />
         </div>
         <div className='game_canvas' ref={ref}>
           Canvas
-          {ref.current?.offsetWidth ? <Canvas width={ref.current.offsetWidth} height={ref.current.offsetHeight}/> : null}
+          {ref.current?.offsetWidth ? (
+            <Canvas
+              width={ref.current.offsetWidth}
+              height={ref.current.offsetHeight}
+            />
+          ) : null}
         </div>
         <div className='game_chat'>
           <Chat socket={socket} />
