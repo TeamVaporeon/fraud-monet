@@ -56,7 +56,7 @@ function App() {
 
   function checkForSession() {
     const sessionID = localStorage.getItem('sessionID');
-    console.log(sessionID);
+    console.log(sessionID && socket.auth);
     if (sessionID) {
       console.log(socket);
       socket.auth.sessionID = sessionID;

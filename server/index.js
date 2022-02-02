@@ -137,7 +137,6 @@ io.on('connection', (socket) => {
       socket.emit('start', rooms[socket.room]);
     };
     socket.emit('connected');
-  });
 
     // Session emitter
     sessionStore.saveSession(socket.sessionID, socket.handshake.auth.user);
@@ -145,7 +144,6 @@ io.on('connection', (socket) => {
       sessionID: socket.sessionID,
       userID: socket.userID
     });
-    socket.emit('packet', data);
   });
 
   // Emit handlers
