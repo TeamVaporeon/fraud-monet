@@ -2,7 +2,6 @@ import React, { useEffect, useContext, useState } from 'react';
 import './PlayerList.css';
 import Button from 'react-bootstrap/Button';
 import { AppContext } from '../../App';
-import { Socket } from 'socket.io-client';
 
 const PlayerList = () => {
   const { users, currentUser, socket, availColors } = useContext(AppContext);
