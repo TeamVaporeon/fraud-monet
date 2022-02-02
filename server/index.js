@@ -84,6 +84,7 @@ io.on('connection', (socket) => {
     socket.broadcast.to(socket.room).emit('newUser', users);
     if (socket.user.host) {
       socket.emit('hostConnected');
+      socket.emit('user_object', socket.user);
     };
     socket.emit('connected');
   });
