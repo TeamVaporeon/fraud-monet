@@ -13,7 +13,6 @@ import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
 import { hostSocket } from '../../CreateRoom';
 
-
 const GameMain = ({ dummyData, actualData }) => {
   const ref = useRef(null);
   const { round, setRound, socket, users } = useContext(AppContext);
@@ -23,7 +22,7 @@ const GameMain = ({ dummyData, actualData }) => {
       return false;
     } else {
       return true;
-    };
+    }
   });
   const [openRules, setOpenRules] = useState(false);
   const [openResults, setOpenResults] = useState(false);

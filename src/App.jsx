@@ -1,5 +1,3 @@
-/*eslint-disable no-unused-vars*/
-
 import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
 import makeRoomData from './mock-data.js';
@@ -9,26 +7,48 @@ import axios from 'axios';
 
 export const AppContext = createContext();
 
+var socket = io({
+  withCredentials: true,
+  autoConnect: false,
+});
+
 function App() {
   const [round, setRound] = useState(0);
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(
+    hostSocket.id ? [hostSocket.auth.user] : []
+  );
+  const [currentUser, setCurrentUser] = useState({});
 
-  console.log('PATH', window.location.pathname);
+  useEffect(() => {
+    setCurrentUser(
+      socket.auth && socket.auth.user
+        ? socket.auth.user
+        : {
+            username: null,
+            roomID: null,
+            color: '#000',
+            host: false,
+            fraud: false,
+            role: 'spectator',
+            score: 0,
+          }
+    );
+  }, [socket.auth]);
+
+  if (hostSocket.id) {
+    socket = hostSocket;
+  }
 
   const socket = io({
     withCredentials: true,
     autoConnect: false,
   });
-  socket.on('users', (users) => {
-    console.log('FRONT USERS', users);
-  });
-  socket.on('newUser', (user) => {
-    console.log('New User:', user);
+
+  socket.on('newUser', (newUsers) => {
+    setUsers(newUsers);
   });
   const dummyData = makeRoomData();
   const [playerUsername, setPlayerUsername] = useState('');
-
-  // Initial 0; after clicked Start, 1; after first vote, 2; after second vote, 3 >> Game End, Show result modal
 
   useEffect(() => {
     axios
@@ -43,13 +63,12 @@ function App() {
     <AppContext.Provider
       value={{
         dummyData,
-        playerUsername,
-        setPlayerUsername,
         round,
         setRound,
         socket,
         users,
         setUsers,
+        currentUser,
       }}
     >
       <div className='App'>
