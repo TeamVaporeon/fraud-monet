@@ -66,13 +66,16 @@ const PlayerList = () => {
                     </div>
                 </div>)): null}
           </div>
-          <h3 className='spec-title'>Spectators:</h3>
-          <div className='just-specs'>
-            {spectators ? spectators.map((spec, index) =>
-            (<div className='each-spectator' key={index}>
-              <div>{spec.username}</div>
-            </div>)): null}
-          </div>
+          {spectators && spectators.length ?
+          <div className="entire-spec-container">
+            <h3 className='spec-title'>Spectators:</h3>
+            <div className='just-specs'>
+              {spectators ? spectators.map((spec, index) =>
+              (<div className='each-spectator' key={index}>
+                <div>{spec.username}</div>
+              </div>)): null}
+            </div>
+          </div>: null}
         </div>
         <div className='playercount-and-buttons'>
           <div className='players-spec-count'>
