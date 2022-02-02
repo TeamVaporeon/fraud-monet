@@ -1,22 +1,20 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, createContext, useEffect, useContext } from 'react';
 import './Vote.css';
+import { AppContext } from '../../../App';
 
-const fakePlayers = [
-  'palyerA',
-  'playerB',
-  'playerC',
-  'playerD',
-  'playerE',
-  'playerF',
-  'playerG',
-  'playerH',
-  'playerI',
-  'playerJ',
-];
-
-const Vote = ({ setOpenVote, setOpenResults }) => {
-  const [players, setPlayers] = useState(fakePlayers);
+const Vote = ({ setOpenVote, setOpenResults, dummyData }) => {
+  const { users } = useContext(AppContext);
+  const [players, setPlayers] = useState(() => {
+    // return users
+    return dummyData.viewers
+      .filter((user) => {
+        return user.role === 'player';
+      })
+      .map((player) => {
+        return player.username;
+      });
+  });
   const [pick, setPick] = useState('');
 
   const handleSubmit = (e) => {
@@ -59,6 +57,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
           </button>
         </div>
       </div>
+      {console.log('player', players)}
     </div>
   );
 };
