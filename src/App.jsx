@@ -73,7 +73,6 @@ function App() {
     }
   }
 
-  const dummyData = makeRoomData();
   useEffect(() => {
     checkForSession();
   }, [])
