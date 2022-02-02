@@ -73,7 +73,7 @@ const PlayerList = () => {
               Number of Spectators: {spectators ? spectators.length : 0}
             </div>
           </div>
-          <div className='join-start-buttons'>
+          <Stack className="join-start-buttons" direction="horizontal" gap={2}>
             {currentUser.role === 'spectator' ? (
               <Button
                 onClick={() => setColorModal(true)}
@@ -83,14 +83,14 @@ const PlayerList = () => {
                 Join
               </Button>
             ) : (
-              <Button disabled>Join</Button>
+              <Button variant="success" size="sm" disabled>Join</Button>
             )}
             {currentUser.host ? (
               <Button onClick={handleStart} variant='success' size='sm'>
                 Start
               </Button>
             ) : null}
-          </div>
+            </Stack>
           {colorModal ? (
             <div className='colorModal'>
               {availColors.map((color) => {
