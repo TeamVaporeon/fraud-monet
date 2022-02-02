@@ -13,7 +13,7 @@ const Canvas = (props) => {
     p5.background(220);
 
     canva.id('sketchpad');
-    
+
     const save = p5.createButton('Download').parent(canvasParentRef);
     save.mouseClicked(() => {
       p5.saveCanvas(canva, 'our drawing', 'jpg');

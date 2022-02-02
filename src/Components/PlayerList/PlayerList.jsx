@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import './PlayerList.css';
 import Button from 'react-bootstrap/Button';
+import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
 const PlayerList = () => {
@@ -17,13 +18,15 @@ const PlayerList = () => {
     }
   }, [users]);
 
-  // joinTest() {
-  //   console.log('I joined the game!');
-  // }
+  const joinTest = (e) => {
+    e.preventDefault();
+    console.log('I joined the game!');
+  }
 
-  // startTest() {
-  //   console.log('Game Started!');
-  // }
+  const startTest = (e) => {
+    e.preventDefault();
+    console.log('Game Started!');
+  }
 
   return(
       <>
@@ -53,10 +56,10 @@ const PlayerList = () => {
             <div>Players in Game: {players && host ? players.length + host.length : 0}/10</div>
             <div>Number of Spectators: {spectators ? spectators.length : 0}</div>
           </div>
-          <div className="join-start-buttons">
-            <Button onClick={null} variant="success" size="sm">Join</Button>
+          <Stack className="join-start-buttons" direction="horizontal" gap={2}>
+            <Button onClick={joinTest} variant="success" size="sm">Join</Button>
             <Button onClick={null} variant="success" size="sm">Start</Button>
-          </div>
+          </Stack>
         </div>
       </div>
       </>
@@ -64,3 +67,6 @@ const PlayerList = () => {
 }
 
 export default PlayerList;
+
+{/* <Button variant="success" size="sm" disabled>Join</Button> */}
+{/* <Button variant="success" size="sm" disabled>Start</Button>  */}
