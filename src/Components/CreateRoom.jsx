@@ -25,7 +25,7 @@ var CreateRoom = (props) => {
   const navigate = useNavigate();
   const routeChange = (e) => {
     e.preventDefault();
-    if (name.length > 0) {
+
       const roomID = generateRandString();
       hostSocket.auth = {
         user: {
@@ -43,7 +43,7 @@ var CreateRoom = (props) => {
       hostSocket.on('hostConnected', () => {
         navigate(`/${roomID}`);
       });
-    }
+
   };
 
   return (
@@ -51,6 +51,7 @@ var CreateRoom = (props) => {
       <h1>Fraud Monet</h1>
       <div className='FormBox'>
         <h2>Username</h2>
+        <form>
         <input
           className='UserNameForm'
           type='text'
@@ -58,10 +59,12 @@ var CreateRoom = (props) => {
             setName(e.target.value);
           }}
           required
-        />
-        <button className='CreateButton' onClick={routeChange}>
+        /><br/>
+        <br/>
+        <button className='CreateButton' onSubmit={routeChange}>
           Create Game
         </button>
+        </form>
       </div>
     </div>
   );
