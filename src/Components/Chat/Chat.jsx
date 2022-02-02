@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import './Chat.css';
 
-const Chat = ({ socket }) => {
+const Chat = ({ socket, currentUser }) => {
   const [currentMsg, setCurrentMsg] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [username, setUsername] = useState('Anonymous');
@@ -48,7 +48,14 @@ const Chat = ({ socket }) => {
                 key={3 * index}
                 id={username === content.author ? "you" : "other"}
               >
-                <div className="message-content">
+                <div
+                  className="message-content"
+                  // style={{
+                  //   backgroundColor:
+                  //   currentUser.color !== '#000' && username === content.author
+                  //   ? currentUser.color
+                  //   : null }}
+                >
                   <p>{content.message}</p>
                 </div>
                 <div className="message-meta">
@@ -61,18 +68,21 @@ const Chat = ({ socket }) => {
         </ScrollToBottom>
       </div>
 
-      <div className="chat-footer">
-        <input
-          type="text"
-          value={currentMsg}
-          placeholder="Message..."
-          aria-label="Message..."
-          autoComplete="off"
-          onChange={(event) => { setCurrentMsg(event.target.value); }}
-          onKeyPress={(event) => { event.key === "Enter" && sendMessage(); }}
-        />
-        <button onClick={sendMessage}>&#9658;</button>
-      </div>
+      {
+        currentUser.role === 'player' &&
+        <div className="chat-footer">
+          <input
+            type="text"
+            value={currentMsg}
+            placeholder="Message..."
+            aria-label="Message..."
+            autoComplete="off"
+            onChange={(event) => { setCurrentMsg(event.target.value); }}
+            onKeyPress={(event) => { event.key === "Enter" && sendMessage(); }}
+          />
+          <button onClick={sendMessage}>&#9658;</button>
+        </div>
+      }
     </div>
   );
 };
