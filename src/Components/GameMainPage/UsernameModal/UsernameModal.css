@@ -7,15 +7,17 @@
 }
 
 .usernameModal {
-  background-color: #fbe89b;
+  background-color: #ffffff;
   /* box-shadow: 0 2px 20px #e0e4ec; */
+  border-radius: 2%;
+  border: solid;
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   margin: auto;
-  width: 850px;
+  width: 880px;
   max-width: 90%;
   height: 600px;
   max-height: 90%;
@@ -23,7 +25,7 @@
   color: black;
 }
 
-.usernameContainer {
+.usernameContainer .usernameForm {
   position: absolute;
   top: 0;
   left: 0;
@@ -33,23 +35,32 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
 }
 
-.usernameContainer > *:last-child {
-  align-self: stretch;
+.usernameLabel {
+  margin-bottom: 2rem;
+  font-size: 3rem;
 }
 
-.usernameCloseBtn {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  font-size: 1rem;
-  text-align: center;
-  display: block;
-  float: right;
-  cursor: pointer;
-  margin: 0.5rem;
-  background-color: rgba(255, 255, 255, 0);
-  border-color: rgba(255, 255, 255, 0);
+.usernameInput {
+  background-color: rgb(255, 246, 208);
+  border-style: solid;
+  border-radius: 4px;
+  border-width: 4px;
+  border-color: rgb(240, 208, 255);
+  width: 280px;
+  height: 50px;
+}
+
+.usernameSubmit {
+  margin-top: 2rem;
+  padding: 10px 25px;
+  font-size: 20px;
+  font: bold;
+  color: rgb(72, 20, 114);
+  background-color: rgb(155, 78, 155);
+  border-radius: 10%;
+  border: solid;
 }
