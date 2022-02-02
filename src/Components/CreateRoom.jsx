@@ -46,9 +46,9 @@ var CreateRoom = (props) => {
       <h1>Fraud Monet</h1>
       <div className="FormBox">
 
-        <div>Enter Your Username:</div>
+        <h2>Username</h2>
         <input className="UserNameForm" type='text' onChange={(e) => { setName(e.target.value); }} />
-        <button className="CreateButton" classonClick={routeChange} >Create Game</button>
+        <button className="CreateButton" onClick={routeChange} >Create Game</button>
 
 
       </div>

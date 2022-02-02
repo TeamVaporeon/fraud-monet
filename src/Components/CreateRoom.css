@@ -1,19 +1,15 @@
-body {
-  top: 20%;
-  background-color: slategray;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-}
+
 
 .CreateGamePage {
   text-align: center;
   display:flex;
   flex-direction: column;
   justify-content: space-evenly;
+  align-items: center;
 }
 
 .FormBox {
+  position: fixed;
   display: flex;
   top: 20%;
   align-items: center;
@@ -42,5 +38,7 @@ body {
 .CreateButton {
   width: 80%;
   height: 40px;
+  font-size: 20px;
+  color: rgb(72, 20, 114);
   background-color: rgb(155, 78, 155);
 }
