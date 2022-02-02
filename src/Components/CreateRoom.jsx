@@ -16,7 +16,7 @@ var generateRandString = () => {
 
 export const hostSocket = io({
   withCredentials: true,
-  autoConnect: false
+  autoConnect: false,
 });
 
 var CreateRoom = (props) => {
@@ -32,9 +32,9 @@ var CreateRoom = (props) => {
         color: '#000',
         host: true,
         fraud: false,
-        role: 'player',
-        score: 0
-      }
+        role: 'spectator',
+        score: 0,
+      },
     };
     hostSocket.connect();
     hostSocket.emit('joinRoom', `/${roomID}`);
@@ -48,8 +48,13 @@ var CreateRoom = (props) => {
       <form>
         <label>
           Enter Your Username:
-          <input type='text' onChange={(e) => { setName(e.target.value); }} />
-          <button onClick={routeChange} >Create Room</button>
+          <input
+            type='text'
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
+          <button onClick={routeChange}>Create Room</button>
         </label>
       </form>
     </div>

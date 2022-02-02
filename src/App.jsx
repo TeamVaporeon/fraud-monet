@@ -25,6 +25,7 @@ function App() {
   }
 
   socket.on('users', (userList) => {
+    console.log('updated users');
     setUsers(userList);
   });
 
@@ -48,9 +49,10 @@ function App() {
             fraud: false,
             role: 'spectator',
             score: 0,
+            id: null,
           }
     );
-  }, [socket.auth]);
+  }, [users]);
 
   return (
     <AppContext.Provider
