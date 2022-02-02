@@ -11,11 +11,19 @@ import ResultsModal from '../ResultsModal/ResultsModal';
 import Canvas from '../Canvas/Canvas.jsx';
 import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
+import { hostSocket } from '../../CreateRoom';
 
-const GameMain = ({ dummyData, actualData }) => {
+const GameMain = () => {
   const ref = useRef(null);
-  const { round, setRound, socket } = useContext(AppContext);
-  const [openUsername, setOpenUsername] = useState(true);
+  const { round, setRound, socket, users, dummyData } = useContext(AppContext);
+
+  const [openUsername, setOpenUsername] = useState(() => {
+    if (hostSocket.id) {
+      return false;
+    } else {
+      return true;
+    }
+  });
   const [openRules, setOpenRules] = useState(false);
   const [openResults, setOpenResults] = useState(false);
   const [openVote, setOpenVote] = useState(false);
@@ -36,7 +44,11 @@ const GameMain = ({ dummyData, actualData }) => {
       ) : null}
       {openFinal ? <FinalResultsModal setOpenFinal={setOpenFinal} /> : null}
       {openVote ? (
-        <Vote setOpenVote={setOpenVote} setOpenResults={setOpenResults} />
+        <Vote
+          setOpenVote={setOpenVote}
+          setOpenResults={setOpenResults}
+          dummyData={dummyData}
+        />
       ) : null}
       {openResults ? (
         <ResultsModal
@@ -62,11 +74,15 @@ const GameMain = ({ dummyData, actualData }) => {
       </div>
       <div className='game_body'>
         <div className='game_players'>
-          <PlayerList dummyData={dummyData} actualData={actualData}/>
+          <PlayerList />
         </div>
         <div className='game_canvas' ref={ref}>
-          Canvas
-          {ref.current?.offsetWidth ? <Canvas width={ref.current.offsetWidth} height={ref.current.offsetHeight}/> : null}
+          {ref.current?.offsetWidth ? (
+            <Canvas
+              width={ref.current.offsetWidth}
+              height={ref.current.offsetHeight}
+            />
+          ) : null}
         </div>
         <div className='game_chat'>
           <Chat socket={socket} />

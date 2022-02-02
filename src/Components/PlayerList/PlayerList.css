@@ -1,7 +1,14 @@
 .each-player {
   margin-top: 5px;
   margin-bottom: 5px;
-  border: 0.5px solid black
+  border: 0.5px solid black;
+  /* border-radius: 30px; */
+}
+
+.host {
+  margin-bottom: 5px;
+  border: 0.5px solid black;
+  /* border-radius: 25px; */
 }
 
 .each-spectator {
@@ -18,7 +25,6 @@
   width: 100%;
   padding: 10px;
   font-weight: 500;
-
 }
 
 .just-players::-webkit-scrollbar {
@@ -27,20 +33,47 @@
 
 .just-specs {
   max-width: 100%;
-  max-height: 175px;
+  max-height: 100px;
   overflow-y: auto;
   text-align: justify;
   margin: auto;
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  /* border: 2px solid white */
 }
 
 .just-specs::-webkit-scrollbar {
   display: none;
 }
 
+.join-start-buttons {
+  margin-top: 2%;
+}
+
 .playercount-and-buttons {
-margin-top: 25px;
+  /* margin-top: 5%; */
+  max-height: 100px;
+  margin-bottom: 15px;
+  margin-left: 10px;
+}
+
+.total-game-list {
+  max-height: 620px;
+}
+
+.players-list {
+  max-height: 520px;
+}
+
+.players-spec-count {
+  font-weight: 400;
+}
+
+.player-title {
+  margin-top: 5%;
+  font-size: 20px;
+}
+
+.spec-title {
+  font-size: 20px;
 }

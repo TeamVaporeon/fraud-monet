@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 // const session = require('express-session');
 // const { v4: uuidv4 } = require('uuid');
 const cookie = require('cookie');
-const users = [];
+const rooms = {};
 
 // Express Server
 const app = express();
@@ -30,15 +30,14 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '../build/index.html'));
 });
 
-app.post('/', (req, res) => {
-  const user = req.body;
-  users.push(user)
-  res.status(201).send(user);
-});
+app.post('/host/:id', (req, res) => {
+  res.status(201).send();
+})
 
 app.get('/host/:id', (req, res) => {
-  res.send(users);
-});
+  const room = req.params.id;
+  res.send(rooms[room]);
+})
 
 app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
@@ -57,6 +56,7 @@ const io = new Server(httpServer, {
 // Persistent Session
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
+  user.id = socket.id;
   // const sessionID = socket.handshake.auth;
   // console.log('SESSION', sessionID);
   socket.user = user;
@@ -68,29 +68,9 @@ io.use((socket, next) => {
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
-
-  let users = [];
-  // Store session middleware
-  // io.use((socket, next) => {
-  //   let parsedCookie = cookie.parse(socket.handshake.headers.cookie);
-  //   let sessionID = parsedCookie.sessionid;
-  //   if (sessionID) {
-  //     if (session[sessionID]) {
-  //       socket.sessionID = sessionID;
-  //       return next()
-  //     } else {
-  //       session[sessionID] = sessionID;
-  //       return next()
-  //     }
-  //   }
-  // })
-
   console.log(`Socket Connected With Id: `, socket.id);
-  // Set socket event handlers
-  socket.on('mouse', data => {
-    socket.broadcast.emit('mouse', data);
-  });
-  socket.broadcast.emit(`Socket Connected With Id: ${socket.id}`);
+  let users = [];
+
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
     // users.push(socket.username);
@@ -101,7 +81,12 @@ io.on('connection', (socket) => {
       users.push(sock.user);
     });
     socket.emit('users', users);
-    socket.broadcast.to(socket.room).emit('newUser', socket.user);
+    socket.broadcast.to(socket.room).emit('newUser', users);
+    if (socket.user.host) {
+      socket.emit('hostConnected');
+      socket.emit('user_object', socket.user);
+    };
+    socket.emit('connected');
   });
 
   // Emit handlers
@@ -120,15 +105,9 @@ io.on('connection', (socket) => {
     socket.emit('packet', data);
   });
 
-  socket.on('newUser', (user) => {
-    const adapter = io.of('room').adapter;
-    adapter.pubClient.publish(user);
-    console.log('new user added!')
-  })
-
-  socket.on('draw', (mouseData) => {
+  socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
-    socket.broadcast.to(socket.room).emit('draw', mouseData);
+    socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
   /* ----- CHATROOM Code ----- */
