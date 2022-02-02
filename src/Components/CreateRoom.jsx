@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './CreateRoom.css'
 
 var generateRandString = () => {
   var result = '';
@@ -41,14 +42,16 @@ var CreateRoom = (props) => {
   };
 
   return (
-    <div>
-      <form>
-        <label>
-          Enter Your Username:
-          <input type='text' onChange={(e) => { setName(e.target.value); }} />
-          <button onClick={routeChange} >Create Room</button>
-        </label>
-      </form>
+    <div className="CreateGamePage">
+      <h1>Fraud Monet</h1>
+      <div className="FormBox">
+
+        <div>Enter Your Username:</div>
+        <input className="UserNameForm" type='text' onChange={(e) => { setName(e.target.value); }} />
+        <button className="CreateButton" classonClick={routeChange} >Create Game</button>
+
+
+      </div>
     </div>
   );
 };

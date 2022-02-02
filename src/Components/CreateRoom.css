@@ -1,0 +1,46 @@
+body {
+  top: 20%;
+  background-color: slategray;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.CreateGamePage {
+  text-align: center;
+  display:flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.FormBox {
+  display: flex;
+  top: 20%;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: rgb(255, 246, 208);
+  border-style: solid;
+  border-radius: 4px;
+  border-width: 4px;
+  border-color:rgb(240, 208, 255);
+  height: 220px;
+  width: 300px;
+}
+
+.CreateForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.UserNameForm {
+  width: 80%;
+  height: 40px;
+}
+
+.CreateButton {
+  width: 80%;
+  height: 40px;
+  background-color: rgb(155, 78, 155);
+}
