@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
+import './CreateRoom.css'
 
 var generateRandString = () => {
   var result = '';
@@ -16,7 +17,7 @@ var generateRandString = () => {
 
 export const hostSocket = io({
   withCredentials: true,
-  autoConnect: false
+  autoConnect: false,
 });
 
 var CreateRoom = (props) => {
@@ -48,15 +49,14 @@ var CreateRoom = (props) => {
   };
 
   return (
-    <div>
-      <form>
-        <label>
-          Enter Your Username:
-          <input type='text' onChange={(e) => { setName(e.target.value); }} />
-          <button onClick={routeChange} >Create Room</button>
-        </label>
-      </form>
-    </div>
+      <div className="CreateGamePage">
+        <h1>Fraud Monet</h1>
+        <div className="FormBox">
+          <h2>Username</h2>
+          <input className="UserNameForm" type='text' onChange={(e) => { setName(e.target.value); }} required />
+          <button className="CreateButton" onClick={routeChange} >Create Game</button>
+        </div>
+      </div>
   );
 };
 
