@@ -62,25 +62,26 @@
   word-break: break-word;
 }
 #you {
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 #you .message-content {
-  justify-content: flex-start;
+  justify-content: flex-end;
+  margin-left: auto;
 }
 #you .message-meta {
-  justify-content: flex-start;
+  justify-content: flex-end;
   margin-left: 5px;
 }
 #other {
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 #other .message-content {
-  justify-content: flex-end;
+  justify-content: flex-start;
   background-color: cornflowerblue;
-  margin-left: auto;
+  /* margin-left: auto; */
 }
 #other .message-meta {
-  justify-content: flex-end;
+  justify-content: flex-start;
   margin-right: 5px;
 }
 .message-meta #author {
