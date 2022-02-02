@@ -8,16 +8,26 @@ const cookie = require('cookie');
 const editFile = require('edit-json-file');
 const rooms = {};
 const defaultColors = {
-  '#FFCCEB': true,
-  '#DF6770': true,
-  '#EA9F4E': true,
-  '#FBE89B': true,
-  '#B9E49F': true,
-  '#73E5DA': true,
-  '#94B1E9': true,
-  '#AE97CD': true,
-  '#D9ABD6': true,
-  '#A9B3BF': true,
+  '#FFCCEB': true, //Cotton Candy
+  '#DF6770': true, //Candy Pink
+  '#EA9F4E': true, //Sandy Brown
+  '#FBE89B': true, //Green Yellow Crayola
+  '#B9E49F': true, //Granny Smith Apple
+  '#73E5DA': true, //Turquoise
+  '#94B1E9': true, //Wild Blue Yonder
+  '#AE97CD': true, //Wisteria
+  '#D9ABD6': true, //Lilac
+  '#A9B3BF': true, //Cadet Blue Crayola
+  '#ff0000': true, //Red
+  '#0000ff': true, //Blue
+  '#008000': true, //Green
+  '#ffa500': true, //Orange
+  '#800080': true, //Purple
+  '#a52a2a': true, //Brown
+  '#ffff00': true, //Yellow
+  '#4b0082': true, //Indigo
+  '#ff69b4': true, //Hot Pink
+  '#00ff00': true, //Lime
 };
 
 // Data JSON File
@@ -85,6 +95,7 @@ io.on('connection', (socket) => {
           prompt: '',
           colors: defaultColors,
         };
+        socket.emit('start', rooms[socket.room]);
       }
       console.log(rooms);
       socket.emit('hostConnected');
@@ -138,12 +149,12 @@ io.on('connection', (socket) => {
   /* ----- End of CHATROOM Code ----- */
 
   // On user disconnecting
-  // socket.on('disconnect', () => {
-  //   if (socket.user.host) {
-  //     delete rooms[socket.room];
-  //   };
-  //   console.log(`${socket.id} disconnected`);
-  // });
+  socket.on('disconnect', () => {
+    if (socket.user.host) {
+      delete rooms[socket.room];
+    }
+    console.log(`${socket.id} disconnected`);
+  });
 
   //------UPDATE PLAYER STATUS-------//
   socket.on('update', async (data) => {
@@ -157,7 +168,7 @@ io.on('connection', (socket) => {
     });
     rooms[socket.room].colors[data.color] =
       !rooms[socket.room].colors[data.color];
-    console.log(rooms);
+    console.log(rooms[socket.room].colors);
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });

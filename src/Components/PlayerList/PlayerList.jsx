@@ -32,17 +32,24 @@ const PlayerList = () => {
     socket.emit('update', currentUser);
   };
 
-  const kick = (e) => {
-    let kickedPlayer = users.filter(
-      (player) => player.id === e.target.attributes.playerId.value
-    );
-    console.log(kickedPlayer[0]);
-    kickedPlayer[0].role = 'spectator';
-    socket.emit('update', kickedPlayer[0]);
+  // const kick = (e) => {
+  //   setColorModal(false);
+  //   let kickedPlayer = users.filter(
+  //     (player) => player.id === e.target.attributes.playerId.value
+  //   );
+  //   console.log(kickedPlayer[0]);
+  //   kickedPlayer[0].role = 'spectator';
+  //   socket.emit('update', kickedPlayer[0]);
+  // };
+
+  const claim = () => {
+    currentUser.host = true;
+    socket.emit('update', currentUser);
   };
 
   return (
     <>
+      <button onClick={claim}>Claim Host</button>
       <div className='total-game-list'>
         <div className='players-list'>
           <h3 className='player-title'>Players:</h3>
@@ -62,15 +69,17 @@ const PlayerList = () => {
                         >
                           ❌
                         </span>
-                      ) : currentUser.host ? (
-                        <span
-                          onClick={kick}
-                          playerId={player.id}
-                          style={{ float: 'right', marginRight: '5px' }}
-                        >
-                          ❌
-                        </span>
-                      ) : null}
+                      ) : (
+                        currentUser.host && (
+                          <span
+                            // onClick={kick}
+                            playerId={player.id}
+                            style={{ float: 'right', marginRight: '5px' }}
+                          >
+                            ❌
+                          </span>
+                        )
+                      )}
                     </div>
                   </div>
                 ))
@@ -110,15 +119,33 @@ const PlayerList = () => {
           </div>
           {colorModal ? (
             <div className='colorModal'>
-              {availColors.map((color) => {
-                return (
+              {Object.keys(availColors).map((color) => {
+                return availColors[color] ? (
                   <svg width='20' height='20'>
                     <rect
                       width='20'
                       height='20'
                       color={color}
-                      style={{ fill: color }}
+                      style={{
+                        fill: color,
+                        stroke: 'darkslategray',
+                        strokeWidth: 2,
+                      }}
                       onClick={(e) => update(e, 'player')}
+                    ></rect>
+                  </svg>
+                ) : (
+                  <svg width='20' height='20'>
+                    <rect
+                      width='20'
+                      height='20'
+                      color={color}
+                      style={{
+                        fill: color,
+                        opacity: '30%',
+                        stroke: 'darkslategray',
+                        strokeWidth: 2,
+                      }}
                     ></rect>
                   </svg>
                 );
