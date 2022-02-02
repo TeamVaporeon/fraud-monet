@@ -116,6 +116,10 @@ io.on('connection', (socket) => {
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
+  socket.on('turn', turn => {
+    socket.broadcast.to(socket.room).emit('mouse', turn);
+  });
+
   socket.on('start', async () => {
     const data = await file.toObject();
 
