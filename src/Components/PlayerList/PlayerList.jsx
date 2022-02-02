@@ -2,13 +2,16 @@ import React, { useEffect, useContext, useState } from 'react';
 import './PlayerList.css';
 import Button from 'react-bootstrap/Button';
 import { AppContext } from '../../App';
-import { Socket } from 'socket.io-client';
 
 const PlayerList = () => {
   const { users, currentUser, socket, availColors } = useContext(AppContext);
   const [players, setPlayers] = useState(null);
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
+
+  const handleStart = (e) => {
+    socket.emit('start');
+  };
 
   useEffect(() => {
     if (users) {
@@ -38,22 +41,22 @@ const PlayerList = () => {
           <div className='just-players'>
             {players
               ? players.map((player, index) => (
-                  <div className='each-player' key={index}>
-                    <div style={{ background: player.color }}>
-                      {`${player.username} ${player.host ? '👑' : ''}`}
-                    </div>
+                <div className='each-player' key={index}>
+                  <div style={{ background: player.color }}>
+                    {`${player.username} ${player.host ? '👑' : ''}`}
                   </div>
-                ))
+                </div>
+              ))
               : null}
           </div>
           <h3 className='spec-title'>Spectators:</h3>
           <div className='just-specs'>
             {spectators
               ? spectators.map((spec, index) => (
-                  <div className='each-spectator' key={index}>
-                    <div>{spec.username}</div>
-                  </div>
-                ))
+                <div className='each-spectator' key={index}>
+                  <div>{spec.username}</div>
+                </div>
+              ))
               : null}
           </div>
         </div>
@@ -77,7 +80,7 @@ const PlayerList = () => {
               <Button disabled>Join</Button>
             )}
             {currentUser.host ? (
-              <Button onClick={null} variant='success' size='sm'>
+              <Button onClick={handleStart} variant='success' size='sm'>
                 Start
               </Button>
             ) : null}
