@@ -27,8 +27,9 @@ const Chat = ({ socket }) => {
     socket.on('receive_message', (receivedMessage) => {
       setMessageList((list) => [...list, receivedMessage]);
     });
+
     socket.on('user_object', (user) => {
-      setUsername(user.name);
+      setUsername(user.username);
     });
   }, [socket]);
 
@@ -40,9 +41,13 @@ const Chat = ({ socket }) => {
 
       <div className="chat-body">
         <ScrollToBottom className="message-container">
-          {messageList.map((content) => {
+          {messageList.map((content, index) => {
             return (
-              <div className="message" id={username === content.author ? "you" : "other"}>
+              <div
+                className="message"
+                key={3 * index}
+                id={username === content.author ? "you" : "other"}
+              >
                 <div className="message-content">
                   <p>{content.message}</p>
                 </div>
