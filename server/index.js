@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 // const session = require('express-session');
 // const { v4: uuidv4 } = require('uuid');
 const cookie = require('cookie');
+const fs = require('fs');
 const rooms = {};
 
 // Express Server
@@ -67,6 +68,7 @@ io.use((socket, next) => {
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
+  socket.user.id = socket.id;
   console.log(`Socket Connected With Id: `, socket.id);
   let users = [];
 
@@ -108,6 +110,13 @@ io.on('connection', (socket) => {
     // Broadcast mouseData to all connected sockets
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
+
+  socket.on('start', async () => {
+    let data = await fs.readFile(path.join(__dirname, 'data.json'));
+    console.log(data);
+    // pick a category and prompt
+    // emit to all players
+  })
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
