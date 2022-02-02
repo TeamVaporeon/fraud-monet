@@ -37,8 +37,8 @@
 }
 .chat-container .chat-body .message {
   display: flex;
-  /* flex-direction: column; */
-  flex-wrap: wrap;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
   height: auto;
   padding: 10px;
 }
@@ -75,6 +75,7 @@
 #other .message-content {
   justify-content: flex-end;
   background-color: cornflowerblue;
+  margin-left: auto;
 }
 #other .message-meta {
   justify-content: flex-end;
