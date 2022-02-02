@@ -6,18 +6,28 @@ import { hostSocket } from './Components/CreateRoom';
 
 export const AppContext = createContext();
 
-const colors = [
-  '#FFCCEB', // 'Cotton Candy',
-  '#DF6770', // 'Candy Pink',
-  '#EA9F4E', // 'Sandy Brown',
-  '#FBE89B', // 'Green Yellow Crayola',
-  '#B9E49F', // 'Granny Smith Apple',
-  '#73E5DA', // 'Turquoise',
-  '#94B1E9', // 'Wild Blue Yonder',
-  '#AE97CD', // 'Wisteria',
-  '#D9ABD6', // 'Lilac',
-  '#A9B3BF', // 'Cadet Blue Crayola',
-];
+const defaultColors = {
+  '#FFCCEB': true, //Cotton Candy
+  '#DF6770': true, //Candy Pink
+  '#ff69b4': true, //Hot Pink
+  '#EA9F4E': true, //Sandy Brown
+  '#a52a2a': true, //Brown
+  '#ff0000': true, //Red
+  '#ffa500': true, //Orange
+  '#FBE89B': true, //Green Yellow Crayola
+  '#ffff00': true, //Yellow
+  '#00ff00': true, //Lime
+  '#B9E49F': true, //Granny Smith Apple
+  '#008000': true, //Green
+  '#73E5DA': true, //Turquoise
+  '#94B1E9': true, //Wild Blue Yonder
+  '#0000ff': true, //Blue
+  '#4b0082': true, //Indigo
+  '#800080': true, //Purple
+  '#AE97CD': true, //Wisteria
+  '#D9ABD6': true, //Lilac
+  '#A9B3BF': true, //Cadet Blue Crayola
+};
 
 var socket = io({
   withCredentials: true,
@@ -30,7 +40,7 @@ function App() {
     hostSocket.id ? [hostSocket.auth.user] : []
   );
   const [currentUser, setCurrentUser] = useState({});
-  const [availColors, setAvailColors] = useState(colors);
+  const [availColors, setAvailColors] = useState(defaultColors);
   const [gameStarted, setStart] = useState(false);
 
   if (hostSocket.id) {
@@ -42,7 +52,6 @@ function App() {
   }
 
   socket.on('users', (userList) => {
-    console.log('updated users');
     setUsers(userList);
     sessionStorage.setItem('users', JSON.stringify(users));
   });
@@ -55,6 +64,14 @@ function App() {
     setStart(true);
     sessionStorage.setItem('gameStarted', 'true');
   })
+
+  socket.on('availColors', (colors) => {
+    setAvailColors(colors);
+  });
+
+  socket.on('start', (roomInfo) => {
+    setAvailColors(roomInfo.colors);
+  });
 
   useEffect(() => {
     setCurrentUser(
@@ -71,6 +88,7 @@ function App() {
             id: null,
           }
     );
+    socket.auth && console.log('user: ', socket.auth.user);
   }, [users]);
 
   return (
@@ -91,7 +109,7 @@ function App() {
         <header className='App-header'></header>
         <GameMain />
       </div>
-      {console.log(users)}
+      {/* {console.log(users)} */}
     </AppContext.Provider>
   );
 }

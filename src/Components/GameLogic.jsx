@@ -18,8 +18,9 @@ const GameLogic = () => {
     <>
       <header
         style={{ fontWeight: 'bolder', color: currentUser.color }}
-      >{`CURRENT VIEW: ${currentUser.host ? 'Host' : currentUser.role
-        }`}</header>
+      >{`CURRENT VIEW: ${
+        currentUser.host ? 'Host' : currentUser.role
+      }`}</header>
       <div>{`Category: ${category}`}</div>
       {currentUser.role === 'player' ? (
         currentUser.fraud ? (
