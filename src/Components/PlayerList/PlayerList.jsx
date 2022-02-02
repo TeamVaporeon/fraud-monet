@@ -6,6 +6,7 @@ class PlayerList extends React.Component {
     super(props);
     this.state = {
       list : [],
+      host : [],
       playersList : [],
       spectatorsList : []
     }
@@ -13,15 +14,17 @@ class PlayerList extends React.Component {
   }
 
   componentDidMount() {
-    this.sortLobby(this.props.data.viewers);
+    this.sortLobby(this.props.dummyData.viewers);
   }
 
   sortLobby(arr) {
-    var playersArr = arr.filter(player => player.role !== 'spectator');
+    var playersArr = arr.filter(player => (player.role === 'player' && player.host === false));
     var specArr = arr.filter(player => player.role === 'spectator');
+    var hostArr = arr.filter(player => player.host === true);
     this.setState({
       playersList : playersArr,
-      spectatorsList : specArr
+      spectatorsList : specArr,
+      host : hostArr
     })
   }
 
@@ -30,26 +33,34 @@ class PlayerList extends React.Component {
       <>
       <div className="total-game-list">
         <div className="players-list">
-          <h3>Players</h3>
+          <h3>Players:</h3>
           <div className="just-players">
+            {this.state.host.map((player, index) =>
+            <div className="host" key={index}>
+              <div style={{ background: player.color }}>{player.username} 👑</div>
+            </div>)}
             {this.state.playersList.map((player, index) =>
             <div className="each-player" key={index}>
-              <div>{player.username}</div>
+              <div style={{ background: player.color}}>{player.username}</div>
             </div>)}
           </div>
-          <h3>Spectating</h3>
+          <h3>Spectators:</h3>
           <div className="just-specs">
             {this.state.spectatorsList.map((spec, index) =>
             <div className="each-spectator" key={index}>
-              <div>{spec.username} (Spectating)</div>
+              <div>{spec.username}</div>
             </div>)}
           </div>
         </div>
-        <div>Players in Game: {this.state.playersList.length}/10</div>
-        <div>Number of Spectators: {this.state.spectatorsList.length}</div>
-        <div>
-          <button>Join</button>
-          <button>Start</button>
+        <div className="playercount-and-buttons">
+          <div className="players-spec-count">
+            <div>Players in Game: {this.state.playersList.length + this.state.host.length}/10</div>
+            <div>Number of Spectators: {this.state.spectatorsList.length}</div>
+          </div>
+          <div className="join-start-buttons">
+            <button>Join</button>
+            <button>Start</button>
+          </div>
         </div>
       </div>
       </>

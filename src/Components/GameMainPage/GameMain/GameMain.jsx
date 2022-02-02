@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import './GameMain.css';
 import PlayerList from '../../PlayerList/PlayerList.jsx';
 import Chat from '../../Chat/Chat.jsx';
@@ -8,13 +8,13 @@ import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
 import FinalResultsModal from '../FinalResultsModal/FinalResultsModal';
 import ResultsModal from '../ResultsModal/ResultsModal';
+import Canvas from '../Canvas/Canvas.jsx';
 import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
 
-const GameMain = ({ data }) => {
-
+const GameMain = ({ dummyData, actualData }) => {
+  const ref = useRef(null);
   const { round, setRound, socket } = useContext(AppContext);
-
   const [openUsername, setOpenUsername] = useState(true);
   const [openRules, setOpenRules] = useState(false);
   const [openResults, setOpenResults] = useState(false);
@@ -62,9 +62,12 @@ const GameMain = ({ data }) => {
       </div>
       <div className='game_body'>
         <div className='game_players'>
-          <PlayerList data={data} />
+          <PlayerList dummyData={dummyData} actualData={actualData}/>
         </div>
-        <div className='game_canvas'>Canvas</div>
+        <div className='game_canvas' ref={ref}>
+          Canvas
+          {ref.current?.offsetWidth ? <Canvas width={ref.current.offsetWidth} height={ref.current.offsetHeight}/> : null}
+        </div>
         <div className='game_chat'>
           <Chat socket={socket} />
         </div>
