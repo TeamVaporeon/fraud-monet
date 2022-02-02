@@ -17,6 +17,7 @@ const fakePlayers = [
 
 const Vote = ({ setOpenVote, setOpenResults }) => {
   const [players, setPlayers] = useState(fakePlayers);
+  const [pick, setPick] = useState('');
 
   const chkcontrol = (j) => {
     let total = 0;
@@ -29,7 +30,20 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
       alert('Please Select Only One Player');
       document.voteForm.ckb[j].checked = false;
       return false;
+    } else {
+      if (document.voteForm.ckb[j].checked === true) {
+        const value = document.voteForm.ckb[j].value;
+        setPick(value);
+      }
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    /*---send pick to somewhere to count score---*/
+    console.log('from submit:', pick);
+    setOpenResults(true);
+    setOpenVote(false);
   };
 
   return (
@@ -58,10 +72,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
             className='voteSubmitBtn'
             type='submit'
             value='submit'
-            onClick={() => {
-              setOpenResults(true);
-              setOpenVote(false);
-            }}
+            onClick={handleSubmit}
           >
             Submit
           </button>
