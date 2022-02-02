@@ -11,11 +11,20 @@ import ResultsModal from '../ResultsModal/ResultsModal';
 import Canvas from '../Canvas/Canvas.jsx';
 import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
+import { hostSocket } from '../../CreateRoom';
+
 
 const GameMain = ({ dummyData, actualData }) => {
   const ref = useRef(null);
-  const { round, setRound, socket } = useContext(AppContext);
-  const [openUsername, setOpenUsername] = useState(true);
+  const { round, setRound, socket, users } = useContext(AppContext);
+
+  const [openUsername, setOpenUsername] = useState(() => {
+    if (hostSocket.id) {
+      return false;
+    } else {
+      return true;
+    };
+  });
   const [openRules, setOpenRules] = useState(false);
   const [openResults, setOpenResults] = useState(false);
   const [openVote, setOpenVote] = useState(false);

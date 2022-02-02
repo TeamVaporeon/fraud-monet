@@ -1,19 +1,19 @@
 /* eslint-disable no-unused-vars */
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Sketch from 'react-p5';
-import { io } from 'socket.io-client';
+import { AppContext } from '../../../App';
 import './Canvas.css';
 
 const Canvas = (props) => {
-  const socket = io.connect('http://127.0.0.1:8080');
+
+  const { socket } = useContext(AppContext);
 
   const setup = (p5, canvasParentRef) => {
-    const canva = p5
-      .createCanvas(props.width, props.height - 100)
-      .parent(canvasParentRef);
-    p5.background(255);
+    const canva = p5.createCanvas(props.width, props.height - 100).parent(canvasParentRef);
+    p5.background(220);
+
     canva.id('sketchpad');
+    
     const save = p5.createButton('Download').parent(canvasParentRef);
     save.mouseClicked(() => {
       p5.saveCanvas(canva, 'our drawing', 'jpg');
