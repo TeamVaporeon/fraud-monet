@@ -12,11 +12,9 @@ import Canvas from '../Canvas/Canvas.jsx';
 import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
 
-const GameMain = () => {
+const GameMain = ({ dummyData, actualData }) => {
   const ref = useRef(null);
-
-  const { round, setRound, socket, users, dummyData } = useContext(AppContext);
-
+  const { round, setRound, socket } = useContext(AppContext);
   const [openUsername, setOpenUsername] = useState(true);
   const [openRules, setOpenRules] = useState(false);
   const [openResults, setOpenResults] = useState(false);
@@ -64,7 +62,7 @@ const GameMain = () => {
       </div>
       <div className='game_body'>
         <div className='game_players'>
-          <PlayerList data={dummyData} />
+          <PlayerList dummyData={dummyData} actualData={actualData} />
         </div>
         <div className='game_canvas' ref={ref}>
           Canvas

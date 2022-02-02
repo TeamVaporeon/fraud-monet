@@ -52,7 +52,7 @@ function App() {
     >
       <div className='App'>
         <header className='App-header'></header>
-        <GameMain />
+        <GameMain dummyData={dummyData} actualData={users} />
       </div>
       {console.log('test invited player input username:::', playerUsername)}
     </AppContext.Provider>
