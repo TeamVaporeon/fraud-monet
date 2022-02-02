@@ -47,6 +47,7 @@ const Canvas = (props) => {
       draw={draw}
       mouseDragged={mouseDragged}
       windowRezied={windowResized}
+      className='sketchpad'
     />
   );
 };
