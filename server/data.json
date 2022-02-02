@@ -1,4 +1,14 @@
 {
+  "categories": [
+    "animals",
+    "buildings",
+    "cars",
+    "food",
+    "fruit",
+    "furniture",
+    "instruments",
+    "hats"
+  ],
   "animals": [
     "ape",
     "bear",

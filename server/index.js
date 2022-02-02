@@ -4,23 +4,15 @@ const express = require('express');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
 const cookieParser = require('cookie-parser');
-// const session = require('express-session');
-// const { v4: uuidv4 } = require('uuid');
 const cookie = require('cookie');
-const fs = require('fs');
+const editFile = require('edit-json-file');
 const rooms = {};
+
+// Data JSON File
+var file = editFile(path.join(__dirname, 'data.json'));
 
 // Express Server
 const app = express();
-// app.use(session({
-//   genid: function (req) {
-//     return uuidv4();
-//   },
-//   secret: 'cat',
-//   resave: false,
-//   saveUninitialized: true,
-//   cookie: { maxAge: 360000 }
-// }));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -31,13 +23,8 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '../build/index.html'));
 });
 
-app.post('/host/:id', (req, res) => {
+app.post('/category', (req, res) => {
   res.status(201).send();
-});
-
-app.get('/host/:id', (req, res) => {
-  const room = req.params.id;
-  res.send(rooms[room]);
 });
 
 app.get('/:id', (req, res) => {
@@ -57,14 +44,10 @@ const io = new Server(httpServer, {
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
   user.id = socket.id;
-  // const sessionID = socket.handshake.auth;
-  // console.log('SESSION', sessionID);
   socket.user = user;
   socket.emit('user_object', user);
   next();
 });
-
-// const session = {}
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
@@ -86,8 +69,9 @@ io.on('connection', (socket) => {
     if (socket.user.host) {
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
-    }
-    socket.emit('connected');
+    } else if (rooms[socket.room]) {
+      socket.emit('start', rooms[socket.room]);
+    };
   });
 
   // Emit handlers
@@ -112,11 +96,20 @@ io.on('connection', (socket) => {
   });
 
   socket.on('start', async () => {
-    let data = await fs.readFile(path.join(__dirname, 'data.json'));
-    console.log(data);
-    // pick a category and prompt
-    // emit to all players
-  })
+    const data = await file.toObject();
+
+    let randCat = Math.floor(Math.random() * data.categories.length);
+    let category = data.categories[randCat];
+
+    let randPrompt = Math.floor(Math.random() * data[category].length);
+    let prompt = data[category][randPrompt];
+
+    rooms[socket.room] = {
+      category: category,
+      prompt: prompt
+    };
+    io.to(socket.room).emit('start', rooms[socket.room]);
+  });
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
@@ -126,6 +119,9 @@ io.on('connection', (socket) => {
 
   // On user disconnecting
   socket.on('disconnect', () => {
+    if (socket.user.host) {
+      delete rooms[socket.room];
+    };
     console.log(`${socket.id} disconnected`);
   });
 
