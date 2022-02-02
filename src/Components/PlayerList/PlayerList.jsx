@@ -25,19 +25,21 @@ const PlayerList = () => {
   const update = (e, role) => {
     setColorModal(false);
     currentUser.role = role;
-    currentUser.color = e.target.attributes.color.value;
+    if (e.target.attributes.color.value !== '#000') {
+      currentUser.color = e.target.attributes.color.value;
+    }
     currentUser.id = socket.id;
     socket.emit('update', currentUser);
   };
 
-  // const kick = (e) => {
-  //   let kickedPlayer = users.filter(
-  //     (player) => player.id === e.target.attributes.playerId.value
-  //   );
-  //   console.log(kickedPlayer[0]);
-  //   kickedPlayer[0].role = 'spectator';
-  //   socket.emit('update', kickedPlayer[0]);
-  // };
+  const kick = (e) => {
+    let kickedPlayer = users.filter(
+      (player) => player.id === e.target.attributes.playerId.value
+    );
+    console.log(kickedPlayer[0]);
+    kickedPlayer[0].role = 'spectator';
+    socket.emit('update', kickedPlayer[0]);
+  };
 
   return (
     <>
@@ -62,7 +64,7 @@ const PlayerList = () => {
                         </span>
                       ) : currentUser.host ? (
                         <span
-                          // onClick={kick}
+                          onClick={kick}
                           playerId={player.id}
                           style={{ float: 'right', marginRight: '5px' }}
                         >

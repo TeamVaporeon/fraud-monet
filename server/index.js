@@ -17,7 +17,7 @@ const defaultColors = {
   '#94B1E9': true,
   '#AE97CD': true,
   '#D9ABD6': true,
-  '#A9B3BF': true
+  '#A9B3BF': true,
 };
 
 // Data JSON File
@@ -83,15 +83,15 @@ io.on('connection', (socket) => {
         rooms[socket.room] = {
           category: '',
           prompt: '',
-          colors: defaultColors
+          colors: defaultColors,
         };
-      };
+      }
       console.log(rooms);
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
       socket.emit('start', rooms[socket.room]);
-    };
+    }
   });
 
   // Emit handlers
@@ -126,7 +126,7 @@ io.on('connection', (socket) => {
 
     rooms[socket.room] = {
       category: category,
-      prompt: prompt
+      prompt: prompt,
     };
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
@@ -138,12 +138,12 @@ io.on('connection', (socket) => {
   /* ----- End of CHATROOM Code ----- */
 
   // On user disconnecting
-  socket.on('disconnect', () => {
-    if (socket.user.host) {
-      delete rooms[socket.room];
-    };
-    console.log(`${socket.id} disconnected`);
-  });
+  // socket.on('disconnect', () => {
+  //   if (socket.user.host) {
+  //     delete rooms[socket.room];
+  //   };
+  //   console.log(`${socket.id} disconnected`);
+  // });
 
   //------UPDATE PLAYER STATUS-------//
   socket.on('update', async (data) => {
@@ -155,7 +155,8 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
-    rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
+    rooms[socket.room].colors[data.color] =
+      !rooms[socket.room].colors[data.color];
     console.log(rooms);
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
