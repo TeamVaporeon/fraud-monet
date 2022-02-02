@@ -15,7 +15,7 @@ import { hostSocket } from '../../CreateRoom';
 
 const GameMain = () => {
   const ref = useRef(null);
-  const { round, setRound, socket, users } = useContext(AppContext);
+  const { round, setRound, socket, users, dummyData } = useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(() => {
     if (hostSocket.id) {
