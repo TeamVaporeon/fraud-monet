@@ -57,9 +57,6 @@ const io = new Server(httpServer, {
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
   user.id = socket.id;
-  if (user.host) {
-    rooms[user.roomID] = user;
-  };
   // const sessionID = socket.handshake.auth;
   // console.log('SESSION', sessionID);
   socket.user = user;
@@ -107,9 +104,9 @@ io.on('connection', (socket) => {
     socket.emit('packet', data);
   });
 
-  socket.on('draw', (mouseData) => {
+  socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
-    socket.broadcast.to(socket.room).emit('draw', mouseData);
+    socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
   /* ----- CHATROOM Code ----- */
