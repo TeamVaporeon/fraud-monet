@@ -1,41 +1,40 @@
-import React, {useState, useEffect} from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect, useContext } from 'react';
 import Sketch from 'react-p5';
-import { io } from 'socket.io-client';
-import { AppContext } from '../../../App.jsx';
+import { AppContext } from '../../../App';
+import './Canvas.css';
 
-const Canvas = (props) => {
+const Canvas = ({thingy, actualData}) => {
 
-  const socket = io.connect('http://127.0.0.1:8080');
+  const { socket } = useContext(AppContext);
 
   const setup = (p5, canvasParentRef) => {
-
-    const canva = p5.createCanvas(props.thingy.offsetWidth, props.thingy.offsetHeight-100).parent(canvasParentRef);
+    const canva = p5.createCanvas(thingy.width, thingy.height - 100).parent(canvasParentRef);
     p5.background(220);
 
-    const save = p5.createButton('Download Drawing').parent(canvasParentRef);
+    canva.id('sketchpad');
+
+    const save = p5.createButton('Download Canvas').parent(canvasParentRef);
 
     save.mouseClicked(() => {
       p5.saveCanvas(canva, 'our drawing', 'jpg');
-    })
-
-    socket.on('mouse', data => {
+    });
+    socket.on('mouse', (data) => {
       p5.stroke('black');
       p5.strokeWeight(10);
-      p5.line(data.x, data.y, data.px, data.py)
-    })
-  }
+      p5.line(data.x, data.y, data.px, data.py);
+    });
+  };
 
-  const draw = (p5) => {
-  }
-
+  const draw = (p5) => {};
 
   const mouseDragged = (p5) => {
     var data = {
       x: p5.mouseX,
       y: p5.mouseY,
       px: p5.pmouseX,
-      py: p5.pmouseY
-    }
+      py: p5.pmouseY,
+    };
     socket.emit('mouse', data);
     p5.stroke('black');
     p5.strokeWeight(10);
@@ -43,8 +42,8 @@ const Canvas = (props) => {
   }
 
   const windowResized = p5 => {
-    console.log(props.actualData);
-    p5.resizeCanvas(props.thingy.offsetWidth, props.thingy.offsetHeight-100)
+    console.log(actualData);
+    p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight-100)
     p5.background(220);
   }
 

@@ -26,8 +26,8 @@ const UsernameModal = ({ setOpenUsername }) => {
         host: false,
         fraud: false,
         role: 'spectator',
-        score: 0
-      }
+        score: 0,
+      },
     };
     socket.connect();
     socket.emit('joinRoom', window.location.pathname);

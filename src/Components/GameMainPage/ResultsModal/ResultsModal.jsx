@@ -17,14 +17,13 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
         <button
           onClick={() => {
             setOpenResults(false);
-            setOpenVote(false);
           }}
         >
           X
         </button>
         <button
           onClick={() => {
-            setOpenVote(false);
+            // setOpenVote(false);
             setOpenResults(false);
             setOpenFinal(true);
           }}
