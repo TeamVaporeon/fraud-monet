@@ -14,7 +14,6 @@ const PlayerList = () => {
     if (users) {
       setPlayers(users.filter((player) => player.role === 'player'));
       setSpectators(users.filter((player) => player.role === 'spectator'));
-      // setHost(users.filter((player) => player.host === true));
     }
   }, [users]);
 
@@ -25,10 +24,6 @@ const PlayerList = () => {
     currentUser.id = socket.id;
     socket.emit('update', currentUser);
   };
-
-  // startTest() {
-  //   console.log('Game Started!');
-  // }
 
   return (
     <>
@@ -66,18 +61,14 @@ const PlayerList = () => {
           </div>
           <div className='join-start-buttons'>
             {currentUser.role === 'spectator' ? (
-              <Button
-                onClick={() => setColorModal(true)}
-                variant='success'
-                size='sm'
-              >
+              <Button onClick={() => setColorModal(true)} variant='success'>
                 Join
               </Button>
             ) : (
               <Button disabled>Join</Button>
             )}
             {currentUser.host ? (
-              <Button onClick={null} variant='success' size='sm'>
+              <Button onClick={null} variant='success'>
                 Start
               </Button>
             ) : null}
