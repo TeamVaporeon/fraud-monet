@@ -2,13 +2,16 @@ import React, { useEffect, useContext, useState } from 'react';
 import './PlayerList.css';
 import Button from 'react-bootstrap/Button';
 import { AppContext } from '../../App';
-import { Socket } from 'socket.io-client';
 
 const PlayerList = () => {
   const { users, currentUser, socket, availColors } = useContext(AppContext);
   const [players, setPlayers] = useState(null);
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
+
+  const handleStart = (e) => {
+    socket.emit('start');
+  };
 
   useEffect(() => {
     if (users) {
@@ -68,7 +71,7 @@ const PlayerList = () => {
               <Button disabled>Join</Button>
             )}
             {currentUser.host ? (
-              <Button onClick={null} variant='success'>
+              <Button onClick={handleStart} variant='success' size='sm'>
                 Start
               </Button>
             ) : null}

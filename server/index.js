@@ -4,22 +4,27 @@ const express = require('express');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
 const cookieParser = require('cookie-parser');
-// const session = require('express-session');
-// const { v4: uuidv4 } = require('uuid');
 const cookie = require('cookie');
+const editFile = require('edit-json-file');
 const rooms = {};
+const defaultColors = {
+  '#FFCCEB': true,
+  '#DF6770': true,
+  '#EA9F4E': true,
+  '#FBE89B': true,
+  '#B9E49F': true,
+  '#73E5DA': true,
+  '#94B1E9': true,
+  '#AE97CD': true,
+  '#D9ABD6': true,
+  '#A9B3BF': true
+};
+
+// Data JSON File
+var file = editFile(path.join(__dirname, 'data.json'));
 
 // Express Server
 const app = express();
-// app.use(session({
-//   genid: function (req) {
-//     return uuidv4();
-//   },
-//   secret: 'cat',
-//   resave: false,
-//   saveUninitialized: true,
-//   cookie: { maxAge: 360000 }
-// }));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -30,13 +35,8 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '../build/index.html'));
 });
 
-app.post('/host/:id', (req, res) => {
+app.post('/category', (req, res) => {
   res.status(201).send();
-});
-
-app.get('/host/:id', (req, res) => {
-  const room = req.params.id;
-  res.send(rooms[room]);
 });
 
 app.get('/:id', (req, res) => {
@@ -56,17 +56,14 @@ const io = new Server(httpServer, {
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
   user.id = socket.id;
-  // const sessionID = socket.handshake.auth;
-  // console.log('SESSION', sessionID);
   socket.user = user;
   socket.emit('user_object', user);
   next();
 });
 
-// const session = {}
-
 // On Client Connecting To Server
 io.on('connection', (socket) => {
+  socket.user.id = socket.id;
   console.log(`Socket Connected With Id: `, socket.id);
   let users = [];
 
@@ -82,10 +79,19 @@ io.on('connection', (socket) => {
     socket.emit('users', users);
     socket.broadcast.to(socket.room).emit('newUser', users);
     if (socket.user.host) {
+      if (!rooms[socket.room]) {
+        rooms[socket.room] = {
+          category: '',
+          prompt: '',
+          colors: defaultColors
+        };
+      };
+      console.log(rooms);
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
-    }
-    socket.emit('connected');
+    } else if (rooms[socket.room]) {
+      socket.emit('start', rooms[socket.room]);
+    };
   });
 
   // Emit handlers
@@ -109,6 +115,22 @@ io.on('connection', (socket) => {
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
+  socket.on('start', async () => {
+    const data = await file.toObject();
+
+    let randCat = Math.floor(Math.random() * data.categories.length);
+    let category = data.categories[randCat];
+
+    let randPrompt = Math.floor(Math.random() * data[category].length);
+    let prompt = data[category][randPrompt];
+
+    rooms[socket.room] = {
+      category: category,
+      prompt: prompt
+    };
+    io.to(socket.room).emit('start', rooms[socket.room]);
+  });
+
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
     socket.broadcast.to(socket.room).emit('receive_message', userMessage);
@@ -117,6 +139,9 @@ io.on('connection', (socket) => {
 
   // On user disconnecting
   socket.on('disconnect', () => {
+    if (socket.user.host) {
+      delete rooms[socket.room];
+    };
     console.log(`${socket.id} disconnected`);
   });
 
@@ -130,6 +155,9 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
+    rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
+    console.log(rooms);
+    io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });
 });
