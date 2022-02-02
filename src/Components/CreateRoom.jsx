@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import io from 'socket.io-client';
 
 var generateRandString = () => {
   var result = '';
@@ -13,31 +14,33 @@ var generateRandString = () => {
   return result;
 };
 
+export const hostSocket = io({
+  withCredentials: true,
+  autoConnect: false
+});
+
 var CreateRoom = (props) => {
   const [name, setName] = useState('');
   const navigate = useNavigate();
   const routeChange = (e) => {
     e.preventDefault();
     const roomID = generateRandString();
-    const userInfo = {
-      username: name,
-      roomID,
-      color: '#000',
-      host: true,
-      fraud: false,
-      role: 'player',
-      score: 0
-    }
-    axios.post(`/`, userInfo, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-      .then((data) => {
-        console.log(data);
-        navigate(`/${roomID}`);
-      })
-      .catch(err => console.log('ERROR', err.message));
+    hostSocket.auth = {
+      user: {
+        username: name,
+        roomID: `/${roomID}`,
+        color: '#000',
+        host: true,
+        fraud: false,
+        role: 'player',
+        score: 0
+      }
+    };
+    hostSocket.connect();
+    hostSocket.emit('joinRoom', `/${roomID}`);
+    hostSocket.on('hostConnected', () => {
+      navigate(`/${roomID}`);
+    });
   };
 
   return (
