@@ -29,10 +29,10 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
     <div className='voteModal'>
       <div className='voteContainer'>
         <h3>Vote</h3>
+        Vote for whoever you think is the fraud!
         <form className='voteForm'>
           {players.map((player, i) => (
             <label>
-              {player}
               <input
                 className='ckb'
                 type='radio'
@@ -43,6 +43,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
                   setPick(player);
                 }}
               />
+              {` ${player}`}
             </label>
           ))}
         </form>

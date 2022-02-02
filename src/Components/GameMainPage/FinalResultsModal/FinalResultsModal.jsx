@@ -1,17 +1,27 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, createContext, useEffect, useContext } from 'react';
+import { AppContext } from '../../../App.jsx';
 import './FinalResultsModal.css';
 
 const FinalResultsModal = ({ setOpenFinal }) => {
-  // const [d, setD] = useState(null);
+  const { users } = useContext(AppContext);
+  const players = users.filter((user) => user.role === 'player');
+  console.log(players);
+  const [fraud] = players.filter((player) => player.fraud === true);
+  console.log(fraud);
+
   return (
     <div className='finalModal'>
       <div className='finalContainer'>
-        Final Results:
         <div className='final_result_text'>
-          Real Fraud Monet: playerUsername
+          The Fraud was <strong>{fraud?.username || 'not found'}</strong>!
         </div>
-        <div className='final_result'>PlayerScore List or Table</div>
+        Score:
+        <div className='final_result'>
+          {players.map((player) => (
+            <>{`${player.username}: ${player.score}`}</>
+          ))}
+        </div>
         <button onClick={() => setOpenFinal(false)}>X</button>
       </div>
     </div>
