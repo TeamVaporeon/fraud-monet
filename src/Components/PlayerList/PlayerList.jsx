@@ -73,12 +73,6 @@ const PlayerList = () => {
               Number of Spectators: {spectators ? spectators.length : 0}
             </div>
           </div>
-<<<<<<< HEAD
-          <Stack className="join-start-buttons" direction="horizontal" gap={2}>
-            <Button onClick={joinTest} variant="success" size="sm">Join</Button>
-            <Button onClick={null} variant="success" size="sm">Start</Button>
-          </Stack>
-=======
           <div className='join-start-buttons'>
             {currentUser.role === 'spectator' ? (
               <Button
@@ -114,7 +108,6 @@ const PlayerList = () => {
               })}
             </div>
           ) : null}
->>>>>>> 083a2a36a255f39ecc6ef8ba5b108f4e01cb0794
         </div>
       </div>
     </>
@@ -125,3 +118,8 @@ export default PlayerList;
 
 {/* <Button variant="success" size="sm" disabled>Join</Button> */}
 {/* <Button variant="success" size="sm" disabled>Start</Button>  */}
+
+{/* <Stack className="join-start-buttons" direction="horizontal" gap={2}>
+<Button onClick={joinTest} variant="success" size="sm">Join</Button>
+<Button onClick={null} variant="success" size="sm">Start</Button>
+</Stack> */}
