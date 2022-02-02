@@ -1,9 +1,12 @@
 const path = require('path');
 const cors = require('cors');
+const argon2 = require('argon2');
 const express = require('express');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
 const cookieParser = require('cookie-parser');
+const { InMemorySessionStore } = require('./sessionStore');
+const sessionStore = new InMemorySessionStore();
 // const session = require('express-session');
 // const { v4: uuidv4 } = require('uuid');
 const cookie = require('cookie');
@@ -57,8 +60,29 @@ const io = new Server(httpServer, {
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
   user.id = socket.id;
-  // const sessionID = socket.handshake.auth;
-  // console.log('SESSION', sessionID);
+  const sessionID = socket.handshake.auth.user.sessionID;
+  if (sessionID) {
+    const session = sessionStore.findSession(sessionID);
+    if (session) {
+      socket.sessionID = sessionID;
+      socket.userID = session.username;
+      socket.emit('user_object', user);
+      return next();
+    }
+  }
+  const username = socket.handshake.auth.user.username;
+  if (!username) {
+    return next(new Error('Invalid username'));
+  }
+
+
+  argon2.hash(username)
+    .then(hash => socket.sessionID = hash)
+    .catch(err => console.error(err));
+  argon2.hash(username)
+    .then(hash => socket.userID = hash)
+    .catch(err => console.error(err));
+  socket.username = username;
   socket.user = user;
   socket.emit('user_object', user);
   next();
@@ -70,6 +94,19 @@ io.use((socket, next) => {
 io.on('connection', (socket) => {
   console.log(`Socket Connected With Id: `, socket.id);
   let users = [];
+
+  // Persist Session
+  sessionStore.saveSession(socket.sessionID, socket.handshake.auth.user);
+  socket.emit('session', {
+    sessionID: socket.sessionID,
+    userID: socket.userID
+  })
+
+  // Print any event received by Client
+  socket.onAny((e, ...args) => {
+    console.log(e, args);
+    console.log(sessionStore);
+  });
 
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {

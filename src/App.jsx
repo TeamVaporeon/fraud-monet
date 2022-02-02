@@ -40,6 +40,13 @@ function App() {
     socket = hostSocket;
   }
 
+  socket.on('session', ({ sessionID, userID }) => {
+    socket.auth.user.sessionID = { sessionID };
+    localStorage.setItem('sessionID', sessionID);
+    socket.userID = userID;
+    console.log(localStorage);
+  })
+
   socket.on('users', (userList) => {
     setUsers(userList);
   });
