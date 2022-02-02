@@ -34,8 +34,6 @@ function App() {
             score: 0,
           }
     );
-    // setCurrentUser
-    console.log(socket.auth);
   }, [socket.auth]);
 
   if (hostSocket.id) {
