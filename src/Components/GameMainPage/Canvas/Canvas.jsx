@@ -11,7 +11,7 @@ const Canvas = (props) => {
     const canva = p5
       .createCanvas(props.width, props.height - 100)
       .parent(canvasParentRef);
-    p5.background(220);
+    p5.background(255);
 
     canva.id('sketchpad');
 
@@ -37,7 +37,7 @@ const Canvas = (props) => {
     };
     socket.emit('mouse', data);
     p5.stroke('black');
-    p5.strokeWeight(10);
+    p5.strokeWeight(5);
     p5.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
   };
 
