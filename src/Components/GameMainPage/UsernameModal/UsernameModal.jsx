@@ -30,6 +30,8 @@ const UsernameModal = ({ setOpenUsername }) => {
       },
     };
     socket.connect();
+    let sessionID = localStorage.getItem('sessionID');
+    socket.auth.sessionID = sessionID;
     socket.emit('joinRoom', window.location.pathname);
     setOpenUsername(false);
   };

@@ -59,19 +59,28 @@ const io = new Server(httpServer, {
 // Socket middleware
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
-  user.id = socket.id;
+  if (user) {
+    user.id = socket.id;
+  }
+  // Get session id
   const sessionID = socket.handshake.auth.sessionID;
 
   if (sessionID) {
+    // Check for session
     const session = sessionStore.findSession(sessionID);
-
+    console.log(session);
+    // Assign user from matching session
     if (session) {
+      socket.user = session
       socket.sessionID = sessionID;
-      socket.userID = session.userID;
-      socket.username = session.username
-      socket.emit('user_object', user);
-      return next();
+      socket.user.id = socket.id;
+    // Save the session and assign the user as user
+    } else {
+      sessionStore.saveSession(socket.handshake.auth.sessionID, user);
+      socket.user = user;
     }
+    socket.emit('user_object', user);
+    return next();
   }
   const username = socket.handshake.auth.user.username;
   if (!username) {
@@ -81,6 +90,8 @@ io.use((socket, next) => {
   const hashIDs = async () => {
     try {
       const hash = await argon2.hash(username)
+      socket.handshake.auth.sessionID = hash;
+      socket.handshake.auth.userID = hash;
       socket.sessionID = hash;
       socket.userID = hash;
     } catch (err) {
@@ -96,7 +107,7 @@ io.use((socket, next) => {
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
-  socket.user.id = socket.id;
+  socket.user ? socket.user.id = socket.id : socket.user = {};
   console.log(`Socket Connected With Id: `, socket.id);
   let users = [];
 
@@ -127,19 +138,28 @@ io.on('connection', (socket) => {
           colors: defaultColors
         };
       };
-      console.log(rooms);
+      // console.log(rooms);
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
       socket.emit('start', rooms[socket.room]);
     };
-    socket.emit('connected');
+    // socket.emit('connected');
 
     // Session emitter
-    sessionStore.saveSession(socket.sessionID, socket.handshake.auth.user);
+    console.log('SOCKET USER', socket.user);
     socket.emit('session', {
-      sessionID: socket.sessionID,
-      userID: socket.userID
+      sessionID: socket.handshake.auth.sessionID,
+      user: socket.user
+    });
+    // console.log(socket.user);
+
+    socket.on('connected', (user) => {
+      console.log(user);
+      // const session = sessionStore.findSession(sessionID.sessionID)
+      // if (session) {
+      //   socket.user = user
+      // }
     });
   });
 
@@ -173,19 +193,15 @@ io.on('connection', (socket) => {
 
   // On user disconnecting
   socket.on('disconnect', async () => {
-    const matchingSockets = await io.in(socket.userID).allSockets();
+    const matchingSockets = await io.in(socket.room).allSockets();
     const isDisconnected = matchingSockets.size === 0;
     if (isDisconnected) {
       socket.broadcast.emit('user disconnected', socket.userID);
-      sessionStore.saveSession(socket.sessionID, {
-        userID: socket.userID,
-        username: socket.username,
-        connected: false,
-      })
+      sessionStore.saveSession(socket.handshake.auth.sessionID, socket.handshake.auth.user);
     }
-    if (socket.user.host) {
-      delete rooms[socket.room];
-    };
+    // if (socket.user.host) {
+    //   delete rooms[socket.room];
+    // };
     console.log(`${socket.id} disconnected`);
   });
 
@@ -200,7 +216,7 @@ io.on('connection', (socket) => {
       users.push(sock.user);
     });
     rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
-    console.log(rooms);
+    // console.log(rooms);
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });

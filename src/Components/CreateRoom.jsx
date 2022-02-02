@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import io from 'socket.io-client';
 import './CreateRoom.css'
 
@@ -53,7 +52,7 @@ var CreateRoom = (props) => {
         <h1>Fraud Monet</h1>
         <div className="FormBox">
           <h2>Username</h2>
-          <input className="UserNameForm" type='text' onChange={(e) => { setName(e.target.value); }} required />
+          <input className="UserNameForm" type='text' onChange={(e) => { setName(e.target.value); }} required={true} />
           <button className="CreateButton" onClick={routeChange} >Create Game</button>
         </div>
       </div>
