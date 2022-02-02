@@ -1,5 +1,7 @@
 import React from 'react';
 import './PlayerList.css';
+import Button from 'react-bootstrap/Button';
+
 
 class PlayerList extends React.Component {
   constructor(props) {
@@ -33,7 +35,7 @@ class PlayerList extends React.Component {
       <>
       <div className="total-game-list">
         <div className="players-list">
-          <h3>Players:</h3>
+          <h3 className="player-title">Players:</h3>
           <div className="just-players">
             {this.state.host.map((player, index) =>
             <div className="host" key={index}>
@@ -58,8 +60,8 @@ class PlayerList extends React.Component {
             <div>Number of Spectators: {this.state.spectatorsList.length}</div>
           </div>
           <div className="join-start-buttons">
-            <button>Join</button>
-            <button>Start</button>
+            <Button variant="success" size="sm">Join</Button>
+            <Button variant="success" size="sm">Start</Button>
           </div>
         </div>
       </div>

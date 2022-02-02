@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import CreateRoom from './Components/CreateRoom.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const root = document.getElementById('root');
 
