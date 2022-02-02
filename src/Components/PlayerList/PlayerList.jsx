@@ -151,7 +151,6 @@ const PlayerList = () => {
             </div>
           ) : null}
         </div>
-      </div>
     </>
   );
 };
