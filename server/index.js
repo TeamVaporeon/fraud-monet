@@ -32,12 +32,12 @@ app.get('/', (req, res) => {
 
 app.post('/host/:id', (req, res) => {
   res.status(201).send();
-})
+});
 
 app.get('/host/:id', (req, res) => {
   const room = req.params.id;
   res.send(rooms[room]);
-})
+});
 
 app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
@@ -47,11 +47,10 @@ app.get('/:id', (req, res) => {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
 });
-
 
 // Persistent Session
 io.use((socket, next) => {
@@ -77,7 +76,7 @@ io.on('connection', (socket) => {
     socket.room = url;
     socket.join(socket.room);
     let userSockets = await io.in(socket.room).fetchSockets();
-    userSockets.forEach(sock => {
+    userSockets.forEach((sock) => {
       users.push(sock.user);
     });
     socket.emit('users', users);
@@ -85,7 +84,7 @@ io.on('connection', (socket) => {
     if (socket.user.host) {
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
-    };
+    }
     socket.emit('connected');
   });
 
@@ -101,7 +100,7 @@ io.on('connection', (socket) => {
       host: socket.host,
       fraud: socket.fraud,
       role: socket.role,
-    })
+    });
     socket.emit('packet', data);
   });
 
@@ -119,6 +118,19 @@ io.on('connection', (socket) => {
   // On user disconnecting
   socket.on('disconnect', () => {
     console.log(`${socket.id} disconnected`);
+  });
+
+  //------UPDATE PLAYER STATUS-------//
+  socket.on('update', async (data) => {
+    let userSockets = await io.in(socket.room).fetchSockets();
+    users = [];
+    userSockets.forEach((sock) => {
+      if (sock.user.id === data.id) {
+        sock.user = data;
+      }
+      users.push(sock.user);
+    });
+    io.to(socket.room).emit('users', users);
   });
 });
 
