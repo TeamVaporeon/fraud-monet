@@ -15,14 +15,28 @@ var socket = io({
 
 function App() {
   const [round, setRound] = useState(0);
-  const [users, setUsers] = useState(() => {
-    if (hostSocket.id) {
-      return [hostSocket.auth.user];
-    } else {
-      return [];
-    }
-  });
-  const [playerUsername, setPlayerUsername] = useState('');
+  const [users, setUsers] = useState(
+    hostSocket.id ? [hostSocket.auth.user] : []
+  );
+  const [currentUser, setCurrentUser] = useState({});
+
+  useEffect(() => {
+    setCurrentUser(
+      socket.auth && socket.auth.user
+        ? socket.auth.user
+        : {
+            username: null,
+            roomID: null,
+            color: '#000',
+            host: false,
+            fraud: false,
+            role: 'spectator',
+            score: 0,
+          }
+    );
+    // setCurrentUser
+    console.log(socket.auth);
+  }, [socket.auth]);
 
   if (hostSocket.id) {
     socket = hostSocket;
@@ -51,13 +65,12 @@ function App() {
     <AppContext.Provider
       value={{
         dummyData,
-        playerUsername,
-        setPlayerUsername,
         round,
         setRound,
         socket,
         users,
         setUsers,
+        currentUser,
       }}
     >
       <div className='App'>
