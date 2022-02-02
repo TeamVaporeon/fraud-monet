@@ -23,8 +23,10 @@ const Canvas = ({thingy, actualData, dummyData}) => {
   }, [currentUser]);
 
   const setup = (p5, canvasParentRef) => {
+    const canva = p5
+      .createCanvas(props.width, props.height - 100)
+      .parent(canvasParentRef);
 
-    canva = p5.createCanvas(thingy.offsetWidth, thingy.offsetHeight - 100).parent(canvasParentRef);
     p5.background(255);
 
     canva.id('sketchpad');
