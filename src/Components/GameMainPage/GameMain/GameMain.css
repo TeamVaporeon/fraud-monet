@@ -12,6 +12,7 @@
 .game_logo {
   margin: 2.5rem;
   margin-bottom: 0.8rem;
+  font-family: Mochiy-Pop-P-One;
 }
 
 .game_topbar {
@@ -36,11 +37,13 @@
 .game_players {
   grid-area: a;
   background-color: rgb(148, 177, 232);
+  border-radius: 1%;
 }
 
 .game_canvas {
   grid-area: b;
   background-color: rgb(173, 151, 205);
+  border-radius: 2%;
 }
 
 .game_chat {

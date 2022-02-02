@@ -33,24 +33,40 @@ function App() {
   socket.on('users', (userList) => {
     setUsers(userList);
   });
+  
   socket.on('newUser', (newUsers) => {
     setUsers(newUsers);
   });
-
 
   const dummyData = makeRoomData();
 
   // Initial 0; after clicked Start, 1; after first vote, 2; after second vote, 3 >> Game End, Show result modal
 
+  useEffect(() => {
+    axios
+      .get(`/host${window.location.pathname}`)
+      .then((res) => {
+        setUsers(res.data);
+      })
+      .catch((err) => console.log(err.message));
+  }, []);
   return (
     <AppContext.Provider
-      value={{ dummyData, playerUsername, setPlayerUsername, round, setRound, socket, users, setUsers }}
+      value={{
+        dummyData,
+        playerUsername,
+        setPlayerUsername,
+        round,
+        setRound,
+        socket,
+        users,
+        setUsers,
+      }}
     >
       <div className='App'>
         <header className='App-header'></header>
         <GameMain dummyData={dummyData} actualData={users}/>
       </div>
-      {console.log('test invited player input username:::', playerUsername)}
     </AppContext.Provider>
   );
 }
