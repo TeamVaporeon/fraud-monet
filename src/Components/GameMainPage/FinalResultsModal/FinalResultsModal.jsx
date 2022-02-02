@@ -7,7 +7,11 @@ const FinalResultsModal = ({ setOpenFinal }) => {
   return (
     <div className='finalModal'>
       <div className='finalContainer'>
-        Final Results
+        Final Results:
+        <div className='final_result_text'>
+          Real Fraud Monet: playerUsername
+        </div>
+        <div className='final_result'>PlayerScore List or Table</div>
         <button onClick={() => setOpenFinal(false)}>X</button>
       </div>
     </div>
