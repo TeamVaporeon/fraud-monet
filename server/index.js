@@ -7,22 +7,11 @@ const { createServer } = require('http');
 const cookieParser = require('cookie-parser');
 const { InMemorySessionStore } = require('./sessionStore');
 const sessionStore = new InMemorySessionStore();
-// const session = require('express-session');
-// const { v4: uuidv4 } = require('uuid');
 const cookie = require('cookie');
 const rooms = {};
 
 // Express Server
 const app = express();
-// app.use(session({
-//   genid: function (req) {
-//     return uuidv4();
-//   },
-//   secret: 'cat',
-//   resave: false,
-//   saveUninitialized: true,
-//   cookie: { maxAge: 360000 }
-// }));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -56,20 +45,20 @@ const io = new Server(httpServer, {
 });
 
 
-// Persistent Session
+// Socket middleware
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
   user.id = socket.id;
-  // const sessionID = socket.handshake.headers
-  const cookies = cookie.parse(socket.handshake.headers)
-  console.log(cookies);
-  const sessionID = cookies.sessionid;
+  const cookies = socket.handshake.headers.cookie;
+  const s = cookie.parse(cookies);
+  const sessionID = s.sessionid;
+
   if (sessionID) {
     const session = sessionStore.findSession(sessionID);
     if (session) {
       socket.sessionID = sessionID;
       socket.userID = session.username;
-      socket.emit('user_object', user);
+      socket.username = session.username;
       return next();
     }
   }
@@ -78,48 +67,71 @@ io.use((socket, next) => {
     return next(new Error('Invalid username'));
   }
 
+  const hashIDs = async () => {
+    try {
+      const hash = await argon2.hash(username)
+      socket.sessionID = hash;
+      socket.userID = hash;
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
-  argon2.hash(username)
-    .then(hash => socket.sessionID = hash)
-    .catch(err => console.error(err));
-  argon2.hash(username)
-    .then(hash => socket.userID = hash)
-    .catch(err => console.error(err));
+  hashIDs();
   socket.username = username;
   socket.user = user;
   socket.emit('user_object', user);
   next();
 });
 
-// const session = {}
-
 // On Client Connecting To Server
 io.on('connection', (socket) => {
+
+  sessionStore.saveSession(socket.sessionID, socket.handshake.auth.user);
+
+  // Initializing
   console.log(`Socket Connected With Id: `, socket.id);
+  let sessionUsers = [];
   let users = [];
 
   // Persist Session
-  sessionStore.saveSession(socket.sessionID, socket.handshake.auth.user);
-  socket.emit('session', {
-    sessionID: socket.sessionID,
-    userID: socket.userID
-  })
+  console.log(sessionStore);
+  // sessionStore.findAllSessions().forEach(session => {
+  //   sessionUsers.push({
+  //     userID: session.userID,
+  //     username: session.username,
+  //     connected: session.connected,
+  //   });
+  // });
+
+  // io.to(socket.room).emit('user connected', {
+  //   userID: socket.userID,
+  //   username: socket.username,
+  //   user: socket.handshake.auth.user,
+  //   connected: true,
+  // });
 
   // Print any event received by Client
   socket.onAny((e, ...args) => {
     console.log(e, args);
-    console.log(sessionStore);
   });
+
 
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
-    // users.push(socket.username);
     socket.room = url;
     socket.join(socket.room);
+    socket.emit('session', {
+      sessionID: socket.sessionID,
+      userID: socket.userID
+    });
+
     let userSockets = await io.in(socket.room).fetchSockets();
     userSockets.forEach(sock => {
       users.push(sock.user);
     });
+
+    // Join room emitters
     socket.emit('users', users);
     socket.broadcast.to(socket.room).emit('newUser', users);
     if (socket.user.host) {
@@ -130,21 +142,6 @@ io.on('connection', (socket) => {
   });
 
   // Emit handlers
-  socket.on('createRoom', (data, next) => {
-    const adapter = io.of('createRoom').adapter;
-    adapter.pubClient.publish(data);
-    socket.emit('session', {
-      sessionID: socket.sessionID,
-      userID: socket.userID,
-      username: socket.username,
-      color: socket.color,
-      host: socket.host,
-      fraud: socket.fraud,
-      role: socket.role,
-    })
-    socket.emit('packet', data);
-  });
-
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
@@ -157,7 +154,17 @@ io.on('connection', (socket) => {
   /* ----- End of CHATROOM Code ----- */
 
   // On user disconnecting
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
+    const matchingSockets = await io.in(socket.userID).allSockets();
+    const isDisconnected = matchingSockets.size === 0;
+    if (isDisconnected) {
+      socket.broadcast.emit('user disconnected', socket.userID);
+      sessionStore.saveSession(socket.sessionID, {
+        userID: socket.userID,
+        username: socket.username,
+        connected: false
+      })
+    }
     console.log(`${socket.id} disconnected`);
   });
 });

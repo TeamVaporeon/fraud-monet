@@ -3,7 +3,6 @@ import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
 import makeRoomData from './mock-data.js';
 import { useState, createContext, useEffect } from 'react';
 import io from 'socket.io-client';
-import axios from 'axios';
 import { hostSocket } from './Components/CreateRoom';
 
 export const AppContext = createContext();
@@ -32,7 +31,23 @@ function App() {
     setUsers(newUsers);
   });
 
-  const [playerUsername, setPlayerUsername] = useState('');
+  socket.on('session', ({ sessionID, userID }) => {
+    console.log('client session');
+    // console.log('CLIENT SESSION', sessionID, userID);
+    // socket.auth.sessionID = sessionID;
+    // localStorage.setItem('sessionID', sessionID);
+  })
+
+  function checkForSession() {
+    const sessionID = localStorage.getItem('sessionID');
+    console.log(sessionID);
+    if (sessionID) {
+      console.log(socket.auth);
+      // socket.auth.sessionID = sessionID;
+      // socket.connect();
+    }
+  }
+  checkForSession();
 
   const dummyData = makeRoomData();
 
@@ -68,8 +83,8 @@ function App() {
         <header className='App-header'></header>
         <GameMain />
       </div>
-      {console.log(dummyData)}
-      {console.log(users)}
+      {/* {console.log(dummyData)}
+      {console.log(users)} */}
     </AppContext.Provider>
   );
 }
