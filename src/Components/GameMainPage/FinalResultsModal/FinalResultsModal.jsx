@@ -6,9 +6,7 @@ import './FinalResultsModal.css';
 const FinalResultsModal = ({ setOpenFinal }) => {
   const { users } = useContext(AppContext);
   const players = users.filter((user) => user.role === 'player');
-  console.log(players);
   const [fraud] = players.filter((player) => player.fraud === true);
-  console.log(fraud);
 
   return (
     <div className='finalModal'>
