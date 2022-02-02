@@ -23,7 +23,6 @@
 }
 
 .game_body {
-  /* max-width: 800px; */
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: 620px;
@@ -54,4 +53,11 @@
 
 .game_rules {
   cursor: pointer;
+  /* font-family: Mochiy-Pop-P-One; */
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.game_rules:hover {
+  transform: scale(1.2);
 }

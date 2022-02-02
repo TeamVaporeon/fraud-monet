@@ -15,7 +15,8 @@ import { hostSocket } from '../../CreateRoom';
 
 const GameMain = () => {
   const ref = useRef(null);
-  const { round, setRound, socket, users, currentUser } = useContext(AppContext);
+  const { round, setRound, socket, users, currentUser } =
+    useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(() => {
     if (hostSocket.id) {
@@ -42,17 +43,6 @@ const GameMain = () => {
       {openUsername ? (
         <UsernameModal setOpenUsername={setOpenUsername} socket={socket} />
       ) : null}
-      {openFinal ? <FinalResultsModal setOpenFinal={setOpenFinal} /> : null}
-      {openVote ? (
-        <Vote setOpenVote={setOpenVote} setOpenResults={setOpenResults} />
-      ) : null}
-      {openResults ? (
-        <ResultsModal
-          setOpenVote={setOpenVote}
-          setOpenResults={setOpenResults}
-          setOpenFinal={setOpenFinal}
-        />
-      ) : null}
       <div className='game_topbar'>
         <div>
           <GameLogic />
@@ -69,6 +59,18 @@ const GameMain = () => {
         </div>
       </div>
       <div className='game_body'>
+        {openVote ? (
+          <Vote setOpenVote={setOpenVote} setOpenResults={setOpenResults} />
+        ) : null}
+        {openFinal ? <FinalResultsModal setOpenFinal={setOpenFinal} /> : null}
+
+        {openResults ? (
+          <ResultsModal
+            setOpenVote={setOpenVote}
+            setOpenResults={setOpenResults}
+            setOpenFinal={setOpenFinal}
+          />
+        ) : null}
         <div className='game_players'>
           <PlayerList />
         </div>

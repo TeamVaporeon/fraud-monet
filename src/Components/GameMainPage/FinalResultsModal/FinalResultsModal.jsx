@@ -9,10 +9,11 @@ const FinalResultsModal = ({ setOpenFinal }) => {
     <div className='finalModal'>
       <div className='finalContainer'>
         <h3 className='finalTitle'>Final Results:</h3>
-        <div className='finalText'>
-          Real Fraud Monet: <span>playerUsername</span>
+
+        <div className='finalScore'>
+          <div className='finalText'>Real Fraud Monet: Playername</div>
+          <table>PlayerScore List or Table</table>
         </div>
-        <div className='finalScore'>PlayerScore List or Table</div>
         <button
           className='finalCloseBtn'
           onClick={() => {

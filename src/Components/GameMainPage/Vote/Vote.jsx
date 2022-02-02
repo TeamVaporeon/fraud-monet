@@ -30,10 +30,9 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
         <h3 className='voteTitle'>Vote</h3>
         <form className='voteForm'>
           {players.map((player, i) => (
-            <label>
+            <label className='votePlayername'>
               {player}
               <input
-                className='ckb'
                 type='radio'
                 name='ckb'
                 value={player}
@@ -41,6 +40,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
                 onClick={() => {
                   setPick(player);
                 }}
+                required='required'
               />
             </label>
           ))}
