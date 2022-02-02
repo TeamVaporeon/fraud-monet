@@ -4,12 +4,15 @@ import Sketch from 'react-p5';
 import { AppContext } from '../../../App';
 import './Canvas.css';
 
-const Canvas = ({thingy, actualData}) => {
+const Canvas = ({thingy, actualData, dummyData}) => {
 
-  const { socket } = useContext(AppContext);
+  const [turn, setTurn] = useState(0);
+  const { socket, users, setRound, round } = useContext(AppContext);
+  const [currentUser, setCurrentUser] = useState();
 
   const setup = (p5, canvasParentRef) => {
-    const canva = p5.createCanvas(thingy.width, thingy.height - 100).parent(canvasParentRef);
+
+    const canva = p5.createCanvas(thingy.offsetWidth, thingy.offsetHeight - 100).parent(canvasParentRef);
     p5.background(220);
 
     canva.id('sketchpad');
@@ -19,10 +22,26 @@ const Canvas = ({thingy, actualData}) => {
     save.mouseClicked(() => {
       p5.saveCanvas(canva, 'our drawing', 'jpg');
     });
+
     socket.on('mouse', (data) => {
       p5.stroke('black');
       p5.strokeWeight(10);
       p5.line(data.x, data.y, data.px, data.py);
+    });
+
+    const x = socket.auth.user;
+    x.id = socket.id;
+    setCurrentUser(x);
+
+    canva.mouseReleased(() => {
+      //increment turn when mouse is released
+      if (turn === users.length && round !== 3) {
+        //if on last player, go back to first player and increment round
+        setTurn(0);
+        setRound(round + 1);
+      } else {
+        setTurn(turn + 1);
+      }
     });
   };
 
@@ -42,7 +61,8 @@ const Canvas = ({thingy, actualData}) => {
   }
 
   const windowResized = p5 => {
-    console.log(actualData);
+    console.log(users);
+    console.log('state: ' + JSON.stringify(currentUser));
     p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight-100)
     p5.background(220);
   }

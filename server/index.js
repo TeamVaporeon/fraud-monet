@@ -69,6 +69,7 @@ io.use((socket, next) => {
 // On Client Connecting To Server
 io.on('connection', (socket) => {
   console.log(`Socket Connected With Id: `, socket.id);
+  socket.user.id = socket.id;
   let users = [];
 
   // Join a room based on room id
