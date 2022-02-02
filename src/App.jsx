@@ -1,5 +1,3 @@
-/*eslint-disable no-unused-vars*/
-
 import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
 import makeRoomData from './mock-data.js';
@@ -12,61 +10,66 @@ export const AppContext = createContext();
 
 var socket = io({
   withCredentials: true,
-  autoConnect: false
+  autoConnect: false,
 });
 
 function App() {
   const [round, setRound] = useState(0);
-  const [users, setUsers] = useState(() => {
-    if (hostSocket.id) {
-      return [hostSocket.auth.user];
-    } else {
-      return [];
-    };
-  });
-  const [playerUsername, setPlayerUsername] = useState('');
+  const [users, setUsers] = useState(
+    hostSocket.id ? [hostSocket.auth.user] : []
+  );
+  const [currentUser, setCurrentUser] = useState({});
 
   if (hostSocket.id) {
     socket = hostSocket;
-  };
+  }
 
   socket.on('users', (userList) => {
     setUsers(userList);
   });
-  
+
   socket.on('newUser', (newUsers) => {
     setUsers(newUsers);
   });
 
+  const [playerUsername, setPlayerUsername] = useState('');
+
   const dummyData = makeRoomData();
 
-  // Initial 0; after clicked Start, 1; after first vote, 2; after second vote, 3 >> Game End, Show result modal
-
   useEffect(() => {
-    axios
-      .get(`/host${window.location.pathname}`)
-      .then((res) => {
-        setUsers(res.data);
-      })
-      .catch((err) => console.log(err.message));
-  }, []);
+    setCurrentUser(
+      socket.auth && socket.auth.user
+        ? socket.auth.user
+        : {
+            username: null,
+            roomID: null,
+            color: '#000',
+            host: false,
+            fraud: false,
+            role: 'spectator',
+            score: 0,
+          }
+    );
+  }, [socket.auth]);
+
   return (
     <AppContext.Provider
       value={{
         dummyData,
-        playerUsername,
-        setPlayerUsername,
         round,
         setRound,
         socket,
         users,
         setUsers,
+        currentUser,
       }}
     >
       <div className='App'>
         <header className='App-header'></header>
-        <GameMain dummyData={dummyData} actualData={users}/>
+        <GameMain />
       </div>
+      {console.log(dummyData)}
+      {console.log(users)}
     </AppContext.Provider>
   );
 }
