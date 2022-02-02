@@ -64,30 +64,3 @@ const PlayerList = () => {
 }
 
 export default PlayerList;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, {useState, useEffect} from 'react';
-
-// const PlayerList = (props) => {
-
-//   return (
-//     <>
-//     <h3>Players List</h3>
-//     </>
-//   )
-// }
-
-// export default PlayerList;
