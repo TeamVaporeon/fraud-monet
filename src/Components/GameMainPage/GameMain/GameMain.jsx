@@ -13,7 +13,7 @@ import Vote from '../Vote/Vote';
 import { AppContext } from '../../../App';
 import { hostSocket } from '../../CreateRoom';
 
-const GameMain = ({ dummyData, actualData }) => {
+const GameMain = () => {
   const ref = useRef(null);
   const { round, setRound, socket, users } = useContext(AppContext);
 
@@ -70,7 +70,7 @@ const GameMain = ({ dummyData, actualData }) => {
       </div>
       <div className='game_body'>
         <div className='game_players'>
-          <PlayerList dummyData={dummyData} actualData={actualData} />
+          <PlayerList />
         </div>
         <div className='game_canvas' ref={ref}>
           {ref.current?.offsetWidth ? (

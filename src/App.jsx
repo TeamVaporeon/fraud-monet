@@ -73,7 +73,7 @@ function App() {
     >
       <div className='App'>
         <header className='App-header'></header>
-        <GameMain dummyData={dummyData} actualData={users} />
+        <GameMain />
       </div>
     </AppContext.Provider>
   );

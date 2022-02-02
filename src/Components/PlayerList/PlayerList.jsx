@@ -1,83 +1,66 @@
-import React from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import './PlayerList.css';
 import Button from 'react-bootstrap/Button';
+import { AppContext } from '../../App';
 
+const PlayerList = () => {
+  const { users, currentUser } = useContext(AppContext);
+  const [players, setPlayers] = useState(null);
+  const [spectators, setSpectators] = useState(null);
+  const [host, setHost] = useState(null);
 
-class PlayerList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      list : [],
-      host : [],
-      playersList : [],
-      spectatorsList : []
+  useEffect(() => {
+    if (users) {
+      setPlayers(users.filter(player => (player.role === 'player' && player.host === false)));
+      setSpectators(users.filter(player => player.role === 'spectator'));
+      setHost(users.filter(player => player.host === true));
     }
-    this.sortLobby = this.sortLobby.bind(this);
-    this.joinTest = this.joinTest.bind(this);
-    this.startTest = this.startTest.bind(this);
-  }
+  }, [users]);
 
-  componentDidMount() {
-    this.sortLobby(this.props.dummyData.viewers);
-  }
+  // joinTest() {
+  //   console.log('I joined the game!');
+  // }
 
-  sortLobby(arr) {
-    var playersArr = arr.filter(player => (player.role === 'player' && player.host === false));
-    var specArr = arr.filter(player => player.role === 'spectator');
-    var hostArr = arr.filter(player => player.host === true);
-    this.setState({
-      playersList : playersArr,
-      spectatorsList : specArr,
-      host : hostArr
-    })
-  }
+  // startTest() {
+  //   console.log('Game Started!');
+  // }
 
-  joinTest() {
-    console.log('I joined the game!');
-  }
-
-  startTest() {
-    console.log('Game Started!');
-  }
-
-  render() {
-    return(
+  return(
       <>
       <div className="total-game-list">
         <div className="players-list">
           <h3 className="player-title">Players:</h3>
           <div className="just-players">
-            {this.state.host.map((player, index) =>
+            {host ? host.map((player, index) =>
             <div className="host" key={index}>
               <div style={{ background: player.color }}>{player.username} 👑</div>
-            </div>)}
-            {this.state.playersList.map((player, index) =>
+            </div>) : null}
+            {players ? players.map((player, index) =>
             <div className="each-player" key={index}>
               <div style={{ background: player.color}}>{player.username}</div>
-            </div>)}
+            </div>) : null}
           </div>
           <h3 className="spec-title">Spectators:</h3>
           <div className="just-specs">
-            {this.state.spectatorsList.map((spec, index) =>
+            {spectators ? spectators.map((spec, index) =>
             <div className="each-spectator" key={index}>
               <div>{spec.username}</div>
-            </div>)}
+            </div>) : null}
           </div>
         </div>
         <div className="playercount-and-buttons">
           <div className="players-spec-count">
-            <div>Players in Game: {this.state.playersList.length + this.state.host.length}/10</div>
-            <div>Number of Spectators: {this.state.spectatorsList.length}</div>
+            <div>Players in Game: {players && host ? players.length + host.length : 0}/10</div>
+            <div>Number of Spectators: {spectators ? spectators.length : 0}</div>
           </div>
           <div className="join-start-buttons">
-            <Button onClick={this.joinTest} variant="success" size="sm">Join</Button>
-            <Button onClick={this.startTest} variant="success" size="sm">Start</Button>
+            <Button onClick={null} variant="success" size="sm">Join</Button>
+            <Button onClick={null} variant="success" size="sm">Start</Button>
           </div>
         </div>
       </div>
       </>
     )
-  }
 }
 
 export default PlayerList;
