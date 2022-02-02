@@ -42,14 +42,14 @@ const PlayerList = () => {
   //   socket.emit('update', kickedPlayer[0]);
   // };
 
-  const claim = () => {
-    currentUser.host = true;
-    socket.emit('update', currentUser);
-  };
+  // const claim = () => {
+  //   currentUser.host = true;
+  //   socket.emit('update', currentUser);
+  // };
 
   return (
     <>
-      <button onClick={claim}>Claim Host</button>
+      {/* <button onClick={claim}>Claim Host</button> */}
       <div className='total-game-list'>
         <div className='players-list'>
           <h3 className='player-title'>Players:</h3>
@@ -130,6 +130,7 @@ const PlayerList = () => {
                         fill: color,
                         stroke: 'darkslategray',
                         strokeWidth: 2,
+                        cursor: 'pointer',
                       }}
                       onClick={(e) => update(e, 'player')}
                     ></rect>
