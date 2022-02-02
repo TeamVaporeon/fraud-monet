@@ -5,14 +5,12 @@ import { AppContext } from '../../../App';
 import './Canvas.css';
 
 let canva;
-let y;
 
-const Canvas = ({thingy, actualData, dummyData}) => {
+const Canvas = ({thingy}) => {
 
-  const { socket, users, setRound, round, currentUser, gameStarted } = useContext(AppContext);
-  const [turn, setTurn] = useState(0);
+  const { socket, users, setRound, round, currentUser, gameStarted, setStart } = useContext(AppContext);
+  // const [turn, setTurn] = useState(0);
   const [userWithId, setUserWithId] = useState();
-  const [myUsers, setMyUsers] = useState();
 
   useEffect(() => {
     let x = currentUser;
@@ -22,12 +20,12 @@ const Canvas = ({thingy, actualData, dummyData}) => {
     setUserWithId(x);
   }, [currentUser]);
 
+
   const setup = (p5, canvasParentRef) => {
-    const canva = p5
-      .createCanvas(props.width, props.height - 100)
-      .parent(canvasParentRef);
+    const canva = p5.createCanvas(thingy.offsetWidth, thingy.offsetHeight - 100).parent(canvasParentRef);
 
     p5.background(255);
+    p5.storeItem('turn', 0);
 
     canva.id('sketchpad');
 
@@ -44,17 +42,34 @@ const Canvas = ({thingy, actualData, dummyData}) => {
     });
 
     canva.mouseReleased(() => {
-      socket.emit('turn', 0);
+      let turn = p5.getItem('turn');
+      if (socket.id === JSON.parse(sessionStorage.getItem('users'))[turn].id && JSON.parse(sessionStorage.getItem('gameStarted'))) {
+        socket.emit('turn', p5.getItem('turn') + 1);
+      }
+    });
+
+    socket.on('turn', newTurn => {
+      if (newTurn === JSON.parse(sessionStorage.getItem('users')).length) {
+        p5.storeItem('turn', 0);
+        // setRound(round+1); commented out for now even though we want this to happen bc we cant set state in here
+      } else {
+        // setTurn(newTurn);
+        p5.storeItem('turn', newTurn);
+      }
     })
 
-    socket.on('turn', resp => console.log(resp));
+    socket.on('gameStart', () => {
+      p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight-100)
+      p5.background(255);
+    })
   };
 
   const draw = (p5) => {};
 
   const mouseDragged = (p5) => {
     //draw and emitting functions
-    if (userWithId && userWithId.id === users[turn].id && gameStarted) {
+    if (userWithId && userWithId.id === users[p5.getItem('turn')].id && gameStarted) {
+      console.log(p5.getItem('turn'));
       var data = {
         x: p5.mouseX,
         y: p5.mouseY,
@@ -67,6 +82,7 @@ const Canvas = ({thingy, actualData, dummyData}) => {
       p5.strokeWeight(10);
       p5.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
     } else if (!gameStarted) {
+      console.log('game not started');
       var data = {
         x: p5.mouseX,
         y: p5.mouseY,
@@ -82,8 +98,6 @@ const Canvas = ({thingy, actualData, dummyData}) => {
   }
 
   const windowResized = p5 => {
-    console.log(users);
-    console.log('state: ' + JSON.stringify(userWithId));
     p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight-100)
     p5.background(255);
   }

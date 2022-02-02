@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('turn', turn => {
-    socket.broadcast.to(socket.room).emit('mouse', turn);
+    socket.to(socket.room).emit('turn', turn);
   });
 
   socket.on('start', async () => {
@@ -135,6 +135,10 @@ io.on('connection', (socket) => {
     };
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
+
+  socket.on('gameStart', () => {
+    io.to(socket.room).emit('gameStart', rooms[socket.room]);
+  })
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
