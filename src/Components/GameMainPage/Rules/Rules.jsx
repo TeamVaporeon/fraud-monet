@@ -27,13 +27,13 @@ const Rules = ({ setOpenRules }) => {
 
           <p>
             During each player’s turn, they must draw a{' '}
-            <strong>single line</strong> on the canvas — once they lift their
+            <strong>single line</strong> on the canvas. Once they lift their
             digital pen, their turn is over. If you’re a real artist, your
             objective is to indicate to the other real artists that you know
-            what the prompt is, without actually revealing that prompt to the
+            what the prompt is — without actually revealing that prompt to the
             fake! If you’re the fraud, your job is to try to figure out what the
             real prompt is, or at least to convince the other artists that you
-            do.
+            know it.
           </p>
 
           <p>
@@ -42,7 +42,7 @@ const Rules = ({ setOpenRules }) => {
             think the fraud is. If they guess wrong, the fraud wins{' '}
             <strong>2 points</strong>. If they guess correctly, the fraud has{' '}
             <strong>one chance</strong> to win: if they correctly guess the
-            original prompt, they also win <strong>2 points</strong>. If the
+            original prompt, they still win <strong>2 points</strong>. If the
             real artists correctly guess the fraud and the fraud can’t guess the
             original prompt, then the real artists win{' '}
             <strong>1 point each</strong>.
