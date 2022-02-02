@@ -51,7 +51,7 @@ var CreateRoom = (props) => {
       <h1>Fraud Monet</h1>
       <div className='FormBox'>
         <h2>Username</h2>
-        <form>
+        <form onSubmit={(e) => {routeChange(e)}}>
         <input
           className='UserNameForm'
           type='text'
@@ -62,9 +62,7 @@ var CreateRoom = (props) => {
           required
         /><br/>
         <br/>
-        <button className='CreateButton' onSubmit={routeChange}>
-          Create Game
-        </button>
+        <input type="submit" className="CreateButton" value="Create Game" ></input>
         </form>
       </div>
     </div>
