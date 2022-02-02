@@ -1,11 +1,12 @@
 .each-player {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 0.5px solid black
 }
 
 .each-spectator {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .just-players {
@@ -16,7 +17,8 @@
   margin: auto;
   width: 100%;
   padding: 10px;
-  /* border: 2px solid white */
+  font-weight: 500;
+
 }
 
 .just-players::-webkit-scrollbar {
@@ -25,12 +27,13 @@
 
 .just-specs {
   max-width: 100%;
-  max-height: 150px;
+  max-height: 175px;
   overflow-y: auto;
   text-align: justify;
   margin: auto;
   width: 100%;
   padding: 10px;
+  margin-bottom: 10px;
   /* border: 2px solid white */
 }
 
@@ -38,3 +41,6 @@
   display: none;
 }
 
+.playercount-and-buttons {
+margin-top: 25px;
+}
