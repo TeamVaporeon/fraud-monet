@@ -36,13 +36,14 @@
 
 .game_players {
   grid-area: a;
-  background-color: rgb(148, 177, 232);
-  border-radius: 1%;
+  background-color: #fff;
+  border-radius: 2%;
+  border: solid;
 }
 
 .game_canvas {
   grid-area: b;
-  background-color: rgb(173, 151, 205);
+  /* background-color: rgb(173, 151, 205); */
   border-radius: 2%;
 }
 

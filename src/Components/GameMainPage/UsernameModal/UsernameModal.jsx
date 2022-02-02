@@ -44,6 +44,7 @@ const UsernameModal = ({ setOpenUsername }) => {
             placeholder='Please fill in...'
             name='username'
             onChange={handleInputChange}
+            required
           ></input>
           <button className='usernameForm_submit' type='submit' value='submit'>
             Submit

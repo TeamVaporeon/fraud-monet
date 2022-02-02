@@ -27,7 +27,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
   return (
     <div className='voteModal'>
       <div className='voteContainer'>
-        <h3>Vote</h3>
+        <h3 className='voteTitle'>Vote</h3>
         <form className='voteForm'>
           {players.map((player, i) => (
             <label>
