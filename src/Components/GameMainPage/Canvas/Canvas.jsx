@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Sketch from 'react-p5';
 import { io } from 'socket.io-client';
+import './Canvas.css';
 
 const Canvas = (props) => {
   const socket = io.connect('http://127.0.0.1:8080');
@@ -12,6 +13,7 @@ const Canvas = (props) => {
       .createCanvas(props.width, props.height - 100)
       .parent(canvasParentRef);
     p5.background(255);
+    canva.id('sketchpad');
     const save = p5.createButton('Download').parent(canvasParentRef);
     save.mouseClicked(() => {
       p5.saveCanvas(canva, 'our drawing', 'jpg');

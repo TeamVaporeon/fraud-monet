@@ -21,6 +21,7 @@
   max-height: 90%;
   z-index: 1000;
   color: black;
+  border-radius: 2%;
 }
 
 .rulesContainer {
