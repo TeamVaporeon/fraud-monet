@@ -5,10 +5,10 @@ import { AppContext } from '../../App';
 import { Socket } from 'socket.io-client';
 
 const PlayerList = () => {
-  const { users, currentUser, socket } = useContext(AppContext);
+  const { users, currentUser, socket, availColors } = useContext(AppContext);
   const [players, setPlayers] = useState(null);
   const [spectators, setSpectators] = useState(null);
-  // const [host, setHost] = useState(null);
+  const [colorModal, setColorModal] = useState(false);
 
   useEffect(() => {
     if (users) {
@@ -18,8 +18,10 @@ const PlayerList = () => {
     }
   }, [users]);
 
-  const join = () => {
+  const join = (e) => {
+    setColorModal(false);
     currentUser.role = 'player';
+    currentUser.color = e.target.attributes.color.value;
     currentUser.id = socket.id;
     socket.emit('update', currentUser);
   };
@@ -34,15 +36,6 @@ const PlayerList = () => {
         <div className='players-list'>
           <h3 className='player-title'>Players:</h3>
           <div className='just-players'>
-            {/* {host
-              ? host.map((player, index) => (
-                  <div className='host' key={index}>
-                    <div style={{ background: player.color }}>
-                      {player.username} 👑
-                    </div>
-                  </div>
-                ))
-              : null} */}
             {players
               ? players.map((player, index) => (
                   <div className='each-player' key={index}>
@@ -72,13 +65,40 @@ const PlayerList = () => {
             </div>
           </div>
           <div className='join-start-buttons'>
-            <Button onClick={join} variant='success' size='sm'>
-              Join
-            </Button>
-            <Button onClick={null} variant='success' size='sm'>
-              Start
-            </Button>
+            {currentUser.role === 'spectator' ? (
+              <Button
+                onClick={() => setColorModal(true)}
+                variant='success'
+                size='sm'
+              >
+                Join
+              </Button>
+            ) : (
+              <Button disabled>Join</Button>
+            )}
+            {currentUser.host ? (
+              <Button onClick={null} variant='success' size='sm'>
+                Start
+              </Button>
+            ) : null}
           </div>
+          {colorModal ? (
+            <div className='colorModal'>
+              {availColors.map((color) => {
+                return (
+                  <svg width='20' height='20'>
+                    <rect
+                      width='20'
+                      height='20'
+                      color={color}
+                      style={{ fill: color }}
+                      onClick={join}
+                    ></rect>
+                  </svg>
+                );
+              })}
+            </div>
+          ) : null}
         </div>
       </div>
     </>
