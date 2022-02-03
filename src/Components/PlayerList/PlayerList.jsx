@@ -91,16 +91,6 @@ const PlayerList = () => {
                 ))
               : null}
           </div>
-          <h3 className='spec-title'>Spectators:</h3>
-          <div className='just-specs'>
-            {spectators
-              ? spectators.map((spec) => (
-                  <div className='each-spectator' key={spec.id}>
-                    <div>{spec.username}</div>
-                  </div>
-                ))
-              : null}
-          </div>
           {spectators && spectators.length ? (
             <div className='entire-spec-container'>
               <h3 className='spec-title'>Spectators:</h3>
@@ -136,7 +126,7 @@ const PlayerList = () => {
               </Button>
             )}
             {currentUser.host && !gameStarted ? (
-              <Button onClick={handleStart} variant='success'>
+              <Button onClick={handleStart} variant='success' size='sm'>
                 Start
               </Button>
             ) : null}
