@@ -15,7 +15,7 @@ import { hostSocket } from '../../CreateRoom';
 
 const GameMain = () => {
   const ref = useRef(null);
-  const { round, setRound, socket, users } = useContext(AppContext);
+  const { round, setRound, socket, users, currentUser } = useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(() => {
     if (hostSocket.id) {
@@ -73,15 +73,10 @@ const GameMain = () => {
           <PlayerList />
         </div>
         <div className='game_canvas' ref={ref}>
-          {ref.current?.offsetWidth ? (
-            <Canvas
-              width={ref.current.offsetWidth}
-              height={ref.current.offsetHeight}
-            />
-          ) : null}
+          {ref.current ? <Canvas thingy={ref.current} /> : null}
         </div>
         <div className='game_chat'>
-          <Chat socket={socket} />
+          <Chat socket={socket} currentUser={currentUser} />
         </div>
       </div>
     </div>
