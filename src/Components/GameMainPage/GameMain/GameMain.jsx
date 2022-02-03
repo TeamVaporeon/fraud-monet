@@ -31,7 +31,7 @@ const GameMain = () => {
   const [openFinal, setOpenFinal] = useState(false);
 
   useEffect(() => {
-    if (round === 3) {
+    if (round === 2) {
       setOpenVote(true);
     }
   }, [round]);

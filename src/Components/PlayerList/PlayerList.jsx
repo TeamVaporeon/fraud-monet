@@ -5,9 +5,16 @@ import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
 const PlayerList = () => {
-  const { users, currentUser, socket, availColors, setStart, gameStarted } =
-    useContext(AppContext);
-  const [players, setPlayers] = useState(null);
+  const {
+    users,
+    currentUser,
+    socket,
+    availColors,
+    setStart,
+    gameStarted,
+    QM,
+    players,
+  } = useContext(AppContext);
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
 
@@ -19,7 +26,6 @@ const PlayerList = () => {
 
   useEffect(() => {
     if (users) {
-      setPlayers(users.filter((player) => player.role === 'player'));
       setSpectators(users.filter((player) => player.role === 'spectator'));
     }
   }, [users]);
@@ -32,6 +38,10 @@ const PlayerList = () => {
     }
     currentUser.id = socket.id;
     socket.emit('update', currentUser);
+  };
+
+  const sendPrompt = (category, prompt) => {
+    socket.emit('prompt', { category, prompt });
   };
 
   // const kick = (e) => {
@@ -117,8 +127,13 @@ const PlayerList = () => {
           <Stack className='join-start-buttons' direction='horizontal' gap={2}>
             {currentUser.role === 'spectator' &&
             !gameStarted &&
+            players.length < 10 &&
             currentUser.username ? (
-              <Button onClick={() => setColorModal(true)} variant='success'>
+              <Button
+                onClick={() => setColorModal(true)}
+                variant='success'
+                size='sm'
+              >
                 Join
               </Button>
             ) : (
@@ -126,8 +141,12 @@ const PlayerList = () => {
                 Join
               </Button>
             )}
-            {currentUser.host && !gameStarted ? (
+            {currentUser.host && !gameStarted && players.length >= 3 ? (
               <Button onClick={handleStart} variant='success' size='sm'>
+                Start
+              </Button>
+            ) : currentUser.host ? (
+              <Button disabled variant='success' size='sm'>
                 Start
               </Button>
             ) : null}
@@ -137,7 +156,7 @@ const PlayerList = () => {
           <div className='colorModal'>
             {Object.keys(availColors).map((color) => {
               return availColors[color] ? (
-                <svg width='20' height='20'>
+                <svg key={color + 'a'} width='20' height='20'>
                   <rect
                     key={color}
                     width='20'
@@ -153,7 +172,7 @@ const PlayerList = () => {
                   ></rect>
                 </svg>
               ) : (
-                <svg width='20' height='20'>
+                <svg key={color + 'a'} width='20' height='20'>
                   <rect
                     key={color}
                     width='20'
@@ -170,6 +189,36 @@ const PlayerList = () => {
               );
             })}
           </div>
+        ) : null}
+        <Stack className='join-qm-button' direction='horizontal' gap={2}>
+          {currentUser.username &&
+          currentUser.role !== 'player' &&
+          !gameStarted &&
+          !QM.id ? (
+            <Button
+              onClick={(e) => update(e, 'qm')}
+              color='#000'
+              variant='success'
+              size='sm'
+            >
+              Join as Question Master
+            </Button>
+          ) : null}
+        </Stack>
+        {QM.id ? (
+          <span>
+            {`Current QM: ${QM.username}`}
+            {QM.id === currentUser.id ? (
+              <span
+                key={QM.id + '3'}
+                onClick={(e) => update(e, 'spectator')}
+                color='#000'
+                style={{ float: 'right', marginRight: '5px' }}
+              >
+                ❌
+              </span>
+            ) : null}
+          </span>
         ) : null}
       </div>
     </>
