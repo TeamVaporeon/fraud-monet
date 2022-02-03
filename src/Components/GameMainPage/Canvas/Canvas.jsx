@@ -23,6 +23,9 @@ const Canvas = ({ thingy }) => {
   const setup = (p5, canvasParentRef) => {
 
     const turndiv = p5.createDiv('Current turn:').parent(canvasParentRef);
+    turndiv.style('font-weight', 'bold');
+    turndiv.style('text-shadow', '1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000');
+    turndiv.style('color', 'rgb(72, 20, 114)');
 
     const canva = p5
       .createCanvas(thingy.offsetWidth, thingy.offsetHeight - 24)
@@ -55,8 +58,10 @@ const Canvas = ({ thingy }) => {
         socket.emit('turn', p5.getItem('turn') + 1);
         if (p5.getItem('turn') === JSON.parse(sessionStorage.getItem('users')).length-1) {
           turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[0].username);
+          turndiv.style('color', JSON.parse(sessionStorage.getItem('users'))[0].color)
         } else {
           turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn') + 1].username);
+          turndiv.style('color', JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn') + 1].color)
         }
       }
     });
@@ -66,16 +71,19 @@ const Canvas = ({ thingy }) => {
         p5.storeItem('turn', 0);
         socket.emit('round', Number(sessionStorage.getItem('round')) + 1);
         turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].username);
+        turndiv.style('color', JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].color)
       } else {
         p5.storeItem('turn', newTurn);
         turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].username);
+        turndiv.style('color', JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].color)
       }
     });
 
     socket.on('gameStart', () => {
       p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight-24);
       p5.background(255);
-      turndiv.html(JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].username, true);
+      turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].username);
+      turndiv.style('color', JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].color)
     });
   };
 

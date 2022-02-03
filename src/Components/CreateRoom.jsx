@@ -47,9 +47,9 @@ var CreateRoom = (props) => {
 
   return (
     <div className='CreateGamePage'>
-      <h1 className='CreateGamePage_Title'>Fraud Monet</h1>
+      <img className='logo_img' src='./images/fm_logo.jpg' alt='logo' />
       <div className='FormBox'>
-        <h2>Username</h2>
+        <h2 className='Form_username'>Username</h2>
         <form onSubmit={routeChange}>
           <input
             className='UserNameForm'
