@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './GameMain.css';
 import PlayerList from '../../PlayerList/PlayerList.jsx';
 import Chat from '../../Chat/Chat.jsx';
@@ -10,11 +12,13 @@ import FinalResultsModal from '../FinalResultsModal/FinalResultsModal';
 import ResultsModal from '../ResultsModal/ResultsModal';
 import Canvas from '../Canvas/Canvas.jsx';
 import Vote from '../Vote/Vote';
+import axios from 'axios';
 import { AppContext } from '../../../App';
 import { hostSocket } from '../../CreateRoom';
 
 const GameMain = () => {
   const ref = useRef(null);
+  const navigate = useNavigate();
   const { round, setRound, socket, users, currentUser } =
     useContext(AppContext);
 
@@ -35,6 +39,14 @@ const GameMain = () => {
       setOpenVote(true);
     }
   }, [round]);
+
+  useEffect(() => {
+    // If room exists, continue, else server will redirect
+    axios.get(`/room${window.location.pathname}`)
+      .catch(err => {
+        navigate('/');
+      });
+  }, []);
 
   return (
     <div className='game'>

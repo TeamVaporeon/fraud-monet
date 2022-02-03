@@ -22,7 +22,7 @@ const Canvas = ({ thingy }) => {
 
   const setup = (p5, canvasParentRef) => {
     const canva = p5
-      .createCanvas(thingy.offsetWidth, thingy.offsetHeight - 100)
+      .createCanvas(thingy.offsetWidth, thingy.offsetHeight)
       .parent(canvasParentRef);
 
     p5.background(255);
@@ -56,20 +56,17 @@ const Canvas = ({ thingy }) => {
     socket.on('turn', (newTurn) => {
       if (newTurn === JSON.parse(sessionStorage.getItem('users')).length) {
         p5.storeItem('turn', 0);
-        // setRound(round+1); commented out for now even though we want this to happen bc we cant set state in here
+        socket.emit('round', Number(sessionStorage.getItem('round')) + 1);
       } else {
-        // setTurn(newTurn);
         p5.storeItem('turn', newTurn);
       }
     });
 
     socket.on('gameStart', () => {
-      p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight - 100);
+      p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight);
       p5.background(255);
     });
   };
-
-  const draw = (p5) => {};
 
   const mouseDragged = (p5) => {
     //draw and emitting functions
@@ -105,7 +102,7 @@ const Canvas = ({ thingy }) => {
   };
 
   const windowResized = (p5) => {
-    p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight - 100);
+    p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight);
     p5.background(255);
   };
 
