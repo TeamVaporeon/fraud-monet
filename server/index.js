@@ -95,13 +95,15 @@ io.on('connection', (socket) => {
           category: '',
           prompt: '',
           colors: Object.assign({}, defaultColors),
+          chats: [],
         };
         socket.emit('start', rooms[socket.room]);
       }
-      console.log(rooms);
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
+      let messages = rooms[socket.room].chats;
+      socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
     }
   });
@@ -153,7 +155,8 @@ io.on('connection', (socket) => {
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
-    socket.broadcast.to(socket.room).emit('receive_message', userMessage);
+    rooms[socket.room].chats.push(userMessage);
+    io.to(socket.room).emit('receive_message', userMessage);
   });
   /* ----- End of CHATROOM Code ----- */
 
