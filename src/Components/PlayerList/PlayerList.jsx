@@ -5,15 +5,14 @@ import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
 const PlayerList = () => {
-  const { users, currentUser, socket, availColors, setStart } =
+  const { users, currentUser, socket, availColors, gameStarted } =
     useContext(AppContext);
   const [players, setPlayers] = useState(null);
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
 
   const handleStart = (e) => {
-    setStart(true);
-    socket.emit('start');
+    socket.emit('gameStart');
   };
 
   useEffect(() => {
