@@ -58,10 +58,18 @@ app.get('/room/:id', (req, res) => {
   if (rooms[room]) {
     res.status(200).send();
   } else {
-    console.log('No room', rooms);
     res.status(301).send();
   }
 });
+
+app.get('/usernames/:id', (req, res) => {
+  let room = `/${req.params.id}`;
+  if (rooms[room]) {
+    res.json(rooms[room].users);
+  } else {
+    res.status(404).send();
+  };
+})
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
@@ -106,6 +114,7 @@ io.on('connection', (socket) => {
           prompt: '',
           colors: Object.assign({}, defaultColors),
           chats: [],
+          users: { [socket.user.username]: 1 },
           votes: {},
           turns: 0,
         };
@@ -114,6 +123,8 @@ io.on('connection', (socket) => {
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
+      rooms[socket.room].users[socket.user.username] = 1;
+      console.log(rooms[socket.room].users);
       let messages = rooms[socket.room].chats;
       socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
@@ -220,7 +231,11 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     if (socket.user.host) {
       delete rooms[socket.room];
-    }
+    } else if (rooms[socket.room]) {
+      if (rooms[socket.room].users[socket.user.username]) {
+        delete rooms[socket.room].users[socket.user.username];
+      };
+    };
     console.log(`${socket.id} disconnected`);
   });
 
