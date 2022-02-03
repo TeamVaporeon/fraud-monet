@@ -46,22 +46,21 @@ const GameMain = () => {
 
   useEffect(() => {
     // If room exists, continue, else server will redirect
-    axios.get(`/room${window.location.pathname}`)
-      .catch(err => {
-        navigate('/');
-      });
+    axios.get(`/room${window.location.pathname}`).catch((err) => {
+      navigate('/');
+    });
     socket.on('start', () => {
       setOpenFinal(false);
       setOpenResults(false);
       setOpenRules(false);
       setOpenUsername(false);
       setOpenVote(false);
-    })
+    });
   }, []);
 
   return (
     <div className='game'>
-      <h1 className='game_logo'>Fraud Monet </h1>
+      <img className='game_main_logo' src='./images/fm_logo.jpg' alt='logo' />
       {openRules ? <Rules setOpenRules={setOpenRules} /> : null}
       {openUsername ? (
         <UsernameModal setOpenUsername={setOpenUsername} socket={socket} />
@@ -77,9 +76,9 @@ const GameMain = () => {
             Modal Test Round+1
           </button>
         </div>
-        <div className='game_rules' onClick={() => setOpenRules(true)}>
+        <button className='game_rules' onClick={() => setOpenRules(true)}>
           Rules
-        </div>
+        </button>
       </div>
       <div className='game_body'>
         {openVote ? (
