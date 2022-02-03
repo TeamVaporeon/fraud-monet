@@ -258,7 +258,11 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
-    rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
+    try {
+      rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
+    } catch (err) {
+      console.log(err);
+    }
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });
