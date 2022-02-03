@@ -25,25 +25,25 @@ var CreateRoom = (props) => {
   const navigate = useNavigate();
   const routeChange = (e) => {
     e.preventDefault();
-
-      const roomID = generateRandString();
-      hostSocket.auth = {
-        user: {
-          username: name,
-          roomID: `/${roomID}`,
-          color: '#000',
-          host: true,
-          fraud: false,
-          role: 'spectator',
-          score: 0,
-        },
-      };
-      hostSocket.connect();
-      hostSocket.emit('joinRoom', `/${roomID}`);
-      hostSocket.on('hostConnected', () => {
-        navigate(`/${roomID}`);
-      });
-
+      if(name.length > 0){
+        const roomID = generateRandString();
+        hostSocket.auth = {
+          user: {
+            username: name,
+            roomID: `/${roomID}`,
+            color: '#000',
+            host: true,
+            fraud: false,
+            role: 'spectator',
+            score: 0,
+          },
+        };
+        hostSocket.connect();
+        hostSocket.emit('joinRoom', `/${roomID}`);
+        hostSocket.on('hostConnected', () => {
+          navigate(`/${roomID}`);
+        });
+    }
   };
 
   return (
