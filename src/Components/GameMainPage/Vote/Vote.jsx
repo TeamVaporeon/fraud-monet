@@ -28,10 +28,10 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
     <div className='voteModal'>
       <div className='voteContainer'>
         <h3 className='voteTitle'>Vote</h3>
+        Who's the fraud? Select the player you think is the fake below.
         <form className='voteForm'>
           {players.map((player, i) => (
             <label className='votePlayername'>
-              {player}
               <input
                 type='radio'
                 name='ckb'
