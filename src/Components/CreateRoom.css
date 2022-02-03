@@ -2,13 +2,14 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  /* justify-content: space-evenly; */
+  height: 100vh;
   align-items: center;
   font-family: Mochiy-Pop-P-One;
 }
 
 .FormBox {
-  position: fixed;
+  /* position: fixed; */
   display: flex;
   top: 30%;
   align-items: center;
@@ -18,9 +19,12 @@
   border-style: solid;
   border-radius: 5px;
   border-width: 4px;
-  border-color: rgb(0, 0, 0);
-  height: 240px;
+  border-color: rgb(121, 67, 229);
+  /* height: 240px; */
+  height: 25vh;
+  min-height: 200px;
   width: 350px;
+  margin-top: 5%;
 }
 
 .CreateForm {
@@ -48,7 +52,7 @@
 
 .CreateButton:hover {
   transform: scale(1.1);
-  color: black;
+  color: rgb(121, 67, 229);
 }
 
 .CreateGamePage_Title {
@@ -57,7 +61,11 @@
 }
 
 .logo_img {
-  /* margin-top: 1rem; */
-  width: 25%;
-  height: 100%;
+  margin-top: 2rem;
+  width: 30%;
+  height: 30%;
+}
+
+.Form_username {
+  color: rgb(65, 36, 124);
 }

@@ -46,7 +46,7 @@
 
 .game_chat {
   grid-area: c;
-  border: solid 1px;
+  border: 2px solid #263238;
   background-color: #fff;
 }
 

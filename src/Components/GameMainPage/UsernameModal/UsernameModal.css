@@ -10,7 +10,7 @@
   background-color: #ffffff;
   /* box-shadow: 0 2px 20px #e0e4ec; */
   border-radius: 2%;
-  border: solid;
+  border: solid rgb(121, 67, 229);
   position: fixed;
   top: 0;
   right: 0;
@@ -42,6 +42,7 @@
 .usernameLabel {
   margin-bottom: 2rem;
   font-size: 3rem;
+  color: rgb(65, 36, 124);
 }
 
 .usernameInput {
@@ -67,4 +68,9 @@
 
 .usernameSubmit:hover {
   transform: scale(1.2);
+  color: black;
+}
+
+.nameTaken {
+  color: red;
 }

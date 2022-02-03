@@ -3,15 +3,18 @@ import './Vote.css';
 import { AppContext } from '../../../App';
 
 const Vote = ({ setOpenVote, setOpenResults }) => {
-  const { socket, players } = useContext(AppContext);
+  const { socket, players, currentUser } = useContext(AppContext);
   const [pick, setPick] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, guess) => {
     e.preventDefault();
     if (pick !== '') {
       socket.emit('vote', pick);
       setOpenResults(true);
       setOpenVote(false);
+    }
+    if (currentUser.fraud) {
+      socket.emit('guess', guess);
     }
   };
 
