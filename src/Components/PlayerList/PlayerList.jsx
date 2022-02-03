@@ -14,6 +14,7 @@ const PlayerList = () => {
   const handleStart = (e) => {
     setStart(true);
     socket.emit('start', users);
+    socket.emit('gameStart');
   };
 
   useEffect(() => {
