@@ -45,6 +45,8 @@ function App() {
   const [gameStarted, setStart] = useState(false);
   const [turn, setTurn] = useState(0);
   const [QM, setQM] = useState({});
+  const [guess, setGuess] = useState('');
+  const [mostVoted, setMostVoted] = useState([]);
 
   if (hostSocket.id) {
     socket = hostSocket;
@@ -76,6 +78,10 @@ function App() {
 
   socket.on('start', (roomInfo) => {
     setAvailColors(roomInfo.colors);
+  });
+
+  socket.on('guess', (guess) => {
+    setGuess(guess);
   });
 
   // socket.on('game_start', (players) => {
@@ -127,6 +133,9 @@ function App() {
         setTurn,
         QM,
         players,
+        guess,
+        mostVoted,
+        setMostVoted,
       }}
     >
       <div className='App'>

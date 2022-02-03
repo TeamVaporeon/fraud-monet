@@ -32,9 +32,13 @@ const GameMain = () => {
 
   useEffect(() => {
     if (round === 2) {
-      setOpenVote(true);
+      if (currentUser.role === 'qm') {
+        setOpenResults(true);
+      } else {
+        setOpenVote(true);
+      }
     }
-  }, [round]);
+  }, [round, currentUser.role]);
 
   return (
     <div className='game'>

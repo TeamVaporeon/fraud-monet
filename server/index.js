@@ -137,6 +137,10 @@ io.on('connection', (socket) => {
     socket.to(socket.room).emit('turn', turn);
   });
 
+  socket.on('guess', (guess) => {
+    io.to(socket.room).emit('guess', guess);
+  });
+
   socket.on('vote', (data) => {
     if (rooms[socket.room].votes[data]) {
       rooms[socket.room].votes[data]++;

@@ -3,16 +3,33 @@ import './ResultsModal.css';
 import { AppContext } from '../../../App';
 
 const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
-  const { socket, players } = useContext(AppContext);
+  const { socket, players, guess, currentUser, QM, setMostVoted, mostVoted } =
+    useContext(AppContext);
   const [voteCount, setVoteCount] = useState({});
   const [fraud, revealFraud] = useState(false);
+  const [judged, setJudged] = useState(false);
 
   socket.on('get_votes', (data) => {
     if (Object.values(data).reduce((x, y) => x + y) === players.length) {
+      const arr = Object.values(data);
+      const voteMax = Math.max(...arr);
+      const most = Object.entries(data).filter((player) =>
+        player[1] === voteMax ? player[0] : null
+      );
+      setMostVoted(most);
       revealFraud(true);
     }
     setVoteCount(data);
   });
+
+  const judgement = (e) => {
+    if (e.target.value === 'Y') {
+      //Emit point scoring here, 2 pts for Fraud and QM
+    } else {
+      //Emit 1 pt for everyone except the Fraud and QM
+    }
+    setJudged(true);
+  };
 
   return (
     <div className='resultsModal'>
@@ -40,6 +57,31 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
           ) : null}
         </div>
         {fraud ? (
+          <div>
+            Most Voted: {console.log('most voted: ', mostVoted)}
+            {mostVoted.map((player) => {
+              return <div>{player}</div>;
+            })}
+          </div>
+        ) : null}
+        {fraud ? <div>{`Fraud's Guess: ${guess}`}</div> : null}
+        {fraud &&
+        (currentUser.role === 'qm' || (!QM.id && currentUser.host)) &&
+        mostVoted.length === 1 &&
+        mostVoted[0] ===
+          players.filter((player) => player.fraud)[0].username ? (
+          <div>
+            <span>Did the Fraud guess correctly?</span>
+            <button value='Y' className='judgeBtn' onClick={judgement}>
+              YES
+            </button>
+            <button value='N' className='judgeBtn' onClick={judgement}>
+              NO
+            </button>
+          </div>
+        ) : null}
+
+        {fraud && judged ? (
           <button
             className='resultsBtn'
             onClick={() => {
