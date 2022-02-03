@@ -19,12 +19,12 @@ const GameMain = () => {
     useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(() => {
-    if (hostSocket.id) {
-      return false;
-    } else {
-      return true;
-    }
-  });
+      if (socket.id && socket.auth.user.host) {
+        return false;
+      } else {
+        return true;
+      }
+    });
   const [openRules, setOpenRules] = useState(false);
   const [openResults, setOpenResults] = useState(false);
   const [openVote, setOpenVote] = useState(false);

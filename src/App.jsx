@@ -60,21 +60,25 @@ function App() {
     setUsers(newUsers);
   });
 
-  socket.on('session', ({ sessionID, userID }) => {
-    console.log(socket);
-    socket.auth.sessionID = sessionID;
+  socket.on('session', ({ sessionID, user }) => {
+    console.log('session', sessionID, user);
+    socket.auth.user = user;
+    socket.auth.user.sessionID = sessionID;
     localStorage.setItem('sessionID', sessionID);
-    socket.userID = userID;
-    socket.auth.userID = userID;
-  })
+    socket.emit('connected', socket.auth.user);
+  });
 
   function checkForSession() {
     const sessionID = localStorage.getItem('sessionID');
-    console.log(sessionID && socket.auth);
     if (sessionID) {
-      console.log(socket);
+      if (!socket.auth) {
+        socket.auth = {}
+      }
       socket.auth.sessionID = sessionID;
-      socket.connect();
+      socket.emit('connected', {
+        sessionID: sessionID,
+        user: socket.user
+      })
     }
   }
 
