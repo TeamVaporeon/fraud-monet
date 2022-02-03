@@ -54,14 +54,7 @@ const Chat = ({ socket, currentUser }) => {
                 key={3 * index}
                 id={username === content.author ? 'you' : 'other'}
               >
-                <div
-                  className='message-content'
-                  // style={{
-                  //   backgroundColor:
-                  //   currentUser.color !== '#000' && username === content.author
-                  //   ? currentUser.color
-                  //   : null }}
-                >
+                <div className="message-content">
                   <p>{content.message}</p>
                 </div>
                 <div className='message-meta'>
