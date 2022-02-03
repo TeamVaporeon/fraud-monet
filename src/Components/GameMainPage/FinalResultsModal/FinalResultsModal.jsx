@@ -1,10 +1,9 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, createContext, useEffect, useContext } from 'react';
 import { AppContext } from '../../../App.jsx';
 import './FinalResultsModal.css';
 
 const FinalResultsModal = ({ setOpenFinal }) => {
-  const { round, setRound, socket, users } = useContext(AppContext);
+  const { round, setRound, socket, players } = useContext(AppContext);
   return (
     <div className='finalModal'>
       <div className='finalContainer'>
