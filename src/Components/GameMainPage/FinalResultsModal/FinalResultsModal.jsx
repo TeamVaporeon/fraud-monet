@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, createContext, useEffect, useContext } from 'react';
+import { AppContext } from '../../../App.jsx';
 import './FinalResultsModal.css';
-import { AppContext } from '../../../App';
 
 const FinalResultsModal = ({ setOpenFinal }) => {
   const { round, setRound, socket, users } = useContext(AppContext);
