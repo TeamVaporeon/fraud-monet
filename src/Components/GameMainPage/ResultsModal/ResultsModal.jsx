@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import './ResultsModal.css';
 import { AppContext } from '../../../App';
+import { set } from 'mongoose';
 
 const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
   const { socket, players, guess, currentUser, QM, setMostVoted, mostVoted } =
@@ -13,9 +14,16 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
     if (Object.values(data).reduce((x, y) => x + y) === players.length) {
       const arr = Object.values(data);
       const voteMax = Math.max(...arr);
-      const most = Object.entries(data).filter((player) =>
-        player[1] === voteMax ? player[0] : null
-      );
+      let most = Object.entries(data).filter((player) => player[1] === voteMax);
+      if (most.length === 1) {
+        most = most[0];
+      }
+      if (
+        most.length > 1 ||
+        most !== players.filter((player) => player.fraud)[0].username
+      ) {
+        setJudged(true);
+      }
       setMostVoted(most);
       revealFraud(true);
     }
@@ -65,6 +73,17 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
           </div>
         ) : null}
         {fraud ? <div>{`Fraud's Guess: ${guess}`}</div> : null}
+        {console.log(
+          'fraud: ',
+          fraud,
+          ' qm or host: ',
+          currentUser.role === 'qm' || (!QM.id && currentUser.host),
+          ' mostvoted len: ',
+          mostVoted.length,
+          ' most is fraud: ',
+          mostVoted[0],
+          players.filter((player) => player.fraud)[0].username
+        )}
         {fraud &&
         (currentUser.role === 'qm' || (!QM.id && currentUser.host)) &&
         mostVoted.length === 1 &&
