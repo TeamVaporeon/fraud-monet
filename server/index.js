@@ -197,6 +197,10 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
+  socket.on('round', req => {
+    io.to(socket.room).emit('round', req);
+  });
+
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
     rooms[socket.room].chats.push(userMessage);
