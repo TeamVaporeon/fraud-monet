@@ -5,9 +5,16 @@ import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
 const PlayerList = () => {
-  const { users, currentUser, socket, availColors, setStart, gameStarted, QM } =
-    useContext(AppContext);
-  const [players, setPlayers] = useState(null);
+  const {
+    users,
+    currentUser,
+    socket,
+    availColors,
+    setStart,
+    gameStarted,
+    QM,
+    players,
+  } = useContext(AppContext);
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
 
@@ -19,7 +26,6 @@ const PlayerList = () => {
 
   useEffect(() => {
     if (users) {
-      setPlayers(users.filter((player) => player.role === 'player'));
       setSpectators(users.filter((player) => player.role === 'spectator'));
     }
   }, [users]);
@@ -29,11 +35,13 @@ const PlayerList = () => {
     currentUser.role = role;
     if (e.target.attributes.color.value !== '#000') {
       currentUser.color = e.target.attributes.color.value;
-      console.log(currentUser.color);
-      console.log(socket.auth.user.color);
     }
     currentUser.id = socket.id;
     socket.emit('update', currentUser);
+  };
+
+  const sendPrompt = (category, prompt) => {
+    socket.emit('prompt', { category, prompt });
   };
 
   // const kick = (e) => {
@@ -133,8 +141,12 @@ const PlayerList = () => {
                 Join
               </Button>
             )}
-            {currentUser.host && !gameStarted && players.length < 3 ? (
+            {currentUser.host && !gameStarted && players.length >= 3 ? (
               <Button onClick={handleStart} variant='success' size='sm'>
+                Start
+              </Button>
+            ) : currentUser.host ? (
+              <Button disabled variant='success' size='sm'>
                 Start
               </Button>
             ) : null}
@@ -144,7 +156,7 @@ const PlayerList = () => {
           <div className='colorModal'>
             {Object.keys(availColors).map((color) => {
               return availColors[color] ? (
-                <svg width='20' height='20'>
+                <svg key={color + 'a'} width='20' height='20'>
                   <rect
                     key={color}
                     width='20'
@@ -160,7 +172,7 @@ const PlayerList = () => {
                   ></rect>
                 </svg>
               ) : (
-                <svg width='20' height='20'>
+                <svg key={color + 'a'} width='20' height='20'>
                   <rect
                     key={color}
                     width='20'

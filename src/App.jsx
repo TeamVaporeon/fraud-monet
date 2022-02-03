@@ -39,6 +39,7 @@ function App() {
   const [users, setUsers] = useState(
     hostSocket.id ? [hostSocket.auth.user] : []
   );
+  const [players, setPlayers] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
   const [availColors, setAvailColors] = useState(defaultColors);
   const [gameStarted, setStart] = useState(false);
@@ -56,6 +57,7 @@ function App() {
   socket.on('users', (userList) => {
     setUsers(userList);
     setQM(userList.filter((player) => player.role === 'qm')[0] || {});
+    setPlayers(userList.filter((player) => player.role === 'player'));
     sessionStorage.setItem('users', JSON.stringify(users));
   });
 
@@ -76,15 +78,15 @@ function App() {
     setAvailColors(roomInfo.colors);
   });
 
-  socket.on('game_start', (players) => {
-    // console.log(players.filter((player) => player.id === currentUser.id)[0]);
-    // setCurrentUser(players.filter((player) => player.id === currentUser.id)[0]);
-    // console.log('after start: ', socket.auth.user);
-    // console.log(
-    //   'from server: ',
-    //   players.filter((player) => player.id === currentUser.id)[0]
-    // );
-  });
+  // socket.on('game_start', (players) => {
+  //   console.log(players.filter((player) => player.id === currentUser.id)[0]);
+  //   setCurrentUser(players.filter((player) => player.id === currentUser.id)[0]);
+  //   console.log('after start: ', socket.auth.user);
+  //   console.log(
+  //     'from server: ',
+  //     players.filter((player) => player.id === currentUser.id)[0]
+  //   );
+  // });
 
   useEffect(() => {
     if (currentUser.id) {
@@ -107,7 +109,6 @@ function App() {
             }
       );
     }
-    // socket.auth && console.log('before start: ', socket.auth.user);
   }, [users]);
 
   return (
@@ -125,6 +126,7 @@ function App() {
         turn,
         setTurn,
         QM,
+        players,
       }}
     >
       <div className='App'>

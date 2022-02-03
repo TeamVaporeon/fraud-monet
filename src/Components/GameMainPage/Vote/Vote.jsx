@@ -1,25 +1,15 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, createContext, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import './Vote.css';
 import { AppContext } from '../../../App';
 
 const Vote = ({ setOpenVote, setOpenResults }) => {
-  const { users } = useContext(AppContext);
-  const [players, setPlayers] = useState(() => {
-    return users
-      .filter((user) => {
-        return user.role === 'player';
-      })
-      .map((player) => {
-        return player.username;
-      });
-  });
+  const { socket, players } = useContext(AppContext);
   const [pick, setPick] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     /*---send pick to somewhere to count score---*/
-    console.log('from submit:', pick);
+    socket.emit('vote', pick);
     setOpenResults(true);
     setOpenVote(false);
   };
@@ -30,21 +20,25 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
         <h3 className='voteTitle'>Vote</h3>
         Who's the fraud? Select the player you think is the fake below.
         <form className='voteForm'>
-          {players.map((player, i) => (
-            <label className='votePlayername'>
-              <input
-                type='radio'
-                name='ckb'
-                value={player}
-                id={player}
-                onClick={() => {
-                  setPick(player);
-                }}
-                required='required'
-              />
-              {` ${player}`}
-            </label>
-          ))}
+          <label className='votePlayername'>
+            {players.map((player) => {
+              return (
+                <div key={player.id}>
+                  <input
+                    type='radio'
+                    name='ckb'
+                    value={player.username}
+                    id={player.id}
+                    onClick={() => {
+                      setPick(player.username);
+                    }}
+                    required='required'
+                  />
+                  <span>{player.username}</span>
+                </div>
+              );
+            })}
+          </label>
         </form>
         <div className='vote_Btns'>
           <button
@@ -57,7 +51,6 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
           </button>
         </div>
       </div>
-      {console.log('player', players)}
     </div>
   );
 };
