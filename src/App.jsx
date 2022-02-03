@@ -47,13 +47,23 @@ function App() {
     socket = hostSocket;
   }
 
+  window.onbeforeunload = () => {
+    sessionStorage.clear();
+  }
+
   socket.on('users', (userList) => {
     setUsers(userList);
+    sessionStorage.setItem('users', JSON.stringify(users));
   });
 
   socket.on('newUser', (newUsers) => {
     setUsers(newUsers);
   });
+
+  socket.on('gameStart', (response) => {
+    setStart(true);
+    sessionStorage.setItem('gameStarted', 'true');
+  })
 
   socket.on('availColors', (colors) => {
     setAvailColors(colors);
