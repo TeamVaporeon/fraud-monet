@@ -47,7 +47,10 @@ var CreateRoom = (props) => {
 
   return (
     <div className='CreateGamePage'>
-      <h1 className='CreateGamePage_Title'>Fraud Monet</h1>
+      <div>
+        <h1 className='CreateGamePage_Title'>Fraud Monet</h1>
+      </div>
+
       <div className='FormBox'>
         <h2>Username</h2>
         <form onSubmit={routeChange}>
