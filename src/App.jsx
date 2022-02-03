@@ -45,6 +45,8 @@ function App() {
   const [gameStarted, setStart] = useState(false);
   const [turn, setTurn] = useState(0);
   const [QM, setQM] = useState({});
+  const [guess, setGuess] = useState('');
+  const [mostVoted, setMostVoted] = useState([[]]);
 
   if (hostSocket.id) {
     socket = hostSocket;
@@ -59,8 +61,9 @@ function App() {
     socket.on('users', (userList) => {
       setUsers(userList);
       setQM(userList.filter((player) => player.role === 'qm')[0] || {});
-      setPlayers(userList.filter((player) => player.role === 'player'));
-      sessionStorage.setItem('users', JSON.stringify(userList));
+      const playList = userList.filter((player) => player.role === 'player');
+      setPlayers(playList);
+      sessionStorage.setItem('users', JSON.stringify(playList));
     });
 
     socket.on('round', (resp) => {
@@ -83,6 +86,10 @@ function App() {
 
     socket.on('start', (roomInfo) => {
       setAvailColors(roomInfo.colors);
+    });
+
+    socket.on('guess', (guess) => {
+      setGuess(guess);
     });
   }, []);
 
@@ -117,7 +124,6 @@ function App() {
             }
       );
     }
-    console.log('CURRENT USER');
   }, [users]);
 
   return (
@@ -136,6 +142,9 @@ function App() {
         setTurn,
         QM,
         players,
+        guess,
+        mostVoted,
+        setMostVoted,
       }}
     >
       <div className='App'>
