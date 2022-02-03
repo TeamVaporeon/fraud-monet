@@ -22,6 +22,8 @@ const Chat = ({ socket, currentUser }) => {
     }
   };
 
+  console.log('CURRENT USER', currentUser);
+
   useEffect(() => {
     socket.on('receive_message', (receivedMessage) => {
       setMessageList((list) => [...list, receivedMessage]);

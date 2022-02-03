@@ -4,10 +4,10 @@ const express = require('express');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
 const cookieParser = require('cookie-parser');
-const cookie = require('cookie');
+// const cookie = require('cookie');
 const editFile = require('edit-json-file');
-const session = require('express-session');
-const { v4: uuidv4 } = require('uuid');
+// const session = require('express-session');
+// const { v4: uuidv4 } = require('uuid');
 const rooms = {};
 const defaultColors = {
   '#FFCCEB': true, //Cotton Candy
@@ -37,17 +37,17 @@ var file = editFile(path.join(__dirname, 'data.json'));
 
 // Express Server
 const app = express();
-app.use(session({
-  genid: function (req) {
-    return uuidv4();
-  },
-  secret: 'fraudmonet',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 60000
-  }
-}));
+// app.use(session({
+//   genid: function (req) {
+//     return uuidv4();
+//   },
+//   secret: 'fraudmonet',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: {
+//     maxAge: 60000
+//   }
+// }));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -79,16 +79,10 @@ const io = new Server(httpServer, {
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
   user.id = socket.id;
-  user.session = socket.handshake.headers.cookie;
   socket.user = user;
   socket.emit('user_object', user);
   if (rooms[user.roomID]) {
-    if (rooms[user.roomID].playerSessions[user.session]) {
-      let curUser = rooms[user.roomID].playerSessions[user.session];
-      curUser.id = socket.id;
-      socket.user = curUser;
-      socket.emit('sessionExist', curUser);
-    };
+
   } else {
     socket.emit('noRoom');
   };
@@ -102,14 +96,8 @@ io.on('connection', (socket) => {
   socket.user.id = socket.id;
   let users = [];
 
-  socket.on('addUsername', (name) => {
-    socket.user.username = name;
-    socket.emit('user_object', socket.user);
-  });
-
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
-    // users.push(socket.username);
     socket.room = url;
     socket.join(socket.room);
     let userSockets = await io.in(socket.room).fetchSockets();
@@ -138,20 +126,6 @@ io.on('connection', (socket) => {
   });
 
   // Emit handlers
-  socket.on('createRoom', (data, next) => {
-    const adapter = io.of('createRoom').adapter;
-    adapter.pubClient.publish(data);
-    socket.emit('session', {
-      sessionID: socket.sessionID,
-      userID: socket.userID,
-      username: socket.username,
-      color: socket.color,
-      host: socket.host,
-      fraud: socket.fraud,
-      role: socket.role,
-    });
-    socket.emit('packet', data);
-  });
 
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets

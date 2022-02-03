@@ -14,7 +14,6 @@ import { AppContext } from '../../../App';
 import { hostSocket } from '../../CreateRoom';
 
 const GameMain = () => {
-  console.log('something changed');
   const ref = useRef(null);
   const { round, setRound, socket, users, currentUser } =
     useContext(AppContext);
@@ -31,26 +30,8 @@ const GameMain = () => {
   const [openVote, setOpenVote] = useState(false);
   const [openFinal, setOpenFinal] = useState(false);
 
-  socket.auth = {
-    user: {
-      username: 'Anonymous',
-      roomID: window.location.pathname,
-      color: '#000',
-      host: false,
-      fraud: false,
-      role: 'spectator',
-      score: 0,
-    },
-  };
-  socket.connect();
-
   socket.on('noRoom', () => {
     // Render a room doesn't exist error page
-  });
-
-  socket.on('sessionExist', (user) => {
-    socket.emit('joinRoom', user.roomID);
-    setOpenUsername(false);
   });
 
   useEffect(() => {
