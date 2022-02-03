@@ -18,8 +18,6 @@ const PlayerList = () => {
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
   const [isShown, scoreIsShown] = useState(false);
-  const score = 6;
-
 
   const handleStart = (e) => {
     setStart(true);
