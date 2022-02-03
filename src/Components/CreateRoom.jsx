@@ -24,7 +24,7 @@ var CreateRoom = (props) => {
   const navigate = useNavigate();
   const routeChange = (e) => {
     e.preventDefault();
-    if (name.length > 1) {
+    if (name.length > 0) {
       const roomID = generateRandString();
       hostSocket.auth = {
         user: {
