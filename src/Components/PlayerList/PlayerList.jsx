@@ -17,6 +17,7 @@ const PlayerList = () => {
   } = useContext(AppContext);
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
+  // const [isShown, scoreIsShown] = useState(false);
 
   const handleStart = (e) => {
     setStart(true);
@@ -77,23 +78,41 @@ const PlayerList = () => {
                         {`${player.username} ${player.host ? '👑' : ''}`}
                       </span>
                       {player.id === currentUser.id ? (
-                        <span
-                          key={player.id + '3'}
-                          onClick={(e) => update(e, 'spectator')}
-                          color='#000'
-                          style={{ float: 'right', marginRight: '5px' }}
-                        >
-                          ❌
-                        </span>
-                      ) : (
-                        currentUser.host && (
+                        <span>
+                          {/* {player.score ? */}
+                          <span
+                            key={player.id + '3'}
+                            style={{ marginLeft: '10px' }}
+                          >
+                          🏆 {player.score}
+                          </span>
+                          {/* : null} */}
                           <span
                             key={player.id + '4'}
-                            // onClick={kick}
-                            playerid={player.id}
+                            onClick={(e) => update(e, 'spectator')}
+                            color='#000'
                             style={{ float: 'right', marginRight: '5px' }}
                           >
                             ❌
+                          </span>
+                        </span>
+                      ) : (
+                        currentUser.host && (
+                          <span>
+                            <span
+                            key={player.id + '5'}
+                            style={{ marginLeft: '10px' }}
+                          >
+                          🏆 {player.score}
+                          </span>
+                            <span
+                              key={player.id + '6'}
+                              // onClick={kick}
+                              playerid={player.id}
+                              style={{ float: 'right', marginRight: '5px' }}
+                            >
+                              ❌
+                            </span>
                           </span>
                         )
                       )}
@@ -190,7 +209,7 @@ const PlayerList = () => {
             })}
           </div>
         ) : null}
-        <Stack className='join-qm-button' direction='horizontal' gap={2}>
+        <Stack className='join-qm-button' direction='horizontal'>
           {currentUser.username &&
           currentUser.role !== 'player' &&
           !gameStarted &&
@@ -198,7 +217,7 @@ const PlayerList = () => {
             <Button
               onClick={(e) => update(e, 'qm')}
               color='#000'
-              variant='success'
+              variant='primary'
               size='sm'
             >
               Join as Question Master
@@ -206,19 +225,18 @@ const PlayerList = () => {
           ) : null}
         </Stack>
         {QM.id ? (
-          <span>
-            {`Current QM: ${QM.username}`}
+          <div className="question-master">
+            {`QM: ${QM.username}`}
             {QM.id === currentUser.id ? (
               <span
                 key={QM.id + '3'}
                 onClick={(e) => update(e, 'spectator')}
                 color='#000'
-                style={{ float: 'right', marginRight: '5px' }}
               >
                 ❌
               </span>
             ) : null}
-          </span>
+          </div>
         ) : null}
       </div>
     </>

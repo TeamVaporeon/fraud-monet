@@ -12,6 +12,7 @@
 .each-spectator {
   margin-top: 5px;
   margin-bottom: 5px;
+  margin-left: 5px;
 }
 
 .just-players {
@@ -52,7 +53,7 @@
   /* margin-top: 5%; */
   max-height: 100px;
   margin-bottom: 15px;
-  margin-left: 10px;
+  margin-left: 15px;
 }
 
 .total-game-list {
@@ -70,10 +71,21 @@
 .player-title {
   margin-top: 5%;
   font-size: 20px;
+  margin-left: 10px;
   /* background-color: blue; */
 }
 
 .spec-title {
   font-size: 20px;
+  margin-left: 10px;
 }
 
+.join-qm-button {
+  margin-bottom: 15px;
+  margin-left: 15px;
+}
+
+.question-master {
+  float: left;
+  margin-left: 15px;
+}
