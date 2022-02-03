@@ -53,6 +53,16 @@ app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
+app.get('/room/:id', (req, res) => {
+  let room = `/${req.params.id}`;
+  if (rooms[room]) {
+    res.status(200).send();
+  } else {
+    console.log('No room', rooms);
+    res.status(301).send();
+  };
+});
+
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -167,7 +177,9 @@ io.on('connection', (socket) => {
       let prompt = data[category][randPrompt];
       rooms[socket.room].category = category;
       rooms[socket.room].prompt = prompt;
-    }
+    } else {
+      console.log(`${socket.room} doesn't exist`);
+    };
     let x = true;
     while (x) {
       let i = Math.floor(Math.random() * players.length);
@@ -175,8 +187,8 @@ io.on('connection', (socket) => {
         players[i].fraud = true;
         console.log(players[i]);
         x = false;
-      }
-    }
+      };
+    };
     io.to(socket.room).emit('users', players);
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
@@ -185,8 +197,8 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
-  socket.on('round', () => {
-    io.to(socket.room).emit('round', rooms[socket.room]);
+  socket.on('round', req => {
+    io.to(socket.room).emit('round', req);
   });
 
   /* ----- CHATROOM Code ----- */
