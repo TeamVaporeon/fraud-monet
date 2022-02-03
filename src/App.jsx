@@ -56,29 +56,7 @@ function App() {
     sessionStorage.clear();
   };
 
-  socket.on('users', (userList) => {
-    setUsers(userList);
-    setQM(userList.filter((player) => player.role === 'qm')[0] || {});
-    setPlayers(userList.filter((player) => player.role === 'player'));
-    sessionStorage.setItem('users', JSON.stringify(users));
-  });
 
-  socket.on('newUser', (newUsers) => {
-    setUsers(newUsers);
-  });
-
-  socket.on('gameStart', (response) => {
-    setStart(true);
-    sessionStorage.setItem('gameStarted', 'true');
-  });
-
-  socket.on('availColors', (colors) => {
-    setAvailColors(colors);
-  });
-
-  socket.on('start', (roomInfo) => {
-    setAvailColors(roomInfo.colors);
-  });
 
   socket.on('guess', (guess) => {
     setGuess(guess);
@@ -104,18 +82,46 @@ function App() {
         socket.auth && socket.auth.user
           ? socket.auth.user
           : {
-              username: null,
-              roomID: null,
-              color: '#000',
-              host: false,
-              fraud: false,
-              role: 'spectator',
-              score: 0,
-              id: null,
-            }
+            username: null,
+            roomID: null,
+            color: '#000',
+            host: false,
+            fraud: false,
+            role: 'spectator',
+            score: 0,
+            id: null,
+          }
       );
     }
+    console.log('CURRENT USER');
   }, [users]);
+
+  // Componentdidmount
+  useEffect(() => {
+    socket.on('users', (userList) => {
+      setUsers(userList);
+      setQM(userList.filter((player) => player.role === 'qm')[0] || {});
+      setPlayers(userList.filter((player) => player.role === 'player'));
+      sessionStorage.setItem('users', JSON.stringify(users));
+    });
+
+    socket.on('newUser', (newUsers) => {
+      setUsers(newUsers);
+    });
+
+    socket.on('gameStart', (response) => {
+      setStart(true);
+      sessionStorage.setItem('gameStarted', 'true');
+    });
+
+    socket.on('availColors', (colors) => {
+      setAvailColors(colors);
+    });
+
+    socket.on('start', (roomInfo) => {
+      setAvailColors(roomInfo.colors);
+    });
+  }, [])
 
   return (
     <AppContext.Provider
