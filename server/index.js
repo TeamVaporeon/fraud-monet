@@ -96,6 +96,8 @@ io.on('connection', (socket) => {
           prompt: '',
           colors: Object.assign({}, defaultColors),
           chats: [],
+          votes: {},
+          turns: 0,
         };
         socket.emit('start', rooms[socket.room]);
       }
@@ -129,29 +131,59 @@ io.on('connection', (socket) => {
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
-  socket.on('turn', turn => {
+  socket.on('turn', (turn) => {
+    rooms[socket.room].turns++;
+    // if (rooms[socket.room].turns % players)
     socket.to(socket.room).emit('turn', turn);
   });
 
-  socket.on('start', async () => {
-    const data = await file.toObject();
+  socket.on('vote', (data) => {
+    if (rooms[socket.room].votes[data]) {
+      rooms[socket.room].votes[data]++;
+    } else {
+      rooms[socket.room].votes[data] = 1;
+    }
+    io.to(socket.room).emit('get_votes', rooms[socket.room].votes);
+  });
 
-    let randCat = Math.floor(Math.random() * data.categories.length);
-    let category = data.categories[randCat];
+  socket.on('new_game', () => {
+    rooms[socket.room].category = '';
+    rooms[socket.room].prompt = '';
+    rooms[socket.room].votes = {};
+    rooms[socket.room].turns = 0;
+  });
 
-    let randPrompt = Math.floor(Math.random() * data[category].length);
-    let prompt = data[category][randPrompt];
+  socket.on('prompt', (data) => {
+    rooms[socket.room].category = data.category;
+    rooms[socket.room].prompt = data.prompt;
+  });
 
-    rooms[socket.room] = {
-      category: category,
-      prompt: prompt,
-    };
+  socket.on('start', async (players) => {
+    if (!rooms[socket.room].category) {
+      const data = await file.toObject();
+      let randCat = Math.floor(Math.random() * data.categories.length);
+      let category = data.categories[randCat];
+      let randPrompt = Math.floor(Math.random() * data[category].length);
+      let prompt = data[category][randPrompt];
+      rooms[socket.room].category = category;
+      rooms[socket.room].prompt = prompt;
+    }
+    let x = true;
+    while (x) {
+      let i = Math.floor(Math.random() * players.length);
+      if (players[i].role === 'player') {
+        players[i].fraud = true;
+        console.log(players[i]);
+        x = false;
+      }
+    }
+    io.to(socket.room).emit('users', players);
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
 
   socket.on('gameStart', () => {
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
-  })
+  });
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
@@ -180,7 +212,7 @@ io.on('connection', (socket) => {
     });
     rooms[socket.room].colors[data.color] =
       !rooms[socket.room].colors[data.color];
-    console.log(rooms[socket.room].colors);
+    // console.log(rooms[socket.room].colors);
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });

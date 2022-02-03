@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import io from 'socket.io-client';
 import './CreateRoom.css';
 
@@ -25,7 +24,7 @@ var CreateRoom = (props) => {
   const navigate = useNavigate();
   const routeChange = (e) => {
     e.preventDefault();
-    if (name.length > 0) {
+    if (name.length > 1) {
       const roomID = generateRandString();
       hostSocket.auth = {
         user: {
@@ -51,20 +50,22 @@ var CreateRoom = (props) => {
       <h1 className='CreateGamePage_Title'>Fraud Monet</h1>
       <div className='FormBox'>
         <h2>Username</h2>
-        <input
-          className='UserNameForm'
-          type='text'
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          onKeyPress={(e) => {
-            e.key === 'Enter' && routeChange(e);
-          }}
-          required
-        />
-        <button className='CreateButton' onClick={routeChange}>
-          Create Game
-        </button>
+        <form onSubmit={routeChange}>
+          <input
+            className='UserNameForm'
+            type='text'
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              e.key === 'Enter' && routeChange(e);
+            }}
+            required
+          />
+          <br />
+          <br />
+          <button className='CreateButton'>Create Game</button>
+        </form>
       </div>
     </div>
   );

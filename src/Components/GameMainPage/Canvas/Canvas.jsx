@@ -83,10 +83,10 @@ const Canvas = ({ thingy }) => {
         y: p5.mouseY,
         px: p5.pmouseX,
         py: p5.pmouseY,
-        color: socket.auth.user.color,
+        color: currentUser.color,
       };
       socket.emit('mouse', data);
-      p5.stroke(socket.auth.user.color);
+      p5.stroke(currentUser.color);
       p5.strokeWeight(10);
       p5.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
     } else if (!gameStarted) {
@@ -95,10 +95,10 @@ const Canvas = ({ thingy }) => {
         y: p5.mouseY,
         px: p5.pmouseX,
         py: p5.pmouseY,
-        color: socket.auth.user.color,
+        color: currentUser.color,
       };
       socket.emit('mouse', data);
-      p5.stroke(socket.auth.user.color);
+      p5.stroke(currentUser.color);
       p5.strokeWeight(10);
       p5.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
     }

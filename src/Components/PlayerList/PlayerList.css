@@ -5,12 +5,8 @@
   text-indent: 10px;
   overflow: hidden;
   border-radius: 25px;
-}
-
-.host {
-  margin-bottom: 5px;
-  border: 0.5px solid black;
-  /* border-radius: 25px; */
+  color: #fff;
+  text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
 
 .each-spectator {
@@ -74,8 +70,10 @@
 .player-title {
   margin-top: 5%;
   font-size: 20px;
+  /* background-color: blue; */
 }
 
 .spec-title {
   font-size: 20px;
 }
+

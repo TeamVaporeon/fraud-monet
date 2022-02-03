@@ -39,9 +39,12 @@ function App() {
   const [users, setUsers] = useState(
     hostSocket.id ? [hostSocket.auth.user] : []
   );
+  const [players, setPlayers] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
   const [availColors, setAvailColors] = useState(defaultColors);
   const [gameStarted, setStart] = useState(false);
+  const [turn, setTurn] = useState(0);
+  const [QM, setQM] = useState({});
 
   if (hostSocket.id) {
     socket = hostSocket;
@@ -49,10 +52,12 @@ function App() {
 
   window.onbeforeunload = () => {
     sessionStorage.clear();
-  }
+  };
 
   socket.on('users', (userList) => {
     setUsers(userList);
+    setQM(userList.filter((player) => player.role === 'qm')[0] || {});
+    setPlayers(userList.filter((player) => player.role === 'player'));
     sessionStorage.setItem('users', JSON.stringify(users));
   });
 
@@ -63,7 +68,7 @@ function App() {
   socket.on('gameStart', (response) => {
     setStart(true);
     sessionStorage.setItem('gameStarted', 'true');
-  })
+  });
 
   socket.on('availColors', (colors) => {
     setAvailColors(colors);
@@ -73,22 +78,37 @@ function App() {
     setAvailColors(roomInfo.colors);
   });
 
+  // socket.on('game_start', (players) => {
+  //   console.log(players.filter((player) => player.id === currentUser.id)[0]);
+  //   setCurrentUser(players.filter((player) => player.id === currentUser.id)[0]);
+  //   console.log('after start: ', socket.auth.user);
+  //   console.log(
+  //     'from server: ',
+  //     players.filter((player) => player.id === currentUser.id)[0]
+  //   );
+  // });
+
   useEffect(() => {
-    setCurrentUser(
-      socket.auth && socket.auth.user
-        ? socket.auth.user
-        : {
-            username: null,
-            roomID: null,
-            color: '#000',
-            host: false,
-            fraud: false,
-            role: 'spectator',
-            score: 0,
-            id: null,
-          }
-    );
-    socket.auth && console.log('user: ', socket.auth.user);
+    if (currentUser.id) {
+      setCurrentUser(users.filter((player) => player.id === currentUser.id)[0]);
+    } else if (socket.auth && socket.auth.user) {
+      setCurrentUser(socket.auth.user);
+    } else {
+      setCurrentUser(
+        socket.auth && socket.auth.user
+          ? socket.auth.user
+          : {
+              username: null,
+              roomID: null,
+              color: '#000',
+              host: false,
+              fraud: false,
+              role: 'spectator',
+              score: 0,
+              id: null,
+            }
+      );
+    }
   }, [users]);
 
   return (
@@ -103,6 +123,10 @@ function App() {
         availColors,
         setStart,
         gameStarted,
+        turn,
+        setTurn,
+        QM,
+        players,
       }}
     >
       <div className='App'>
