@@ -156,6 +156,7 @@ const PlayerList = () => {
         </div>
         {colorModal ? (
           <div className='colorModal'>
+            <div>Select your color:</div>
             {Object.keys(availColors).map((color) => {
               return availColors[color] ? (
                 <svg key={color + 'a'} width='20' height='20'>

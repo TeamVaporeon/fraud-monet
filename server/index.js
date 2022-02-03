@@ -14,7 +14,7 @@ const defaultColors = {
   '#EA9F4E': true, //Sandy Brown
   '#a52a2a': true, //Brown
   '#ff0000': true, //Red
-  '#ffa500': true, //Orange
+  '#ff6600': true, //Orange
   '#FBE89B': true, //Green Yellow Crayola
   '#ffff00': true, //Yellow
   '#00ff00': true, //Lime
@@ -68,8 +68,8 @@ app.get('/usernames/:id', (req, res) => {
     res.json(rooms[room].users);
   } else {
     res.status(404).send();
-  };
-})
+  }
+});
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
@@ -234,8 +234,8 @@ io.on('connection', (socket) => {
     } else if (rooms[socket.room]) {
       if (rooms[socket.room].users[socket.user.username]) {
         delete rooms[socket.room].users[socket.user.username];
-      };
-    };
+      }
+    }
     console.log(`${socket.id} disconnected`);
   });
 

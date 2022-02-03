@@ -55,7 +55,7 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
             })}
           </div>
           {fraud ? (
-            <div style={{ color: 'red' }}>
+            <div style={{ color: 'crimson' }}>
               <span>
                 {`Fraud Monet: ${
                   players.filter((player) => player.fraud)[0].username
@@ -80,23 +80,15 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
           players.filter((player) => player.fraud)[0].username &&
         !judged ? (
           <div>
-            <span>Did the Fraud guess correctly?</span>
-            <button
-              value='Y'
-              variant='success'
-              className='judgeBtn'
-              onClick={judgement}
-            >
-              YES
-            </button>
-            <button
-              value='N'
-              variant='success'
-              className='judgeBtn'
-              onClick={judgement}
-            >
-              NO
-            </button>
+            <div>Did the Fraud guess correctly?</div>
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+              <button value='Y' className='resultsBtn' onClick={judgement}>
+                YES
+              </button>
+              <button value='N' className='resultsBtn' onClick={judgement}>
+                NO
+              </button>
+            </div>
           </div>
         ) : null}
         {fraud && judged ? (

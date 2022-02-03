@@ -3,18 +3,21 @@ import './Vote.css';
 import { AppContext } from '../../../App';
 
 const Vote = ({ setOpenVote, setOpenResults }) => {
-  const { socket, players, currentUser } = useContext(AppContext);
+  const { socket, players, currentUser, guess, setGuess } =
+    useContext(AppContext);
   const [pick, setPick] = useState('');
 
-  const handleSubmit = (e, guess) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (pick !== '') {
-      socket.emit('vote', pick);
-      setOpenResults(true);
-      setOpenVote(false);
-    }
-    if (currentUser.fraud) {
-      socket.emit('guess', guess);
+    if (guess.length > 0 || !currentUser.fraud) {
+      if (pick !== '') {
+        socket.emit('vote', pick);
+        setOpenResults(true);
+        setOpenVote(false);
+      }
+      if (currentUser.fraud) {
+        socket.emit('guess', guess);
+      }
     }
   };
 
@@ -22,7 +25,9 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
     <div className='voteModal'>
       <div className='voteContainer'>
         <h3 className='voteTitle'>Vote</h3>
-        Who's the fraud? Select the player you think is the fake below.
+        {currentUser.fraud
+          ? `You're the fraud! Submit your best guess for the Prompt, and vote for someone else to take the blame!`
+          : `Who's the fraud? Select the player you think is the fake below.`}
         <form className='voteForm'>
           <label className='votePlayername'>
             {players.map((player) => {
@@ -43,6 +48,14 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
               );
             })}
           </label>
+          {currentUser.fraud ? (
+            <input
+              placeholder='Guess the Prompt'
+              type='text'
+              onChange={(e) => setGuess(e.target.value)}
+              required={true}
+            ></input>
+          ) : null}
         </form>
         <div className='vote_Btns'>
           <button
