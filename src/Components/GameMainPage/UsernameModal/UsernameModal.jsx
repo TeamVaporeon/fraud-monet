@@ -18,18 +18,8 @@ const UsernameModal = ({ setOpenUsername }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    socket.auth = {
-      user: {
-        username: paramsBody.username,
-        roomID: window.location.pathname,
-        color: '#000',
-        host: false,
-        fraud: false,
-        role: 'spectator',
-        score: 0,
-      },
-    };
-    socket.connect();
+    // username: paramsBody.username,
+    socket.emit('addUsername', (paramsBody.username));
     socket.emit('joinRoom', window.location.pathname);
     setOpenUsername(false);
   };

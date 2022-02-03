@@ -6,6 +6,8 @@ const { createServer } = require('http');
 const cookieParser = require('cookie-parser');
 const cookie = require('cookie');
 const editFile = require('edit-json-file');
+const session = require('express-session');
+const { v4: uuidv4 } = require('uuid');
 const rooms = {};
 const defaultColors = {
   '#FFCCEB': true, //Cotton Candy
@@ -35,6 +37,17 @@ var file = editFile(path.join(__dirname, 'data.json'));
 
 // Express Server
 const app = express();
+app.use(session({
+  genid: function (req) {
+    return uuidv4();
+  },
+  secret: 'fraudmonet',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 60000
+  }
+}));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -66,8 +79,19 @@ const io = new Server(httpServer, {
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
   user.id = socket.id;
+  user.session = socket.handshake.headers.cookie;
   socket.user = user;
   socket.emit('user_object', user);
+  if (rooms[user.roomID]) {
+    if (rooms[user.roomID].playerSessions[user.session]) {
+      let curUser = rooms[user.roomID].playerSessions[user.session];
+      curUser.id = socket.id;
+      socket.user = curUser;
+      socket.emit('sessionExist', curUser);
+    };
+  } else {
+    socket.emit('noRoom');
+  };
   next();
 });
 
@@ -77,6 +101,11 @@ io.on('connection', (socket) => {
   console.log(`Socket Connected With Id: `, socket.id);
   socket.user.id = socket.id;
   let users = [];
+
+  socket.on('addUsername', (name) => {
+    socket.user.username = name;
+    socket.emit('user_object', socket.user);
+  });
 
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
@@ -161,10 +190,12 @@ io.on('connection', (socket) => {
   /* ----- End of CHATROOM Code ----- */
 
   // On user disconnecting
-  socket.on('disconnect', () => {
-    if (socket.user.host) {
-      delete rooms[socket.room];
-    }
+  socket.on('disconnect', async () => {
+    // let userSockets = await io.in(socket.room).fetchSockets();
+    // console.log(userSockets.length);
+    // if (userSockets.length < 1) {
+    //   delete rooms[socket.room];
+    // };
     console.log(`${socket.id} disconnected`);
   });
 
@@ -178,9 +209,7 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
-    rooms[socket.room].colors[data.color] =
-      !rooms[socket.room].colors[data.color];
-    console.log(rooms[socket.room].colors);
+    rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });
