@@ -7,11 +7,14 @@ const Rules = ({ setOpenRules }) => {
   return (
     <div className='rules'>
       <div className='rulesContainer'>
-        <button className='ruleCloseBtn' onClick={() => setOpenRules(false)}>
-          X
-        </button>
+        <div className='rulesTop'>
+          <h3 className='rulesTitle'>Game Rules</h3>
+          <button className='ruleCloseBtn' onClick={() => setOpenRules(false)}>
+            X
+          </button>
+        </div>
+
         <div className='ruleText'>
-          <h3>Game Rules</h3>
           <p>
             Welcome to Fraud Monet! This is a group drawing game about
             identifying fakes — without revealing to them what’s really going
