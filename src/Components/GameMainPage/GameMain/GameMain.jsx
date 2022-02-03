@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './GameMain.css';
@@ -19,8 +17,7 @@ import { hostSocket } from '../../CreateRoom';
 const GameMain = () => {
   const ref = useRef(null);
   const navigate = useNavigate();
-  const { round, setRound, socket, users, currentUser } =
-    useContext(AppContext);
+  const { round, socket, currentUser } = useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(() => {
     if (hostSocket.id) {
@@ -69,12 +66,11 @@ const GameMain = () => {
         <div>
           <GameLogic />
         </div>
-        <div className='game_round'>
-          <div>Round: {round}</div>
-          {/* <span>buttons for tests, will delete later</span> */}
-          <button onClick={() => setRound(round + 1)}>
-            Modal Test Round+1
-          </button>
+        <div
+          style={{ fontSize: '1.5rem', fontWeight: 'bold' }}
+          className='game_round'
+        >
+          <div>Round: {round !== 2 ? round + 1 : 0}</div>
         </div>
         <button className='game_rules' onClick={() => setOpenRules(true)}>
           Rules

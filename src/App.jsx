@@ -13,7 +13,7 @@ const defaultColors = {
   '#EA9F4E': true, //Sandy Brown
   '#a52a2a': true, //Brown
   '#ff0000': true, //Red
-  '#ffa500': true, //Orange
+  '#ff6600': true, //Orange
   '#FBE89B': true, //Green Yellow Crayola
   '#ffff00': true, //Yellow
   '#00ff00': true, //Lime
@@ -143,6 +143,7 @@ function App() {
         QM,
         players,
         guess,
+        setGuess,
         mostVoted,
         setMostVoted,
       }}

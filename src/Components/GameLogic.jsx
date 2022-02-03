@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
-import { useResolvedPath } from 'react-router-dom';
+import { useContext, useState } from 'react';
 import { AppContext } from '../App';
 
 const GameLogic = () => {
-  const { currentUser, socket, gameStarted, users } = useContext(AppContext);
+  const { currentUser, socket, round } = useContext(AppContext);
 
   const [prompt, setPrompt] = useState('');
   const [category, setCategory] = useState('');
@@ -14,17 +13,17 @@ const GameLogic = () => {
   });
 
   return (
-    <>
+    <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
       <div>{`Category: ${category}`}</div>
       {currentUser &&
       (currentUser.role === 'player' || currentUser.role === 'qm') ? (
         currentUser.fraud ? (
-          <span>You are the Fraud!</span>
+          <div style={{ color: 'crimson' }}>You are the Fraud!</div>
         ) : (
-          <span>{`Prompt: ${prompt}`}</span>
+          <div>{`Prompt: ${prompt}`}</div>
         )
       ) : null}
-    </>
+    </div>
   );
 };
 
