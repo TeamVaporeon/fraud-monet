@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import './PlayerList.css';
 import Button from 'react-bootstrap/Button';
+import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
 const PlayerList = () => {
@@ -100,6 +101,20 @@ const PlayerList = () => {
                 ))
               : null}
           </div>
+          {spectators && spectators.length ? (
+            <div className='entire-spec-container'>
+              <h3 className='spec-title'>Spectators:</h3>
+              <div className='just-specs'>
+                {spectators
+                  ? spectators.map((spec, index) => (
+                      <div className='each-spectator' key={index}>
+                        <div>{spec.username}</div>
+                      </div>
+                    ))
+                  : null}
+              </div>
+            </div>
+          ) : null}
         </div>
         <div className='playercount-and-buttons'>
           <div className='players-spec-count'>
@@ -108,7 +123,7 @@ const PlayerList = () => {
               Number of Spectators: {spectators ? spectators.length : 0}
             </div>
           </div>
-          <div className='join-start-buttons'>
+          <Stack className='join-start-buttons' direction='horizontal' gap={2}>
             {currentUser.role === 'spectator' &&
             !gameStarted &&
             currentUser.username ? (
@@ -116,53 +131,55 @@ const PlayerList = () => {
                 Join
               </Button>
             ) : (
-              <Button disabled>Join</Button>
+              <Button variant='success' size='sm' disabled>
+                Join
+              </Button>
             )}
             {currentUser.host && !gameStarted ? (
               <Button onClick={handleStart} variant='success'>
                 Start
               </Button>
             ) : null}
-          </div>
-          {colorModal ? (
-            <div className='colorModal'>
-              {Object.keys(availColors).map((color) => {
-                return availColors[color] ? (
-                  <svg width='20' height='20'>
-                    <rect
-                      key={color}
-                      width='20'
-                      height='20'
-                      color={color}
-                      style={{
-                        fill: color,
-                        stroke: 'darkslategray',
-                        strokeWidth: 2,
-                        cursor: 'pointer',
-                      }}
-                      onClick={(e) => update(e, 'player')}
-                    ></rect>
-                  </svg>
-                ) : (
-                  <svg width='20' height='20'>
-                    <rect
-                      key={color}
-                      width='20'
-                      height='20'
-                      color={color}
-                      style={{
-                        fill: color,
-                        opacity: '30%',
-                        stroke: 'darkslategray',
-                        strokeWidth: 2,
-                      }}
-                    ></rect>
-                  </svg>
-                );
-              })}
-            </div>
-          ) : null}
+          </Stack>
         </div>
+        {colorModal ? (
+          <div className='colorModal'>
+            {Object.keys(availColors).map((color) => {
+              return availColors[color] ? (
+                <svg width='20' height='20'>
+                  <rect
+                    key={color}
+                    width='20'
+                    height='20'
+                    color={color}
+                    style={{
+                      fill: color,
+                      stroke: 'darkslategray',
+                      strokeWidth: 2,
+                      cursor: 'pointer',
+                    }}
+                    onClick={(e) => update(e, 'player')}
+                  ></rect>
+                </svg>
+              ) : (
+                <svg width='20' height='20'>
+                  <rect
+                    key={color}
+                    width='20'
+                    height='20'
+                    color={color}
+                    style={{
+                      fill: color,
+                      opacity: '30%',
+                      stroke: 'darkslategray',
+                      strokeWidth: 2,
+                    }}
+                  ></rect>
+                </svg>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
     </>
   );

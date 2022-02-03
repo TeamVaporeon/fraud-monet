@@ -38,14 +38,15 @@ const UsernameModal = ({ setOpenUsername }) => {
     <div className='usernameModal'>
       <div className='usernameContainer'>
         <form className='usernameForm' onSubmit={handleSubmit}>
-          <label>Username:</label>
+          <label className='usernameLabel'>Username:</label>
           <input
-            className='usernameForm_input'
+            className='usernameInput'
             placeholder='Please fill in...'
             name='username'
             onChange={handleInputChange}
+            required
           ></input>
-          <button className='usernameForm_submit' type='submit' value='submit'>
+          <button className='usernameSubmit' type='submit' value='submit'>
             Submit
           </button>
         </form>
