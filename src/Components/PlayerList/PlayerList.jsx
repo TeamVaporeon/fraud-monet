@@ -211,7 +211,7 @@ const PlayerList = () => {
             })}
           </div>
         ) : null}
-        <Stack className='join-qm-button' direction='horizontal'>
+        <Stack className='join-qm-button' direction='horizontal' gap={2}>
           {currentUser.username &&
           currentUser.role !== 'player' &&
           !gameStarted &&
@@ -219,7 +219,7 @@ const PlayerList = () => {
             <Button
               onClick={(e) => update(e, 'qm')}
               color='#000'
-              variant='primary'
+              variant='success'
               size='sm'
             >
               Join as Question Master
