@@ -64,6 +64,7 @@ function App() {
   socket.on('gameStart', (response) => {
     setStart(true);
     sessionStorage.setItem('gameStarted', 'true');
+    console.log('gamestart received');
   })
 
   socket.on('availColors', (colors) => {
