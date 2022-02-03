@@ -56,6 +56,10 @@
   height: 100%;
 }
 
+.game_main_logo:hover {
+  transform: scale(1.1);
+}
+
 .game_rules {
   margin-bottom: 1.5rem;
   padding: 5px 15px;
