@@ -42,15 +42,15 @@ const GameMain = () => {
 
   useEffect(() => {
     // If room exists, continue, else server will redirect
-    axios.get(`/room${window.location.pathname}`)
-      .catch(err => {
-        navigate('/');
-      });
+    axios.get(`/room${window.location.pathname}`).catch((err) => {
+      navigate('/');
+    });
   }, []);
 
   return (
     <div className='game'>
-      <h1 className='game_logo'>Fraud Monet </h1>
+      {/* <h1 className='game_logo'>Fraud Monet </h1> */}
+      <img className='game_main_logo' src='./images/fm_logo.jpg' alt='logo' />
       {openRules ? <Rules setOpenRules={setOpenRules} /> : null}
       {openUsername ? (
         <UsernameModal setOpenUsername={setOpenUsername} socket={socket} />

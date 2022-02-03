@@ -59,3 +59,9 @@
 .game_rules:hover {
   transform: scale(1.2);
 }
+
+.game_main_logo {
+  margin-top: 1rem;
+  width: 15%;
+  height: 100%;
+}
