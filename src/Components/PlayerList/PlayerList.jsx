@@ -141,11 +141,13 @@ const PlayerList = () => {
                 Join
               </Button>
             )}
-            {currentUser.host && !gameStarted && players.length >= 3 ? (
+            {(currentUser.role === 'qm' || (!QM.id && currentUser.host)) &&
+            !gameStarted &&
+            players.length >= 3 ? (
               <Button onClick={handleStart} variant='success' size='sm'>
                 Start
               </Button>
-            ) : currentUser.host ? (
+            ) : currentUser.role === 'qm' || (!QM.id && currentUser.host) ? (
               <Button disabled variant='success' size='sm'>
                 Start
               </Button>
