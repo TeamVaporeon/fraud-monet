@@ -267,17 +267,11 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
-<<<<<<< HEAD
-    rooms[socket.room].colors[data.color] =
-      !rooms[socket.room].colors[data.color];
-    // console.log(rooms[socket.room].colors);
-=======
     try {
       rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
     } catch (err) {
       console.log(err);
     }
->>>>>>> backend/Persist
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });
