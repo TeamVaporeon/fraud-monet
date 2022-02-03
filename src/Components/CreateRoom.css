@@ -18,15 +18,9 @@
   border-style: solid;
   border-radius: 5px;
   border-width: 4px;
-<<<<<<< HEAD
   border-color:rgb(0, 0, 0);
   height: 240px;
   width: 350px;
-=======
-  border-color: rgb(240, 208, 255);
-  height: 220px;
-  width: 300px;
->>>>>>> 10c8578ba5dbd86c0655fc00516c140b429e4508
 }
 
 .CreateForm {
