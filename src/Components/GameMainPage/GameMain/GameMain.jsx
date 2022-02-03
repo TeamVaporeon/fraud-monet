@@ -75,12 +75,7 @@ const GameMain = () => {
           <PlayerList />
         </div>
         <div className='game_canvas' ref={ref}>
-          {ref.current?.offsetWidth ? (
-            <Canvas
-              width={ref.current.offsetWidth}
-              height={ref.current.offsetHeight}
-            />
-          ) : null}
+          {ref.current ? <Canvas thingy={ref.current} /> : null}
         </div>
         <div className='game_chat'>
           <Chat socket={socket} currentUser={currentUser} />
