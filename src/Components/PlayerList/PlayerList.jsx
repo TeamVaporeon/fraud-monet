@@ -117,7 +117,11 @@ const PlayerList = () => {
             {currentUser.role === 'spectator' &&
             !gameStarted &&
             currentUser.username ? (
-              <Button onClick={() => setColorModal(true)} variant='success'>
+              <Button
+                onClick={() => setColorModal(true)}
+                variant='success'
+                size='sm'
+              >
                 Join
               </Button>
             ) : (
