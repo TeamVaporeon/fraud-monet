@@ -23,7 +23,7 @@ const Canvas = ({ thingy }) => {
   const setup = (p5, canvasParentRef) => {
 
     const turndiv = p5.createDiv('Current turn:').parent(canvasParentRef);
-
+    turndiv.style('font-weight', 'bold');
     const canva = p5
       .createCanvas(thingy.offsetWidth, thingy.offsetHeight - 24)
       .parent(canvasParentRef);
