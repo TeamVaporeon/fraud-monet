@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import io from 'socket.io-client';
 import './CreateRoom.css';
 
@@ -25,25 +24,25 @@ var CreateRoom = (props) => {
   const navigate = useNavigate();
   const routeChange = (e) => {
     e.preventDefault();
-      if(name.length > 1) {
-        const roomID = generateRandString();
-        hostSocket.auth = {
-          user: {
-            username: name,
-            roomID: `/${roomID}`,
-            color: '#000',
-            host: true,
-            fraud: false,
-            role: 'spectator',
-            score: 0,
-          },
-        };
-        hostSocket.connect();
-        hostSocket.emit('joinRoom', `/${roomID}`);
-        hostSocket.on('hostConnected', () => {
-          navigate(`/${roomID}`);
-        });
-      }
+    if (name.length > 1) {
+      const roomID = generateRandString();
+      hostSocket.auth = {
+        user: {
+          username: name,
+          roomID: `/${roomID}`,
+          color: '#000',
+          host: true,
+          fraud: false,
+          role: 'spectator',
+          score: 0,
+        },
+      };
+      hostSocket.connect();
+      hostSocket.emit('joinRoom', `/${roomID}`);
+      hostSocket.on('hostConnected', () => {
+        navigate(`/${roomID}`);
+      });
+    }
   };
 
   return (
@@ -52,21 +51,20 @@ var CreateRoom = (props) => {
       <div className='FormBox'>
         <h2>Username</h2>
         <form onSubmit={routeChange}>
-        <input
-          className='UserNameForm'
-          type='text'
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          onKeyPress={(e) => {
-            e.key === 'Enter' && routeChange(e);
-          }}
-          required
-        /><br/>
-        <br/>
-        <button className='CreateButton' >
-          Create Game
-        </button>
+          <input
+            className='UserNameForm'
+            type='text'
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              e.key === 'Enter' && routeChange(e);
+            }}
+            required
+          />
+          <br />
+          <br />
+          <button className='CreateButton'>Create Game</button>
         </form>
       </div>
     </div>
