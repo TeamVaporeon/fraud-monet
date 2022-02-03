@@ -60,7 +60,7 @@ app.get('/room/:id', (req, res) => {
   } else {
     console.log('No room', rooms);
     res.status(301).send();
-  };
+  }
 });
 
 // Implementing Express Server With Socket.io
@@ -183,7 +183,7 @@ io.on('connection', (socket) => {
       rooms[socket.room].prompt = prompt;
     } else {
       console.log(`${socket.room} doesn't exist`);
-    };
+    }
     let x = true;
     while (x) {
       let i = Math.floor(Math.random() * players.length);
@@ -191,8 +191,8 @@ io.on('connection', (socket) => {
         players[i].fraud = true;
         console.log(players[i]);
         x = false;
-      };
-    };
+      }
+    }
     io.to(socket.room).emit('users', players);
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
@@ -201,8 +201,12 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
-  socket.on('round', req => {
+  socket.on('round', (req) => {
     io.to(socket.room).emit('round', req);
+  });
+
+  socket.on('judged', () => {
+    io.to(socket.room).emit('judged');
   });
 
   /* ----- CHATROOM Code ----- */

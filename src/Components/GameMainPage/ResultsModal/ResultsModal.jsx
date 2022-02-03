@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import './ResultsModal.css';
 import { AppContext } from '../../../App';
-import { set } from 'mongoose';
 
 const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
   const { socket, players, guess, currentUser, QM, setMostVoted, mostVoted } =
@@ -15,12 +14,9 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
       const arr = Object.values(data);
       const voteMax = Math.max(...arr);
       let most = Object.entries(data).filter((player) => player[1] === voteMax);
-      if (most.length === 1) {
-        most = most[0];
-      }
       if (
         most.length > 1 ||
-        most !== players.filter((player) => player.fraud)[0].username
+        most[0][0] !== players.filter((player) => player.fraud)[0].username
       ) {
         setJudged(true);
       }
@@ -36,8 +32,12 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
     } else {
       //Emit 1 pt for everyone except the Fraud and QM
     }
-    setJudged(true);
+    socket.emit('judged');
   };
+
+  socket.on('judged', () => {
+    setJudged(true);
+  });
 
   return (
     <div className='resultsModal'>
@@ -68,38 +68,37 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
           <div>
             Most Voted: {console.log('most voted: ', mostVoted)}
             {mostVoted.map((player) => {
-              return <div>{player}</div>;
+              return <div>{player[0]}</div>;
             })}
           </div>
         ) : null}
-        {/* {fraud ? <div>{`Fraud's Guess: ${guess}`}</div> : null}
-        {console.log(
-          'fraud: ',
-          fraud,
-          ' qm or host: ',
-          currentUser.role === 'qm' || (!QM.id && currentUser.host),
-          ' mostvoted len: ',
-          mostVoted.length,
-          ' most is fraud: ',
-          mostVoted[0],
-          players.filter((player) => player.fraud)[0].username
-        )}
+        {fraud ? <div>{`Fraud's Guess: ${guess}`}</div> : null}
         {fraud &&
         (currentUser.role === 'qm' || (!QM.id && currentUser.host)) &&
         mostVoted.length === 1 &&
-        mostVoted[0] ===
-          players.filter((player) => player.fraud)[0].username ? (
+        mostVoted[0][0] ===
+          players.filter((player) => player.fraud)[0].username &&
+        !judged ? (
           <div>
             <span>Did the Fraud guess correctly?</span>
-            <button value='Y' className='judgeBtn' onClick={judgement}>
+            <button
+              value='Y'
+              variant='success'
+              className='judgeBtn'
+              onClick={judgement}
+            >
               YES
             </button>
-            <button value='N' className='judgeBtn' onClick={judgement}>
+            <button
+              value='N'
+              variant='success'
+              className='judgeBtn'
+              onClick={judgement}
+            >
               NO
             </button>
           </div>
-        ) : null} */}
-
+        ) : null}
         {fraud && judged ? (
           <button
             className='resultsBtn'
