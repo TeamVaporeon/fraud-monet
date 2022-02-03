@@ -12,6 +12,12 @@
 
 @font-face {
   font-family: Poppins;
+  src: url(./fonts/Poppins-Italic.ttf);
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Poppins;
   src: url(./fonts/Poppins-Bold.ttf);
   font-weight: bold;
 }
@@ -31,4 +37,8 @@ code {
 
 strong {
   font-weight: bold;
+}
+
+em {
+  font-style: italic;
 }
