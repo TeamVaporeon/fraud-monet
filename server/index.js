@@ -163,6 +163,8 @@ io.on('connection', (socket) => {
           prompt: '',
           colors: Object.assign({}, defaultColors),
           chats: [],
+          votes: {},
+          turns: 0,
         };
         socket.emit('start', rooms[socket.room]);
       }
@@ -204,21 +206,42 @@ io.on('connection', (socket) => {
   });
 
   socket.on('turn', (turn) => {
+    rooms[socket.room].turns++;
+    // if (rooms[socket.room].turns % players)
     socket.to(socket.room).emit('turn', turn);
   });
 
+  socket.on('vote', (data) => {
+    if (rooms[socket.room].votes[data]) {
+      rooms[socket.room].votes[data]++;
+    } else {
+      rooms[socket.room].votes[data] = 1;
+    }
+    io.to(socket.room).emit('get_votes', rooms[socket.room].votes);
+  });
+
+  socket.on('new_game', () => {
+    rooms[socket.room].category = '';
+    rooms[socket.room].prompt = '';
+    rooms[socket.room].votes = {};
+    rooms[socket.room].turns = 0;
+  });
+
+  socket.on('prompt', (data) => {
+    rooms[socket.room].category = data.category;
+    rooms[socket.room].prompt = data.prompt;
+  });
+
   socket.on('start', async (players) => {
-    const data = await file.toObject();
-
-    let randCat = Math.floor(Math.random() * data.categories.length);
-    let category = data.categories[randCat];
-
-    let randPrompt = Math.floor(Math.random() * data[category].length);
-    let prompt = data[category][randPrompt];
-
-    console.log('players', players);
-    rooms[socket.room].category = category;
-    rooms[socket.room].prompt = prompt;
+    if (!rooms[socket.room].category) {
+      const data = await file.toObject();
+      let randCat = Math.floor(Math.random() * data.categories.length);
+      let category = data.categories[randCat];
+      let randPrompt = Math.floor(Math.random() * data[category].length);
+      let prompt = data[category][randPrompt];
+      rooms[socket.room].category = category;
+      rooms[socket.room].prompt = prompt;
+    }
     let x = true;
     while (x) {
       let i = Math.floor(Math.random() * players.length);

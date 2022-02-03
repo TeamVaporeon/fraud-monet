@@ -55,21 +55,20 @@ var CreateRoom = (props) => {
       <div className='FormBox'>
         <h2>Username</h2>
         <form onSubmit={routeChange}>
-        <input
-          className='UserNameForm'
-          type='text'
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          onKeyPress={(e) => {
-            e.key === 'Enter' && routeChange(e);
-          }}
-          required
-        /><br/>
-        <br/>
-        <button className='CreateButton' >
-          Create Game
-        </button>
+          <input
+            className='UserNameForm'
+            type='text'
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              e.key === 'Enter' && routeChange(e);
+            }}
+            required
+          />
+          <br />
+          <br />
+          <button className='CreateButton'>Create Game</button>
         </form>
       </div>
     </div>
