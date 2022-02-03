@@ -17,6 +17,7 @@ const PlayerList = () => {
   } = useContext(AppContext);
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
+  const [isShown, scoreIsShown] = useState(false);
 
   const handleStart = (e) => {
     setStart(true);
@@ -71,31 +72,46 @@ const PlayerList = () => {
             {players
               ? players.map((player) => (
                   <div className='each-player' key={player.id + '1'}>
+
                     <div
                       style={{ background: player.color }}
                       key={player.id + '2'}
+                      onMouseEnter={() => scoreIsShown(true)}
+                      onMouseLeave={() => scoreIsShown(false)}
                     >
                       <span key={player.id}>
                         {`${player.username} ${player.host ? '👑' : ''}`}
+                        {(isShown && player.score <= 5) ?
+                        <span style={{ marginLeft: '5px'}}>
+                        {'🏆'.repeat(player.score)}
+                        </span> :
+                        (isShown && player.score > 5) ?
+                        <span style={{ marginLeft: '5px'}}>
+                        {'🏆 x ' + (player.score)}
+                        </span> : null}
                       </span>
                       {player.id === currentUser.id ? (
-                        <span
-                          key={player.id + '3'}
-                          onClick={(e) => update(e, 'spectator')}
-                          color='#000'
-                          style={{ float: 'right', marginRight: '5px' }}
-                        >
-                          ❌
-                        </span>
-                      ) : (
-                        currentUser.host && (
+                        <span>
                           <span
                             key={player.id + '4'}
-                            // onClick={kick}
-                            playerid={player.id}
+                            onClick={(e) => update(e, 'spectator')}
+                            color='#000'
                             style={{ float: 'right', marginRight: '5px' }}
                           >
                             ❌
+                          </span>
+                        </span>
+                      ) : (
+                        currentUser.host && (
+                          <span>
+                            <span
+                              key={player.id + '6'}
+                              // onClick={kick}
+                              playerid={player.id}
+                              style={{ float: 'right', marginRight: '5px' }}
+                            >
+                              ❌
+                            </span>
                           </span>
                         )
                       )}
@@ -210,19 +226,18 @@ const PlayerList = () => {
           ) : null}
         </Stack>
         {QM.id ? (
-          <span>
-            {`Current QM: ${QM.username}`}
+          <div className="question-master">
+            {`QM: ${QM.username}`}
             {QM.id === currentUser.id ? (
               <span
                 key={QM.id + '3'}
                 onClick={(e) => update(e, 'spectator')}
                 color='#000'
-                style={{ float: 'right', marginRight: '5px' }}
               >
                 ❌
               </span>
             ) : null}
-          </span>
+          </div>
         ) : null}
       </div>
     </>
