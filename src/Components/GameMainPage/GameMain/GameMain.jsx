@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './GameMain.css';
 import PlayerList from '../../PlayerList/PlayerList.jsx';
 import Chat from '../../Chat/Chat.jsx';
@@ -11,11 +13,13 @@ import ResultsModal from '../ResultsModal/ResultsModal';
 import PromptModal from '../PromptModal/PromptModal.jsx';
 import Canvas from '../Canvas/Canvas.jsx';
 import Vote from '../Vote/Vote';
+import axios from 'axios';
 import { AppContext } from '../../../App';
 import { hostSocket } from '../../CreateRoom';
 
 const GameMain = () => {
   const ref = useRef(null);
+  const navigate = useNavigate();
   const { round, setRound, socket, users, currentUser } =
     useContext(AppContext);
 
@@ -35,9 +39,28 @@ const GameMain = () => {
 
   useEffect(() => {
     if (round === 2) {
-      setOpenVote(true);
+      if (currentUser.role === 'qm') {
+        setOpenResults(true);
+      } else {
+        setOpenVote(true);
+      }
     }
-  }, [round]);
+  }, [round, currentUser.role]);
+
+  useEffect(() => {
+    // If room exists, continue, else server will redirect
+    axios.get(`/room${window.location.pathname}`)
+      .catch(err => {
+        navigate('/');
+      });
+    socket.on('start', () => {
+      setOpenFinal(false);
+      setOpenResults(false);
+      setOpenRules(false);
+      setOpenUsername(false);
+      setOpenVote(false);
+    })
+  }, []);
 
   return (
     <div className='game'>

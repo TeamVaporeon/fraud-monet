@@ -22,6 +22,8 @@ const PlayerList = ({setOpenPrompt}) => {
     setStart(true);
     socket.emit('start', users);
     socket.emit('gameStart');
+    socket.emit('round', 0);
+    socket.emit('turn', 0);
   };
 
   useEffect(() => {
@@ -144,11 +146,13 @@ const PlayerList = ({setOpenPrompt}) => {
                 Join
               </Button>
             )}
-            {currentUser.host && !gameStarted && players.length >= 3 ? (
+            {(currentUser.role === 'qm' || (!QM.id && currentUser.host)) &&
+            !gameStarted &&
+            players.length >= 3 ? (
               <Button onClick={handleStart} variant='success' size='sm'>
                 Start
               </Button>
-            ) : currentUser.host ? (
+            ) : currentUser.role === 'qm' || (!QM.id && currentUser.host) ? (
               <Button disabled variant='success' size='sm'>
                 Start
               </Button>
@@ -167,15 +171,18 @@ const PlayerList = ({setOpenPrompt}) => {
                     color={color}
                     style={{
                       fill: color,
-                      stroke: 'darkslategray',
-                      strokeWidth: 2,
                       cursor: 'pointer',
                     }}
                     onClick={(e) => update(e, 'player')}
                   ></rect>
                 </svg>
               ) : (
-                <svg key={color + 'a'} width='20' height='20'>
+                <svg
+                  key={color + 'a'}
+                  width='20'
+                  height='20'
+                  style={{ opacity: '30%' }}
+                >
                   <rect
                     key={color}
                     width='20'
@@ -183,9 +190,6 @@ const PlayerList = ({setOpenPrompt}) => {
                     color={color}
                     style={{
                       fill: color,
-                      opacity: '30%',
-                      stroke: 'darkslategray',
-                      strokeWidth: 2,
                     }}
                   ></rect>
                 </svg>

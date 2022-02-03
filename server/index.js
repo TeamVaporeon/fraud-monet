@@ -53,6 +53,24 @@ app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
+app.get('/room/:id', (req, res) => {
+  let room = `/${req.params.id}`;
+  if (rooms[room]) {
+    res.status(200).send();
+  } else {
+    res.status(301).send();
+  }
+});
+
+app.get('/usernames/:id', (req, res) => {
+  let room = `/${req.params.id}`;
+  if (rooms[room]) {
+    res.json(rooms[room].users);
+  } else {
+    res.status(404).send();
+  };
+})
+
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -96,6 +114,7 @@ io.on('connection', (socket) => {
           prompt: '',
           colors: Object.assign({}, defaultColors),
           chats: [],
+          users: { [socket.user.username]: 1 },
           votes: {},
           turns: 0,
         };
@@ -104,6 +123,8 @@ io.on('connection', (socket) => {
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
+      rooms[socket.room].users[socket.user.username] = 1;
+      console.log(rooms[socket.room].users);
       let messages = rooms[socket.room].chats;
       socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
@@ -137,6 +158,10 @@ io.on('connection', (socket) => {
     socket.to(socket.room).emit('turn', turn);
   });
 
+  socket.on('guess', (guess) => {
+    io.to(socket.room).emit('guess', guess);
+  });
+
   socket.on('vote', (data) => {
     if (rooms[socket.room].votes[data]) {
       rooms[socket.room].votes[data]++;
@@ -167,6 +192,8 @@ io.on('connection', (socket) => {
       let prompt = data[category][randPrompt];
       rooms[socket.room].category = category;
       rooms[socket.room].prompt = prompt;
+    } else {
+      console.log(`${socket.room} doesn't exist`);
     }
     let x = true;
     while (x) {
@@ -185,6 +212,14 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
+  socket.on('round', (req) => {
+    io.to(socket.room).emit('round', req);
+  });
+
+  socket.on('judged', () => {
+    io.to(socket.room).emit('judged');
+  });
+
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
     rooms[socket.room].chats.push(userMessage);
@@ -196,7 +231,11 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     if (socket.user.host) {
       delete rooms[socket.room];
-    }
+    } else if (rooms[socket.room]) {
+      if (rooms[socket.room].users[socket.user.username]) {
+        delete rooms[socket.room].users[socket.user.username];
+      };
+    };
     console.log(`${socket.id} disconnected`);
   });
 
