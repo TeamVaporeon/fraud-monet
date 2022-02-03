@@ -55,8 +55,7 @@ const Canvas = ({ thingy }) => {
     socket.on('turn', (newTurn) => {
       if (newTurn === JSON.parse(sessionStorage.getItem('users')).length) {
         p5.storeItem('turn', 0);
-        socket.emit('round');
-        console.log('emitting round');
+        socket.emit('round', Number(sessionStorage.getItem('round')) + 1);
       } else {
         p5.storeItem('turn', newTurn);
       }

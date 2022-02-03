@@ -54,32 +54,37 @@ function App() {
     sessionStorage.clear();
   };
 
-  socket.on('users', (userList) => {
-    setUsers(userList);
-    setQM(userList.filter((player) => player.role === 'qm')[0] || {});
-    setPlayers(userList.filter((player) => player.role === 'player'));
-    sessionStorage.setItem('users', JSON.stringify(users));
-  });
+  useEffect(() => {
+    sessionStorage.setItem('round', 0);
+    socket.on('users', (userList) => {
+      setUsers(userList);
+      setQM(userList.filter((player) => player.role === 'qm')[0] || {});
+      setPlayers(userList.filter((player) => player.role === 'player'));
+      sessionStorage.setItem('users', JSON.stringify(userList));
+    });
 
-  socket.on('round', () => {setRound(round + 1); console.log('received emission')});
+    socket.on('round', (resp) => {
+      setRound(resp);
+      sessionStorage.setItem('round', resp);
+    });
 
-  socket.on('newUser', (newUsers) => {
-    setUsers(newUsers);
-  });
+    socket.on('newUser', (newUsers) => {
+      setUsers(newUsers);
+    });
 
-  socket.on('gameStart', (response) => {
-    setStart(true);
-    sessionStorage.setItem('gameStarted', 'true');
-    console.log('gamestart received');
-  });
+    socket.on('gameStart', (response) => {
+      setStart(true);
+      sessionStorage.setItem('gameStarted', 'true');
+    });
 
-  socket.on('availColors', (colors) => {
-    setAvailColors(colors);
-  });
+    socket.on('availColors', (colors) => {
+      setAvailColors(colors);
+    });
 
-  socket.on('start', (roomInfo) => {
-    setAvailColors(roomInfo.colors);
-  });
+    socket.on('start', (roomInfo) => {
+      setAvailColors(roomInfo.colors);
+    });
+  }, [])
 
   // socket.on('game_start', (players) => {
   //   console.log(players.filter((player) => player.id === currentUser.id)[0]);
