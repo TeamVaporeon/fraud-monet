@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { AppContext } from '../../App';
 
 const PlayerList = () => {
-  const { users, currentUser, socket, availColors, setStart } =
+  const { users, currentUser, socket, availColors, setStart, gameStarted } =
     useContext(AppContext);
   const [players, setPlayers] = useState(null);
   const [spectators, setSpectators] = useState(null);
@@ -12,7 +12,7 @@ const PlayerList = () => {
 
   const handleStart = (e) => {
     setStart(true);
-    socket.emit('start');
+    socket.emit('start', users);
   };
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const PlayerList = () => {
   // const kick = (e) => {
   //   setColorModal(false);
   //   let kickedPlayer = users.filter(
-  //     (player) => player.id === e.target.attributes.playerId.value
+  //     (player) => player.id === e.target.attributes.playerid.value
   //   );
   //   console.log(kickedPlayer[0]);
   //   kickedPlayer[0].role = 'spectator';
@@ -55,14 +55,18 @@ const PlayerList = () => {
           <h3 className='player-title'>Players:</h3>
           <div className='just-players'>
             {players
-              ? players.map((player, index) => (
-                  <div className='each-player' key={index}>
-                    <div style={{ background: player.color }}>
-                      <span>
+              ? players.map((player) => (
+                  <div className='each-player' key={player.id + '1'}>
+                    <div
+                      style={{ background: player.color }}
+                      key={player.id + '2'}
+                    >
+                      <span key={player.id}>
                         {`${player.username} ${player.host ? '👑' : ''}`}
                       </span>
                       {player.id === currentUser.id ? (
                         <span
+                          key={player.id + '3'}
                           onClick={(e) => update(e, 'spectator')}
                           color='#000'
                           style={{ float: 'right', marginRight: '5px' }}
@@ -72,8 +76,9 @@ const PlayerList = () => {
                       ) : (
                         currentUser.host && (
                           <span
+                            key={player.id + '4'}
                             // onClick={kick}
-                            playerId={player.id}
+                            playerid={player.id}
                             style={{ float: 'right', marginRight: '5px' }}
                           >
                             ❌
@@ -88,8 +93,8 @@ const PlayerList = () => {
           <h3 className='spec-title'>Spectators:</h3>
           <div className='just-specs'>
             {spectators
-              ? spectators.map((spec, index) => (
-                  <div className='each-spectator' key={index}>
+              ? spectators.map((spec) => (
+                  <div className='each-spectator' key={spec.id}>
                     <div>{spec.username}</div>
                   </div>
                 ))
@@ -104,14 +109,16 @@ const PlayerList = () => {
             </div>
           </div>
           <div className='join-start-buttons'>
-            {currentUser.role === 'spectator' ? (
+            {currentUser.role === 'spectator' &&
+            !gameStarted &&
+            currentUser.username ? (
               <Button onClick={() => setColorModal(true)} variant='success'>
                 Join
               </Button>
             ) : (
               <Button disabled>Join</Button>
             )}
-            {currentUser.host ? (
+            {currentUser.host && !gameStarted ? (
               <Button onClick={handleStart} variant='success'>
                 Start
               </Button>
@@ -123,6 +130,7 @@ const PlayerList = () => {
                 return availColors[color] ? (
                   <svg width='20' height='20'>
                     <rect
+                      key={color}
                       width='20'
                       height='20'
                       color={color}
@@ -138,6 +146,7 @@ const PlayerList = () => {
                 ) : (
                   <svg width='20' height='20'>
                     <rect
+                      key={color}
                       width='20'
                       height='20'
                       color={color}

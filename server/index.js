@@ -97,7 +97,7 @@ io.on('connection', (socket) => {
         };
         socket.emit('start', rooms[socket.room]);
       }
-      console.log(rooms);
+      // console.log(rooms);
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
@@ -126,7 +126,7 @@ io.on('connection', (socket) => {
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
-  socket.on('start', async () => {
+  socket.on('start', async (players) => {
     const data = await file.toObject();
 
     let randCat = Math.floor(Math.random() * data.categories.length);
@@ -135,10 +135,19 @@ io.on('connection', (socket) => {
     let randPrompt = Math.floor(Math.random() * data[category].length);
     let prompt = data[category][randPrompt];
 
-    rooms[socket.room] = {
-      category: category,
-      prompt: prompt,
-    };
+    console.log('players', players);
+    rooms[socket.room].category = category;
+    rooms[socket.room].prompt = prompt;
+    let x = true;
+    while (x) {
+      let i = Math.floor(Math.random() * players.length);
+      if (players[i].role === 'player') {
+        players[i].fraud = true;
+        console.log(players[i]);
+        x = false;
+      }
+    }
+    io.to(socket.room).emit('users', players);
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
 
@@ -168,7 +177,7 @@ io.on('connection', (socket) => {
     });
     rooms[socket.room].colors[data.color] =
       !rooms[socket.room].colors[data.color];
-    console.log(rooms[socket.room].colors);
+    // console.log(rooms[socket.room].colors);
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });
