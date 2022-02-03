@@ -75,7 +75,7 @@ const Canvas = ({ thingy }) => {
     socket.on('gameStart', () => {
       p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight-24);
       p5.background(255);
-      turndiv.html(JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].username, true);
+      turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].username);
     });
   };
 
