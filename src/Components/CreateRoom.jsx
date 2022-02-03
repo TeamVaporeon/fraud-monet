@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import io from 'socket.io-client';
 import './CreateRoom.css';
 
@@ -25,8 +24,8 @@ var CreateRoom = (props) => {
   const navigate = useNavigate();
   const routeChange = (e) => {
     e.preventDefault();
-      if(name.length > 1) {
-        const roomID = generateRandString();
+    if (name.length > 0) {
+      const roomID = generateRandString();
         hostSocket.auth = {
           user: {
             username: name,
@@ -34,16 +33,20 @@ var CreateRoom = (props) => {
             color: '#000',
             host: true,
             fraud: false,
-            role: 'spectator',
-            score: 0,
-          },
+            role: 'player',
+            score: 0
+          }
         };
-        hostSocket.connect();
-        hostSocket.emit('joinRoom', `/${roomID}`);
-        hostSocket.on('hostConnected', () => {
-          navigate(`/${roomID}`);
-        });
+      const sessionID = localStorage.getItem('sessionID');
+      if (sessionID) {
+        hostSocket.auth.sessionID = sessionID;
       }
+      hostSocket.connect();
+      hostSocket.emit('joinRoom', `/${roomID}`);
+      hostSocket.on('hostConnected', () => {
+        navigate(`/${roomID}`);
+      });
+    }
   };
 
   return (

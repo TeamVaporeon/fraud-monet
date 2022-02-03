@@ -19,16 +19,20 @@ const GameMain = () => {
     useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(() => {
-    if (hostSocket.id) {
-      return false;
-    } else {
-      return true;
-    }
-  });
+      if (socket.id && socket.auth.user.host) {
+        return false;
+      } else {
+        return true;
+      }
+    });
   const [openRules, setOpenRules] = useState(false);
   const [openResults, setOpenResults] = useState(false);
   const [openVote, setOpenVote] = useState(false);
   const [openFinal, setOpenFinal] = useState(false);
+
+  socket.on('noRoom', () => {
+    // Render a room doesn't exist error page
+  });
 
   useEffect(() => {
     if (round === 3) {

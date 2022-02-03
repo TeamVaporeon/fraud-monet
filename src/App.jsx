@@ -61,6 +61,31 @@ function App() {
     setUsers(newUsers);
   });
 
+  socket.on('session', ({ sessionID, user }) => {
+    console.log('session', sessionID, user);
+    socket.auth.user = user;
+    socket.auth.user.sessionID = sessionID;
+    localStorage.setItem('sessionID', sessionID);
+    socket.emit('connected', socket.auth.user);
+  });
+
+  function checkForSession() {
+    const sessionID = localStorage.getItem('sessionID');
+    if (sessionID) {
+      if (!socket.auth) {
+        socket.auth = {}
+      }
+      socket.auth.sessionID = sessionID;
+      socket.emit('connected', {
+        sessionID: sessionID,
+        user: socket.user
+      })
+    }
+  }
+
+  useEffect(() => {
+    checkForSession();
+  }, [])
   socket.on('gameStart', (response) => {
     setStart(true);
     sessionStorage.setItem('gameStarted', 'true');
@@ -107,6 +132,27 @@ function App() {
     }
     // socket.auth && console.log('before start: ', socket.auth.user);
   }, [users]);
+  socket.on('user_object', (user) => {
+    setCurrentUser(user);
+  });
+
+  // useEffect(() => {
+  //   setCurrentUser(
+  //     socket.auth && socket.auth.user
+  //       ? socket.auth.user
+  //       : {
+  //         username: null,
+  //         roomID: null,
+  //         color: '#000',
+  //         host: false,
+  //         fraud: false,
+  //         role: 'spectator',
+  //         score: 0,
+  //         id: null,
+  //       }
+  //   );
+  //   socket.auth && console.log('user: ', socket.auth.user);
+  // }, []);
 
   return (
     <AppContext.Provider
@@ -128,7 +174,6 @@ function App() {
         <header className='App-header'></header>
         <GameMain />
       </div>
-      {/* {console.log(users)} */}
     </AppContext.Provider>
   );
 }
