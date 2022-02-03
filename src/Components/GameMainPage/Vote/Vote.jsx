@@ -6,7 +6,6 @@ import { AppContext } from '../../../App';
 const Vote = ({ setOpenVote, setOpenResults }) => {
   const { users } = useContext(AppContext);
   const [players, setPlayers] = useState(() => {
-    // return users
     return users
       .filter((user) => {
         return user.role === 'player';
@@ -28,13 +27,12 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
   return (
     <div className='voteModal'>
       <div className='voteContainer'>
-        <h3>Vote</h3>
+        <h3 className='voteTitle'>Vote</h3>
         <form className='voteForm'>
           {players.map((player, i) => (
-            <label>
+            <label className='votePlayername'>
               {player}
               <input
-                className='ckb'
                 type='radio'
                 name='ckb'
                 value={player}
@@ -42,6 +40,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
                 onClick={() => {
                   setPick(player);
                 }}
+                required='required'
               />
             </label>
           ))}

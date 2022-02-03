@@ -47,13 +47,13 @@ function App() {
     socket = hostSocket;
   }
 
-  socket.on('users', (userList) => {
-    let obj ={}
-    userList.forEach(player=>{
-      obj[player.id] = player;
-    })
+  window.onbeforeunload = () => {
+    sessionStorage.clear();
+  }
 
-    setUsers(Object.values(obj));
+  socket.on('users', (userList) => {
+    setUsers(userList);
+    sessionStorage.setItem('users', JSON.stringify(users));
   });
 
   socket.on('newUser', (newUsers) => {
@@ -85,6 +85,10 @@ function App() {
   useEffect(() => {
     checkForSession();
   }, [])
+  socket.on('gameStart', (response) => {
+    setStart(true);
+    sessionStorage.setItem('gameStarted', 'true');
+  })
 
   socket.on('availColors', (colors) => {
     setAvailColors(colors);

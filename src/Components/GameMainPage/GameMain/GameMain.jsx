@@ -15,7 +15,8 @@ import { hostSocket } from '../../CreateRoom';
 
 const GameMain = () => {
   const ref = useRef(null);
-  const { round, setRound, socket, users, currentUser } = useContext(AppContext);
+  const { round, setRound, socket, users, currentUser } =
+    useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(() => {
       if (socket.id && socket.auth.user.host) {
@@ -42,43 +43,39 @@ const GameMain = () => {
       {openUsername ? (
         <UsernameModal setOpenUsername={setOpenUsername} socket={socket} />
       ) : null}
-      {openFinal ? <FinalResultsModal setOpenFinal={setOpenFinal} /> : null}
-      {openVote ? (
-        <Vote setOpenVote={setOpenVote} setOpenResults={setOpenResults} />
-      ) : null}
-      {openResults ? (
-        <ResultsModal
-          setOpenVote={setOpenVote}
-          setOpenResults={setOpenResults}
-          setOpenFinal={setOpenFinal}
-        />
-      ) : null}
       <div className='game_topbar'>
         <div>
           <GameLogic />
         </div>
         <div className='game_round'>
           <div>Round: {round}</div>
-          <span>buttons for tests, will delete later</span>
-          <button onClick={() => setRound(round + 1)}>Round+1</button>
-          <button onClick={() => setOpenVote(true)}>Vote:R=3</button>
-          <button onClick={() => setOpenFinal(true)}>FinalRes</button>
+          {/* <span>buttons for tests, will delete later</span> */}
+          <button onClick={() => setRound(round + 1)}>
+            Modal Test Round+1
+          </button>
         </div>
         <div className='game_rules' onClick={() => setOpenRules(true)}>
           Rules
         </div>
       </div>
       <div className='game_body'>
+        {openVote ? (
+          <Vote setOpenVote={setOpenVote} setOpenResults={setOpenResults} />
+        ) : null}
+        {openFinal ? <FinalResultsModal setOpenFinal={setOpenFinal} /> : null}
+
+        {openResults ? (
+          <ResultsModal
+            setOpenVote={setOpenVote}
+            setOpenResults={setOpenResults}
+            setOpenFinal={setOpenFinal}
+          />
+        ) : null}
         <div className='game_players'>
           <PlayerList />
         </div>
         <div className='game_canvas' ref={ref}>
-          {ref.current?.offsetWidth ? (
-            <Canvas
-              width={ref.current.offsetWidth}
-              height={ref.current.offsetHeight}
-            />
-          ) : null}
+          {ref.current ? <Canvas thingy={ref.current} /> : null}
         </div>
         <div className='game_chat'>
           <Chat socket={socket} currentUser={currentUser} />

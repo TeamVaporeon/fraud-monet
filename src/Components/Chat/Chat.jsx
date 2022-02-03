@@ -3,11 +3,12 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import './Chat.css';
 
 const Chat = ({ socket, currentUser }) => {
-  const [currentMsg, setCurrentMsg] = useState('');
+  // const [currentMsg, setCurrentMsg] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [username, setUsername] = useState('Anonymous');
 
   const sendMessage = async () => {
+    let currentMsg = document.getElementById("message-input").value;
     if (currentMsg !== '') {
       const mins = new Date(Date.now()).getMinutes();
       const additionalZero = (mins < 10) ? '0' : '';
@@ -18,8 +19,9 @@ const Chat = ({ socket, currentUser }) => {
       };
 
       await socket.emit('send_message', messageDetails);
-      setMessageList((list) => [...list, messageDetails]);
-      setCurrentMsg('');
+      // setMessageList((list) => [...list, messageDetails]);
+      document.getElementById('message-input').value = '';
+      // setCurrentMsg('');
     }
   };
 
@@ -27,6 +29,10 @@ const Chat = ({ socket, currentUser }) => {
     socket.on('receive_message', (receivedMessage) => {
       setMessageList((list) => [...list, receivedMessage]);
     });
+
+    socket.on('messages_for_new_users', (messages) => {
+      setMessageList(messages);
+    })
 
     socket.on('user_object', (user) => {
       setUsername(user.username);
@@ -72,12 +78,13 @@ const Chat = ({ socket, currentUser }) => {
         currentUser.role === 'player' &&
         <div className="chat-footer">
           <input
+            id="message-input"
             type="text"
-            value={currentMsg}
+            // value={currentMsg}
             placeholder="Message..."
             aria-label="Message..."
             autoComplete="off"
-            onChange={(event) => { setCurrentMsg(event.target.value); }}
+            // onChange={(event) => { setCurrentMsg(event.target.value); }}
             onKeyPress={(event) => { event.key === "Enter" && sendMessage(); }}
           />
           <button onClick={sendMessage}>&#9658;</button>
