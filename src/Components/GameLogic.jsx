@@ -16,7 +16,8 @@ const GameLogic = () => {
   return (
     <>
       <div>{`Category: ${category}`}</div>
-      {currentUser && currentUser.role === 'player' ? (
+      {currentUser &&
+      (currentUser.role === 'player' || currentUser.role === 'qm') ? (
         currentUser.fraud ? (
           <span>You are the Fraud!</span>
         ) : (
