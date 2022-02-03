@@ -8,10 +8,10 @@ const Chat = ({ socket, currentUser }) => {
   const [username, setUsername] = useState('Anonymous');
 
   const sendMessage = async () => {
-    let currentMsg = document.getElementById("message-input").value;
+    let currentMsg = document.getElementById('message-input').value;
     if (currentMsg !== '') {
       const mins = new Date(Date.now()).getMinutes();
-      const additionalZero = (mins < 10) ? '0' : '';
+      const additionalZero = mins < 10 ? '0' : '';
       const messageDetails = {
         author: username,
         message: currentMsg,
@@ -32,7 +32,7 @@ const Chat = ({ socket, currentUser }) => {
 
     socket.on('messages_for_new_users', (messages) => {
       setMessageList(messages);
-    })
+    });
 
     socket.on('user_object', (user) => {
       setUsername(user.username);
@@ -40,49 +40,54 @@ const Chat = ({ socket, currentUser }) => {
   }, [socket]);
 
   return (
-    <div className="chat-container">
-      <div className="chat-header">
+    <div className='chat-container'>
+      <div className='chat-header'>
         <p>Live Chat</p>
       </div>
 
-      <div className="chat-body">
-        <ScrollToBottom className="message-container">
+      <div className='chat-body'>
+        <ScrollToBottom className='message-container'>
           {messageList.map((content, index) => {
             return (
               <div
-                className="message"
+                className='message'
                 key={3 * index}
-                id={username === content.author ? "you" : "other"}
+                id={username === content.author ? 'you' : 'other'}
               >
                 <div className="message-content">
                   <p>{content.message}</p>
                 </div>
-                <div className="message-meta">
-                  <p id="time">{content.time}</p>
-                  <p id="author">{content.author}</p>
+                <div className='message-meta'>
+                  <p id='time'>{content.time}</p>
+                  <p id='author'>{content.author}</p>
                 </div>
               </div>
-            )
+            );
           })}
         </ScrollToBottom>
       </div>
 
-      {
-        currentUser.role === 'player' &&
-        <div className="chat-footer">
+      {currentUser.role === 'player' ? (
+        <div className='chat-footer'>
           <input
-            id="message-input"
-            type="text"
+            id='message-input'
+            type='text'
             // value={currentMsg}
-            placeholder="Message..."
-            aria-label="Message..."
-            autoComplete="off"
+            placeholder='Message...'
+            aria-label='Message...'
+            autoComplete='off'
             // onChange={(event) => { setCurrentMsg(event.target.value); }}
-            onKeyPress={(event) => { event.key === "Enter" && sendMessage(); }}
+            onKeyPress={(event) => {
+              event.key === 'Enter' && sendMessage();
+            }}
           />
           <button onClick={sendMessage}>&#9658;</button>
         </div>
-      }
+      ) : (
+        <div className='spectator-chat-warning'>
+          Please join the game to enable chat
+        </div>
+      )}
     </div>
   );
 };

@@ -125,4 +125,12 @@
 .chat-container .chat-footer button:hover {
   color: #43a047;
 }
+
+.spectator-chat-warning {
+  color: #848688;
+  font-size: 14px;
+  height: max-content;
+  display: block;
+  margin: 5px 10px;
+}
 /* ----- END OF CHAT ----- */
