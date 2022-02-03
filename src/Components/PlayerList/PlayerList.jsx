@@ -5,7 +5,7 @@ import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
 const PlayerList = () => {
-  const { users, currentUser, socket, availColors, setStart, gameStarted } =
+  const { users, currentUser, socket, availColors, setStart, gameStarted, QM } =
     useContext(AppContext);
   const [players, setPlayers] = useState(null);
   const [spectators, setSpectators] = useState(null);
@@ -29,6 +29,8 @@ const PlayerList = () => {
     currentUser.role = role;
     if (e.target.attributes.color.value !== '#000') {
       currentUser.color = e.target.attributes.color.value;
+      console.log(currentUser.color);
+      console.log(socket.auth.user.color);
     }
     currentUser.id = socket.id;
     socket.emit('update', currentUser);
@@ -117,6 +119,7 @@ const PlayerList = () => {
           <Stack className='join-start-buttons' direction='horizontal' gap={2}>
             {currentUser.role === 'spectator' &&
             !gameStarted &&
+            players.length < 10 &&
             currentUser.username ? (
               <Button
                 onClick={() => setColorModal(true)}
@@ -130,7 +133,7 @@ const PlayerList = () => {
                 Join
               </Button>
             )}
-            {currentUser.host && !gameStarted ? (
+            {currentUser.host && !gameStarted && players.length < 3 ? (
               <Button onClick={handleStart} variant='success' size='sm'>
                 Start
               </Button>
@@ -174,6 +177,36 @@ const PlayerList = () => {
               );
             })}
           </div>
+        ) : null}
+        <Stack className='join-qm-button' direction='horizontal' gap={2}>
+          {currentUser.username &&
+          currentUser.role !== 'player' &&
+          !gameStarted &&
+          !QM.id ? (
+            <Button
+              onClick={(e) => update(e, 'qm')}
+              color='#000'
+              variant='success'
+              size='sm'
+            >
+              Join as Question Master
+            </Button>
+          ) : null}
+        </Stack>
+        {QM.id ? (
+          <span>
+            {`Current QM: ${QM.username}`}
+            {QM.id === currentUser.id ? (
+              <span
+                key={QM.id + '3'}
+                onClick={(e) => update(e, 'spectator')}
+                color='#000'
+                style={{ float: 'right', marginRight: '5px' }}
+              >
+                ❌
+              </span>
+            ) : null}
+          </span>
         ) : null}
       </div>
     </>

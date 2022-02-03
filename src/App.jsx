@@ -43,6 +43,7 @@ function App() {
   const [availColors, setAvailColors] = useState(defaultColors);
   const [gameStarted, setStart] = useState(false);
   const [turn, setTurn] = useState(0);
+  const [QM, setQM] = useState({});
 
   if (hostSocket.id) {
     socket = hostSocket;
@@ -50,10 +51,11 @@ function App() {
 
   window.onbeforeunload = () => {
     sessionStorage.clear();
-  }
+  };
 
   socket.on('users', (userList) => {
     setUsers(userList);
+    setQM(userList.filter((player) => player.role === 'qm')[0] || {});
     sessionStorage.setItem('users', JSON.stringify(users));
   });
 
@@ -64,7 +66,7 @@ function App() {
   socket.on('gameStart', (response) => {
     setStart(true);
     sessionStorage.setItem('gameStarted', 'true');
-  })
+  });
 
   socket.on('availColors', (colors) => {
     setAvailColors(colors);
@@ -122,6 +124,7 @@ function App() {
         gameStarted,
         turn,
         setTurn,
+        QM,
       }}
     >
       <div className='App'>
