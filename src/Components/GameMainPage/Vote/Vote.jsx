@@ -8,10 +8,11 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    /*---send pick to somewhere to count score---*/
-    socket.emit('vote', pick);
-    setOpenResults(true);
-    setOpenVote(false);
+    if (pick !== '') {
+      socket.emit('vote', pick);
+      setOpenResults(true);
+      setOpenVote(false);
+    }
   };
 
   return (
@@ -32,7 +33,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
                     onClick={() => {
                       setPick(player.username);
                     }}
-                    required='required'
+                    required
                   />
                   <span>{player.username}</span>
                 </div>

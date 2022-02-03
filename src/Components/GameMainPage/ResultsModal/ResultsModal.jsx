@@ -20,7 +20,7 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
         <h3 className='resultsTitle'> Vote Results</h3>
         <div className='resultsText'>
           <div>
-            Current Votes:{' '}
+            <span>{!fraud ? `Current Votes: ` : `Final Count`}</span>
             {Object.entries(voteCount).map((entry) => {
               return (
                 <div key={entry[0]}>
