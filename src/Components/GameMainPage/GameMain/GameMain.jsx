@@ -76,9 +76,9 @@ const GameMain = () => {
             Modal Test Round+1
           </button>
         </div>
-        <div className='game_rules' onClick={() => setOpenRules(true)}>
+        <button className='game_rules' onClick={() => setOpenRules(true)}>
           Rules
-        </div>
+        </button>
       </div>
       <div className='game_body'>
         {openVote ? (
