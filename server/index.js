@@ -111,6 +111,7 @@ io.use((socket, next) => {
 io.on('connection', (socket) => {
   socket.user.id = socket.id;
   console.log(`Socket Connected With Id: `, socket.id);
+  socket.user.id = socket.id;
   let users = [];
 
   // Print any event received by Client
@@ -138,13 +139,15 @@ io.on('connection', (socket) => {
           category: '',
           prompt: '',
           colors: Object.assign({}, defaultColors),
+          chats: [],
         };
         socket.emit('start', rooms[socket.room]);
       }
-      console.log(rooms);
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
+      let messages = rooms[socket.room].chats;
+      socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
     };
 
@@ -160,6 +163,10 @@ io.on('connection', (socket) => {
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
+  });
+
+  socket.on('turn', turn => {
+    socket.to(socket.room).emit('turn', turn);
   });
 
   socket.on('start', async () => {
@@ -178,9 +185,14 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
 
+  socket.on('gameStart', () => {
+    io.to(socket.room).emit('gameStart', rooms[socket.room]);
+  })
+
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
-    socket.broadcast.to(socket.room).emit('receive_message', userMessage);
+    rooms[socket.room].chats.push(userMessage);
+    io.to(socket.room).emit('receive_message', userMessage);
   });
   /* ----- End of CHATROOM Code ----- */
 

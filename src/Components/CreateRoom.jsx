@@ -63,7 +63,9 @@ var CreateRoom = (props) => {
           onChange={(e) => {
             setName(e.target.value);
           }}
-          onKeyPress={(e) => { e.key === "Enter" && routeChange(e); }}
+          onKeyPress={(e) => {
+            e.key === 'Enter' && routeChange(e);
+          }}
           required
         />
         <button className='CreateButton' onClick={routeChange}>
