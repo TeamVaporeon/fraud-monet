@@ -2,14 +2,12 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-evenly; */
   height: 100vh;
   align-items: center;
   font-family: Mochiy-Pop-P-One;
 }
 
 .FormBox {
-  /* position: fixed; */
   display: flex;
   top: 30%;
   align-items: center;
@@ -20,11 +18,10 @@
   border-radius: 5px;
   border-width: 4px;
   border-color: rgb(121, 67, 229);
-  /* height: 240px; */
   height: 25vh;
   min-height: 200px;
   width: 350px;
-  margin-top: 5%;
+  margin-top: 4%;
 }
 
 .CreateForm {
@@ -55,15 +52,10 @@
   color: rgb(121, 67, 229);
 }
 
-.CreateGamePage_Title {
-  margin-top: 6rem;
-  font-size: 3rem;
-}
-
 .logo_img {
-  margin-top: 2rem;
-  width: 30%;
-  height: 30%;
+  margin-top: 2%;
+  width: 35%;
+  height: 35%;
 }
 
 .Form_username {
