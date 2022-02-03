@@ -97,6 +97,7 @@ io.on('connection', (socket) => {
           colors: Object.assign({}, defaultColors),
           chats: [],
           votes: {},
+          turns: 0,
         };
         socket.emit('start', rooms[socket.room]);
       }
@@ -131,6 +132,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('turn', (turn) => {
+    rooms[socket.room].turns++;
+    // if (rooms[socket.room].turns % players)
     socket.to(socket.room).emit('turn', turn);
   });
 
@@ -144,9 +147,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('new_game', () => {
-    delete rooms[socket.room].category;
-    delete rooms[socket.room].prompt;
-    delete rooms[socket.room].votes;
+    rooms[socket.room].category = '';
+    rooms[socket.room].prompt = '';
+    rooms[socket.room].votes = {};
+    rooms[socket.room].turns = 0;
   });
 
   socket.on('prompt', (data) => {
