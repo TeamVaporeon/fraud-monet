@@ -183,6 +183,12 @@ io.on('connection', (socket) => {
 
   socket.on('gameStart', () => {
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
+    console.log('sending gamestart from server');
+  });
+
+  socket.on('round', () => {
+    io.to(socket.room).emit('round', rooms[socket.room]);
+    console.log('sending round from server');
   });
 
   /* ----- CHATROOM Code ----- */

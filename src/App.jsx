@@ -61,6 +61,8 @@ function App() {
     sessionStorage.setItem('users', JSON.stringify(users));
   });
 
+  socket.on('round', () => {setRound(round + 1); console.log('received emission')});
+
   socket.on('newUser', (newUsers) => {
     setUsers(newUsers);
   });
@@ -68,6 +70,7 @@ function App() {
   socket.on('gameStart', (response) => {
     setStart(true);
     sessionStorage.setItem('gameStarted', 'true');
+    console.log('gamestart received');
   });
 
   socket.on('availColors', (colors) => {
