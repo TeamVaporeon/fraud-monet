@@ -3,7 +3,7 @@ import { AppContext } from '../../../App.jsx';
 import './FinalResultsModal.css';
 
 const FinalResultsModal = ({ setOpenFinal }) => {
-  const { round, setRound, socket, players } = useContext(AppContext);
+  const { round, setRound, socket, players, setStart } = useContext(AppContext);
   return (
     <div className='finalModal'>
       <div className='finalContainer'>
@@ -18,6 +18,8 @@ const FinalResultsModal = ({ setOpenFinal }) => {
           onClick={() => {
             setOpenFinal(false);
             setRound(0);
+            setStart(false);
+            sessionStorage.setItem('gameStarted', 'false');
           }}
         >
           X
