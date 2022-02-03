@@ -50,6 +50,13 @@ const GameMain = () => {
       .catch(err => {
         navigate('/');
       });
+    socket.on('start', () => {
+      setOpenFinal(false);
+      setOpenResults(false);
+      setOpenRules(false);
+      setOpenUsername(false);
+      setOpenVote(false);
+    })
   }, []);
 
   return (
