@@ -40,7 +40,7 @@ var CreateRoom = (props) => {
       const sessionID = localStorage.getItem('sessionID');
       if (sessionID) {
         hostSocket.auth.sessionID = sessionID;
-      }
+      };
       hostSocket.connect();
       hostSocket.emit('joinRoom', `/${roomID}`);
       hostSocket.on('hostConnected', () => {
@@ -51,25 +51,24 @@ var CreateRoom = (props) => {
 
   return (
     <div className='CreateGamePage'>
-      <h1>Fraud Monet</h1>
+      <h1 className='CreateGamePage_Title'>Fraud Monet</h1>
       <div className='FormBox'>
         <h2>Username</h2>
         <form onSubmit={routeChange}>
-        <input
-          className='UserNameForm'
-          type='text'
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          onKeyPress={(e) => {
-            e.key === 'Enter' && routeChange(e);
-          }}
-          required
-        /><br/>
-        <br/>
-        <button className='CreateButton' >
-          Create Game
-        </button>
+          <input
+            className='UserNameForm'
+            type='text'
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              e.key === 'Enter' && routeChange(e);
+            }}
+            required
+          />
+          <br />
+          <br />
+          <button className='CreateButton'>Create Game</button>
         </form>
       </div>
     </div>

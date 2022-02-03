@@ -39,10 +39,14 @@ function App() {
   const [users, setUsers] = useState(
     hostSocket.id ? [hostSocket.auth.user] : []
   );
+  const [players, setPlayers] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
   const [availColors, setAvailColors] = useState(defaultColors);
   const [gameStarted, setStart] = useState(false);
   const [turn, setTurn] = useState(0);
+  const [QM, setQM] = useState({});
+  const [guess, setGuess] = useState('');
+  const [mostVoted, setMostVoted] = useState([[]]);
 
   if (hostSocket.id) {
     socket = hostSocket;
@@ -50,64 +54,44 @@ function App() {
 
   window.onbeforeunload = () => {
     sessionStorage.clear();
-  }
-
-  socket.on('users', (userList) => {
-    setUsers(userList);
-    sessionStorage.setItem('users', JSON.stringify(users));
-  });
-
-  socket.on('newUser', (newUsers) => {
-    setUsers(newUsers);
-  });
-
-  socket.on('session', ({ sessionID, user }) => {
-    console.log('session', sessionID, user);
-    socket.auth.user = user;
-    socket.auth.user.sessionID = sessionID;
-    localStorage.setItem('sessionID', sessionID);
-    socket.emit('connected', socket.auth.user);
-  });
-
-  function checkForSession() {
-    const sessionID = localStorage.getItem('sessionID');
-    if (sessionID) {
-      if (!socket.auth) {
-        socket.auth = {}
-      }
-      socket.auth.sessionID = sessionID;
-      socket.emit('connected', {
-        sessionID: sessionID,
-        user: socket.user
-      })
-    }
-  }
+  };
 
   useEffect(() => {
-    checkForSession();
-  }, [])
-  socket.on('gameStart', (response) => {
-    setStart(true);
-    sessionStorage.setItem('gameStarted', 'true');
-  })
+    sessionStorage.setItem('round', 0);
+    socket.on('users', (userList) => {
+      setUsers(userList);
+      setQM(userList.filter((player) => player.role === 'qm')[0] || {});
+      const playList = userList.filter((player) => player.role === 'player');
+      setPlayers(playList);
+      sessionStorage.setItem('users', JSON.stringify(playList));
+    });
 
-  socket.on('availColors', (colors) => {
-    setAvailColors(colors);
-  });
+    socket.on('round', (resp) => {
+      setRound(resp);
+      sessionStorage.setItem('round', resp);
+    });
 
-  socket.on('start', (roomInfo) => {
-    setAvailColors(roomInfo.colors);
-  });
+    socket.on('newUser', (newUsers) => {
+      setUsers(newUsers);
+    });
 
-  socket.on('game_start', (players) => {
-    // console.log(players.filter((player) => player.id === currentUser.id)[0]);
-    // setCurrentUser(players.filter((player) => player.id === currentUser.id)[0]);
-    // console.log('after start: ', socket.auth.user);
-    // console.log(
-    //   'from server: ',
-    //   players.filter((player) => player.id === currentUser.id)[0]
-    // );
-  });
+    socket.on('gameStart', (response) => {
+      setStart(true);
+      sessionStorage.setItem('gameStarted', 'true');
+    });
+
+    socket.on('availColors', (colors) => {
+      setAvailColors(colors);
+    });
+
+    socket.on('start', (roomInfo) => {
+      setAvailColors(roomInfo.colors);
+    });
+
+    socket.on('guess', (guess) => {
+      setGuess(guess);
+    });
+  }, []);
 
   useEffect(() => {
     if (currentUser.id) {
@@ -130,29 +114,10 @@ function App() {
             }
       );
     }
-    // socket.auth && console.log('before start: ', socket.auth.user);
   }, [users]);
   socket.on('user_object', (user) => {
     setCurrentUser(user);
   });
-
-  // useEffect(() => {
-  //   setCurrentUser(
-  //     socket.auth && socket.auth.user
-  //       ? socket.auth.user
-  //       : {
-  //         username: null,
-  //         roomID: null,
-  //         color: '#000',
-  //         host: false,
-  //         fraud: false,
-  //         role: 'spectator',
-  //         score: 0,
-  //         id: null,
-  //       }
-  //   );
-  //   socket.auth && console.log('user: ', socket.auth.user);
-  // }, []);
 
   return (
     <AppContext.Provider
@@ -168,6 +133,11 @@ function App() {
         gameStarted,
         turn,
         setTurn,
+        QM,
+        players,
+        guess,
+        mostVoted,
+        setMostVoted,
       }}
     >
       <div className='App'>

@@ -70,6 +70,16 @@ app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
+app.get('/room/:id', (req, res) => {
+  let room = `/${req.params.id}`;
+  if (rooms[room]) {
+    res.status(200).send();
+  } else {
+    console.log('No room', rooms);
+    res.status(301).send();
+  }
+});
+
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -163,6 +173,8 @@ io.on('connection', (socket) => {
           prompt: '',
           colors: Object.assign({}, defaultColors),
           chats: [],
+          votes: {},
+          turns: 0,
         };
         socket.emit('start', rooms[socket.room]);
       }
@@ -204,21 +216,48 @@ io.on('connection', (socket) => {
   });
 
   socket.on('turn', (turn) => {
+    rooms[socket.room].turns++;
+    // if (rooms[socket.room].turns % players)
     socket.to(socket.room).emit('turn', turn);
   });
 
+  socket.on('guess', (guess) => {
+    io.to(socket.room).emit('guess', guess);
+  });
+
+  socket.on('vote', (data) => {
+    if (rooms[socket.room].votes[data]) {
+      rooms[socket.room].votes[data]++;
+    } else {
+      rooms[socket.room].votes[data] = 1;
+    }
+    io.to(socket.room).emit('get_votes', rooms[socket.room].votes);
+  });
+
+  socket.on('new_game', () => {
+    rooms[socket.room].category = '';
+    rooms[socket.room].prompt = '';
+    rooms[socket.room].votes = {};
+    rooms[socket.room].turns = 0;
+  });
+
+  socket.on('prompt', (data) => {
+    rooms[socket.room].category = data.category;
+    rooms[socket.room].prompt = data.prompt;
+  });
+
   socket.on('start', async (players) => {
-    const data = await file.toObject();
-
-    let randCat = Math.floor(Math.random() * data.categories.length);
-    let category = data.categories[randCat];
-
-    let randPrompt = Math.floor(Math.random() * data[category].length);
-    let prompt = data[category][randPrompt];
-
-    console.log('players', players);
-    rooms[socket.room].category = category;
-    rooms[socket.room].prompt = prompt;
+    if (!rooms[socket.room].category) {
+      const data = await file.toObject();
+      let randCat = Math.floor(Math.random() * data.categories.length);
+      let category = data.categories[randCat];
+      let randPrompt = Math.floor(Math.random() * data[category].length);
+      let prompt = data[category][randPrompt];
+      rooms[socket.room].category = category;
+      rooms[socket.room].prompt = prompt;
+    } else {
+      console.log(`${socket.room} doesn't exist`);
+    }
     let x = true;
     while (x) {
       let i = Math.floor(Math.random() * players.length);
@@ -234,6 +273,14 @@ io.on('connection', (socket) => {
 
   socket.on('gameStart', () => {
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
+  });
+
+  socket.on('round', (req) => {
+    io.to(socket.room).emit('round', req);
+  });
+
+  socket.on('judged', () => {
+    io.to(socket.room).emit('judged');
   });
 
   /* ----- CHATROOM Code ----- */
