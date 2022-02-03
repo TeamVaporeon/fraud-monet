@@ -63,7 +63,7 @@ const GameMain = () => {
           style={{ fontSize: '1.5rem', fontWeight: 'bold' }}
           className='game_round'
         >
-          <div>Round: {round}</div>
+          <div>Round: {round !== 2 ? round + 1 : 0}</div>
         </div>
         <div className='game_rules' onClick={() => setOpenRules(true)}>
           Rules

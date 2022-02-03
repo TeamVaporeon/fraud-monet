@@ -200,7 +200,6 @@ io.on('connection', (socket) => {
       let i = Math.floor(Math.random() * players.length);
       if (players[i].role === 'player') {
         players[i].fraud = true;
-        console.log(players[i]);
         x = false;
       }
     }
