@@ -36,24 +36,22 @@
 .game_players {
   grid-area: a;
   background-color: #fff;
-  /* border-radius: 2%; */
   border: 2px solid #263238;
 }
 
 .game_canvas {
   grid-area: b;
-  /* background-color: rgb(173, 151, 205); */
   border-radius: 2%;
 }
 
 .game_chat {
   grid-area: c;
-  /* background-color: rgba(217, 171, 213, 0.322); */
+  border: solid 1px;
+  background-color: #fff;
 }
 
 .game_rules {
   cursor: pointer;
-  /* font-family: Mochiy-Pop-P-One; */
   font-size: 1.5rem;
   font-weight: bold;
 }
