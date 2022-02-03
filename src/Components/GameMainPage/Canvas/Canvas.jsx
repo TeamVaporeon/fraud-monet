@@ -31,6 +31,7 @@ const Canvas = ({ thingy }) => {
     canva.id('sketchpad');
 
     const save = p5.createButton('Download Canvas').parent(canvasParentRef);
+    save.id('downloadBtn');
     //download button
     save.mouseClicked(() => {
       p5.saveCanvas(canva, 'our drawing', 'jpg');

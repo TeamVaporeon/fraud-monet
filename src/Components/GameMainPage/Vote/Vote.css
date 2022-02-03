@@ -9,8 +9,7 @@
 .voteModal {
   background-color: #e4d8dc;
   color: black;
-  border-radius: 2%;
-  border: solid;
+  border: solid 2px;
   z-index: 1000;
   position: absolute;
   --widthPLA: 100%;
