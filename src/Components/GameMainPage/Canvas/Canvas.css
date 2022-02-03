@@ -1,4 +1,22 @@
 #sketchpad {
   border: solid;
-  border-radius: 2%;
+  border-radius: 1.5%;
+}
+
+#downloadBtn {
+  margin-bottom: 1.5rem;
+  padding: 5px 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(72, 20, 114);
+  background-color: rgb(155, 78, 155);
+  border-radius: 8%;
+  border: solid;
+  display: block;
+  margin: 20px auto;
+}
+
+#downloadBtn:hover {
+  transform: scale(1.1);
+  color: black;
 }

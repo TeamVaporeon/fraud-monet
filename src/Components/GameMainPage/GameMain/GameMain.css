@@ -36,7 +36,7 @@
 .game_players {
   grid-area: a;
   background-color: #fff;
-  border: solid 1px;
+  border: solid 2px;
 }
 
 .game_canvas {
@@ -46,6 +46,8 @@
 
 .game_chat {
   grid-area: c;
+  border: solid 1px;
+  background-color: #fff;
 }
 
 .game_rules {

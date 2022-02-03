@@ -9,7 +9,7 @@
 .finalModal {
   background-color: #ea9f4e;
   color: black;
-  border: solid 1px;
+  border: solid 2px;
   z-index: 1000;
   position: absolute;
   --widthPLA: 100%;
