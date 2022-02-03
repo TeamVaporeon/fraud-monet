@@ -4,8 +4,10 @@ const express = require('express');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
 const cookieParser = require('cookie-parser');
-const cookie = require('cookie');
+// const cookie = require('cookie');
 const editFile = require('edit-json-file');
+// const session = require('express-session');
+// const { v4: uuidv4 } = require('uuid');
 const rooms = {};
 const defaultColors = {
   '#FFCCEB': true, //Cotton Candy
@@ -35,6 +37,17 @@ var file = editFile(path.join(__dirname, 'data.json'));
 
 // Express Server
 const app = express();
+// app.use(session({
+//   genid: function (req) {
+//     return uuidv4();
+//   },
+//   secret: 'fraudmonet',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: {
+//     maxAge: 60000
+//   }
+// }));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -68,6 +81,11 @@ io.use((socket, next) => {
   user.id = socket.id;
   socket.user = user;
   socket.emit('user_object', user);
+  if (rooms[user.roomID]) {
+
+  } else {
+    socket.emit('noRoom');
+  };
   next();
 });
 
@@ -80,7 +98,6 @@ io.on('connection', (socket) => {
 
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
-    // users.push(socket.username);
     socket.room = url;
     socket.join(socket.room);
     let userSockets = await io.in(socket.room).fetchSockets();
@@ -109,20 +126,6 @@ io.on('connection', (socket) => {
   });
 
   // Emit handlers
-  socket.on('createRoom', (data, next) => {
-    const adapter = io.of('createRoom').adapter;
-    adapter.pubClient.publish(data);
-    socket.emit('session', {
-      sessionID: socket.sessionID,
-      userID: socket.userID,
-      username: socket.username,
-      color: socket.color,
-      host: socket.host,
-      fraud: socket.fraud,
-      role: socket.role,
-    });
-    socket.emit('packet', data);
-  });
 
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
@@ -161,10 +164,12 @@ io.on('connection', (socket) => {
   /* ----- End of CHATROOM Code ----- */
 
   // On user disconnecting
-  socket.on('disconnect', () => {
-    if (socket.user.host) {
-      delete rooms[socket.room];
-    }
+  socket.on('disconnect', async () => {
+    // let userSockets = await io.in(socket.room).fetchSockets();
+    // console.log(userSockets.length);
+    // if (userSockets.length < 1) {
+    //   delete rooms[socket.room];
+    // };
     console.log(`${socket.id} disconnected`);
   });
 
@@ -178,9 +183,7 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
-    rooms[socket.room].colors[data.color] =
-      !rooms[socket.room].colors[data.color];
-    console.log(rooms[socket.room].colors);
+    rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });

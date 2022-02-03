@@ -3,7 +3,6 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import './Chat.css';
 
 const Chat = ({ socket, currentUser }) => {
-  // const [currentMsg, setCurrentMsg] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [username, setUsername] = useState('Anonymous');
 
@@ -19,11 +18,11 @@ const Chat = ({ socket, currentUser }) => {
       };
 
       await socket.emit('send_message', messageDetails);
-      // setMessageList((list) => [...list, messageDetails]);
       document.getElementById('message-input').value = '';
-      // setCurrentMsg('');
     }
   };
+
+  console.log('CURRENT USER', currentUser);
 
   useEffect(() => {
     socket.on('receive_message', (receivedMessage) => {
@@ -56,11 +55,6 @@ const Chat = ({ socket, currentUser }) => {
               >
                 <div
                   className="message-content"
-                  // style={{
-                  //   backgroundColor:
-                  //   currentUser.color !== '#000' && username === content.author
-                  //   ? currentUser.color
-                  //   : null }}
                 >
                   <p>{content.message}</p>
                 </div>
@@ -80,11 +74,9 @@ const Chat = ({ socket, currentUser }) => {
           <input
             id="message-input"
             type="text"
-            // value={currentMsg}
             placeholder="Message..."
             aria-label="Message..."
             autoComplete="off"
-            // onChange={(event) => { setCurrentMsg(event.target.value); }}
             onKeyPress={(event) => { event.key === "Enter" && sendMessage(); }}
           />
           <button onClick={sendMessage}>&#9658;</button>
