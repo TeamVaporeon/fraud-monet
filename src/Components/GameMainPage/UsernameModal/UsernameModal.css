@@ -68,3 +68,7 @@
 .usernameSubmit:hover {
   transform: scale(1.2);
 }
+
+.nameTaken {
+  color: red;
+}
