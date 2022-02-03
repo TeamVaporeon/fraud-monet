@@ -79,7 +79,6 @@ const io = new Server(httpServer, {
   },
 });
 
-// On Client Connecting To Server
 io.on('connection', (socket) => {
   socket.user ? socket.user.id = socket.id : socket.user = {};
   console.log(`Socket Connected With Id: `, socket.id);
@@ -115,42 +114,29 @@ io.on('connection', (socket) => {
     if (!username) {
       return next(new Error('Invalid username'));
     }
-  hashIDs();
-  socket.username = username;
-  socket.user = user;
-  socket.emit('user_object', user);
-  if (rooms[user.roomID]) {
-
-  } else {
-    socket.emit('noRoom');
-  };
-  next();
-});
-
-// On Client Connecting To Server
-io.on('connection', (socket) => {
-  socket.user.id = socket.id;
-  console.log(`Socket Connected With Id: `, socket.id);
-  socket.user.id = socket.id;
-  let users = [];
 
     const hashIDs = async () => {
       try {
         const hash = await argon2.hash(username)
-        socket.handshake.auth.sessionID = hash;
-        socket.handshake.auth.userID = hash;
         socket.sessionID = hash;
         socket.userID = hash;
       } catch (err) {
         console.error(err);
       }
     }
+
     hashIDs();
     socket.username = username;
     socket.user = user;
     socket.emit('user_object', user);
+    if (rooms[user.roomID]) {
+
+    } else {
+      socket.emit('noRoom');
+    };
     next();
   });
+
   // Print any event received by Client
   socket.onAny((e, ...args) => {
     console.log(e, args);
