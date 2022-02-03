@@ -72,7 +72,7 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
             })}
           </div>
         ) : null}
-        {fraud ? <div>{`Fraud's Guess: ${guess}`}</div> : null}
+        {/* {fraud ? <div>{`Fraud's Guess: ${guess}`}</div> : null}
         {console.log(
           'fraud: ',
           fraud,
@@ -98,7 +98,7 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
               NO
             </button>
           </div>
-        ) : null}
+        ) : null} */}
 
         {fraud && judged ? (
           <button
