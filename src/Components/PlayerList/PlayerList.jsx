@@ -164,8 +164,8 @@ const PlayerList = () => {
                     color={color}
                     style={{
                       fill: color,
-                      stroke: 'darkslategray',
-                      strokeWidth: 2,
+                      // stroke: 'darkslategray',
+                      // strokeWidth: 2,
                       cursor: 'pointer',
                     }}
                     onClick={(e) => update(e, 'player')}

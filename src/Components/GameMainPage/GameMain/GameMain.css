@@ -36,8 +36,8 @@
 .game_players {
   grid-area: a;
   background-color: #fff;
-  border-radius: 2%;
-  border: solid;
+  /* border-radius: 2%; */
+  border: 2px solid #263238;
 }
 
 .game_canvas {
