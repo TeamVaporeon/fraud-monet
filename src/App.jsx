@@ -56,9 +56,41 @@ function App() {
     sessionStorage.clear();
   };
 
-  socket.on('guess', (guess) => {
-    setGuess(guess);
-  });
+  useEffect(() => {
+    sessionStorage.setItem('round', 0);
+    socket.on('users', (userList) => {
+      setUsers(userList);
+      setQM(userList.filter((player) => player.role === 'qm')[0] || {});
+      setPlayers(userList.filter((player) => player.role === 'player'));
+      sessionStorage.setItem('users', JSON.stringify(userList));
+    });
+
+    socket.on('round', (resp) => {
+      setRound(resp);
+      sessionStorage.setItem('round', resp);
+    });
+
+    socket.on('newUser', (newUsers) => {
+      setUsers(newUsers);
+    });
+
+    socket.on('gameStart', (response) => {
+      setStart(true);
+      sessionStorage.setItem('gameStarted', 'true');
+    });
+
+    socket.on('availColors', (colors) => {
+      setAvailColors(colors);
+    });
+
+    socket.on('start', (roomInfo) => {
+      setAvailColors(roomInfo.colors);
+    });
+
+    socket.on('guess', (guess) => {
+      setGuess(guess);
+    });
+  }, []);
 
   // socket.on('game_start', (players) => {
   //   console.log(players.filter((player) => player.id === currentUser.id)[0]);
@@ -92,33 +124,6 @@ function App() {
       );
     }
   }, [users]);
-
-  // Componentdidmount
-  useEffect(() => {
-    socket.on('users', (userList) => {
-      setUsers(userList);
-      setQM(userList.filter((player) => player.role === 'qm')[0] || {});
-      setPlayers(userList.filter((player) => player.role === 'player'));
-      sessionStorage.setItem('users', JSON.stringify(users));
-    });
-
-    socket.on('newUser', (newUsers) => {
-      setUsers(newUsers);
-    });
-
-    socket.on('gameStart', (response) => {
-      setStart(true);
-      sessionStorage.setItem('gameStarted', 'true');
-    });
-
-    socket.on('availColors', (colors) => {
-      setAvailColors(colors);
-    });
-
-    socket.on('start', (roomInfo) => {
-      setAvailColors(roomInfo.colors);
-    });
-  }, []);
 
   return (
     <AppContext.Provider
