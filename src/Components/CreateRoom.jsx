@@ -25,7 +25,7 @@ var CreateRoom = (props) => {
   const navigate = useNavigate();
   const routeChange = (e) => {
     e.preventDefault();
-
+      if(name.length > 1) {
         const roomID = generateRandString();
         hostSocket.auth = {
           user: {
@@ -43,7 +43,7 @@ var CreateRoom = (props) => {
         hostSocket.on('hostConnected', () => {
           navigate(`/${roomID}`);
         });
-
+      }
   };
 
   return (
