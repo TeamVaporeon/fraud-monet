@@ -75,6 +75,7 @@ io.use((socket, next) => {
 io.on('connection', (socket) => {
   socket.user.id = socket.id;
   console.log(`Socket Connected With Id: `, socket.id);
+  socket.user.id = socket.id;
   let users = [];
 
   // Join a room based on room id
@@ -126,6 +127,10 @@ io.on('connection', (socket) => {
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
+  socket.on('turn', turn => {
+    socket.to(socket.room).emit('turn', turn);
+  });
+
   socket.on('start', async () => {
     const data = await file.toObject();
 
@@ -141,6 +146,10 @@ io.on('connection', (socket) => {
     };
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
+
+  socket.on('gameStart', () => {
+    io.to(socket.room).emit('gameStart', rooms[socket.room]);
+  })
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
