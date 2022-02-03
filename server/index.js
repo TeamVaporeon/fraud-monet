@@ -101,13 +101,12 @@ io.on('connection', (socket) => {
     if (!username) {
       return next(new Error('Invalid username'));
     }
-  }
-  hashIDs();
-  socket.username = username;
-  socket.user = user;
-  socket.emit('user_object', user);
-  next();
-});
+    hashIDs();
+    socket.username = username;
+    socket.user = user;
+    socket.emit('user_object', user);
+    next();
+  });
 
 // On Client Connecting To Server
 io.on('connection', (socket) => {
