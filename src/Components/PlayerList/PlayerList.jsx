@@ -22,6 +22,8 @@ const PlayerList = () => {
     setStart(true);
     socket.emit('start', users);
     socket.emit('gameStart');
+    socket.emit('round', 0);
+    socket.emit('turn', 0);
   };
 
   useEffect(() => {
