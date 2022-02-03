@@ -8,16 +8,26 @@ const cookie = require('cookie');
 const editFile = require('edit-json-file');
 const rooms = {};
 const defaultColors = {
-  '#FFCCEB': true,
-  '#DF6770': true,
-  '#EA9F4E': true,
-  '#FBE89B': true,
-  '#B9E49F': true,
-  '#73E5DA': true,
-  '#94B1E9': true,
-  '#AE97CD': true,
-  '#D9ABD6': true,
-  '#A9B3BF': true
+  '#FFCCEB': true, //Cotton Candy
+  '#DF6770': true, //Candy Pink
+  '#ff69b4': true, //Hot Pink
+  '#EA9F4E': true, //Sandy Brown
+  '#a52a2a': true, //Brown
+  '#ff0000': true, //Red
+  '#ffa500': true, //Orange
+  '#FBE89B': true, //Green Yellow Crayola
+  '#ffff00': true, //Yellow
+  '#00ff00': true, //Lime
+  '#B9E49F': true, //Granny Smith Apple
+  '#008000': true, //Green
+  '#73E5DA': true, //Turquoise
+  '#94B1E9': true, //Wild Blue Yonder
+  '#0000ff': true, //Blue
+  '#4b0082': true, //Indigo
+  '#800080': true, //Purple
+  '#AE97CD': true, //Wisteria
+  '#D9ABD6': true, //Lilac
+  '#A9B3BF': true, //Cadet Blue Crayola
 };
 
 // Data JSON File
@@ -65,6 +75,7 @@ io.use((socket, next) => {
 io.on('connection', (socket) => {
   socket.user.id = socket.id;
   console.log(`Socket Connected With Id: `, socket.id);
+  socket.user.id = socket.id;
   let users = [];
 
   // Join a room based on room id
@@ -83,15 +94,16 @@ io.on('connection', (socket) => {
         rooms[socket.room] = {
           category: '',
           prompt: '',
-          colors: defaultColors
+          colors: Object.assign({}, defaultColors),
         };
-      };
+        socket.emit('start', rooms[socket.room]);
+      }
       console.log(rooms);
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
       socket.emit('start', rooms[socket.room]);
-    };
+    }
   });
 
   // Emit handlers
@@ -115,6 +127,10 @@ io.on('connection', (socket) => {
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
+  socket.on('turn', turn => {
+    socket.to(socket.room).emit('turn', turn);
+  });
+
   socket.on('start', async () => {
     const data = await file.toObject();
 
@@ -126,10 +142,14 @@ io.on('connection', (socket) => {
 
     rooms[socket.room] = {
       category: category,
-      prompt: prompt
+      prompt: prompt,
     };
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
+
+  socket.on('gameStart', () => {
+    io.to(socket.room).emit('gameStart', rooms[socket.room]);
+  })
 
   /* ----- CHATROOM Code ----- */
   socket.on('send_message', (userMessage) => {
@@ -141,7 +161,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     if (socket.user.host) {
       delete rooms[socket.room];
-    };
+    }
     console.log(`${socket.id} disconnected`);
   });
 
@@ -155,8 +175,9 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
-    rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
-    console.log(rooms);
+    rooms[socket.room].colors[data.color] =
+      !rooms[socket.room].colors[data.color];
+    console.log(rooms[socket.room].colors);
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });
