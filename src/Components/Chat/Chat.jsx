@@ -66,27 +66,26 @@ const Chat = ({ socket, currentUser }) => {
         </ScrollToBottom>
       </div>
 
-      {currentUser.role === 'player' ? (
-        <div className='chat-footer'>
-          <input
-            id='message-input'
-            type='text'
-            // value={currentMsg}
-            placeholder='Message...'
-            aria-label='Message...'
-            autoComplete='off'
-            // onChange={(event) => { setCurrentMsg(event.target.value); }}
-            onKeyPress={(event) => {
-              event.key === 'Enter' && sendMessage();
-            }}
-          />
+      <div className='chat-footer'>
+        <input
+          id='message-input'
+          type='text'
+          placeholder={currentUser.role === 'player'
+            ? 'Message...'
+            : 'Chat disabled! Join game to enable.'
+          }
+          aria-label='Message...'
+          autoComplete='off'
+          disabled={currentUser.role === 'player' ? false : true}
+          onKeyPress={(event) => {
+            event.key === 'Enter' && sendMessage();
+          }}
+        />
+        {
+          currentUser.role === 'player' &&
           <button onClick={sendMessage}>&#9658;</button>
-        </div>
-      ) : (
-        <div className='spectator-chat-warning'>
-          Please join the game to enable chat
-        </div>
-      )}
+        }
+      </div>
     </div>
   );
 };
