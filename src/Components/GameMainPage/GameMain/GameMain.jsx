@@ -30,6 +30,10 @@ const GameMain = () => {
   const [openVote, setOpenVote] = useState(false);
   const [openFinal, setOpenFinal] = useState(false);
 
+  socket.on('noRoom', () => {
+    // Render a room doesn't exist error page
+  });
+
   useEffect(() => {
     if (round === 3) {
       setOpenVote(true);

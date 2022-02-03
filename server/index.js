@@ -8,7 +8,10 @@ const cookieParser = require('cookie-parser');
 const { InMemorySessionStore } = require('./sessionStore');
 const sessionStore = new InMemorySessionStore();
 const cookie = require('cookie');
+// const cookie = require('cookie');
 const editFile = require('edit-json-file');
+// const session = require('express-session');
+// const { v4: uuidv4 } = require('uuid');
 const rooms = {};
 const defaultColors = {
   '#FFCCEB': true, //Cotton Candy
@@ -38,6 +41,17 @@ var file = editFile(path.join(__dirname, 'data.json'));
 
 // Express Server
 const app = express();
+// app.use(session({
+//   genid: function (req) {
+//     return uuidv4();
+//   },
+//   secret: 'fraudmonet',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: {
+//     maxAge: 60000
+//   }
+// }));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -104,6 +118,11 @@ io.use((socket, next) => {
   socket.username = username;
   socket.user = user;
   socket.emit('user_object', user);
+  if (rooms[user.roomID]) {
+
+  } else {
+    socket.emit('noRoom');
+  };
   next();
 });
 
@@ -224,9 +243,7 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
-    rooms[socket.room].colors[data.color] =
-      !rooms[socket.room].colors[data.color];
-    console.log(rooms[socket.room].colors);
+    rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });
