@@ -48,7 +48,12 @@ function App() {
   }
 
   socket.on('users', (userList) => {
-    setUsers(userList);
+    let obj ={}
+    userList.forEach(player=>{
+      obj[player.id] = player;
+    })
+
+    setUsers(Object.values(obj));
   });
 
   socket.on('newUser', (newUsers) => {
@@ -57,14 +62,11 @@ function App() {
 
   socket.on('session', ({ sessionID, user }) => {
     console.log('session', sessionID, user);
-    socket.auth.sessionID = sessionID;
+    socket.auth.user = user;
+    socket.auth.user.sessionID = sessionID;
     localStorage.setItem('sessionID', sessionID);
+    socket.emit('connected', socket.auth.user);
   });
-
-  socket.emit('connected', socket.user);
-  socket.on('user disconnected', () => {
-
-  })
 
   function checkForSession() {
     const sessionID = localStorage.getItem('sessionID');
@@ -73,7 +75,6 @@ function App() {
         socket.auth = {}
       }
       socket.auth.sessionID = sessionID;
-      socket.auth.user = socket.user;
       socket.emit('connected', {
         sessionID: sessionID,
         user: socket.user
@@ -84,6 +85,7 @@ function App() {
   useEffect(() => {
     checkForSession();
   }, [])
+
   socket.on('availColors', (colors) => {
     setAvailColors(colors);
   });

@@ -65,62 +65,60 @@ const io = new Server(httpServer, {
   },
 });
 
-
-// Socket middleware
-io.use((socket, next) => {
-  const user = socket.handshake.auth.user;
-  if (user) {
-    user.id = socket.id;
-  }
-  // Get session id
-  const sessionID = socket.handshake.auth.sessionID;
-
-  if (sessionID) {
-    // Check for session
-    const session = sessionStore.findSession(sessionID);
-    console.log(session);
-    // Assign user from matching session
-    if (session) {
-      socket.user = session
-      socket.sessionID = sessionID;
-      socket.user.id = socket.id;
-    // Save the session and assign the user as user
-    } else {
-      sessionStore.saveSession(socket.handshake.auth.sessionID, user);
-      socket.user = user;
-    }
-    socket.emit('user_object', user);
-    return next();
-  }
-  const username = socket.handshake.auth.user.username;
-  if (!username) {
-    return next(new Error('Invalid username'));
-  }
-
-  const hashIDs = async () => {
-    try {
-      const hash = await argon2.hash(username)
-      socket.handshake.auth.sessionID = hash;
-      socket.handshake.auth.userID = hash;
-      socket.sessionID = hash;
-      socket.userID = hash;
-    } catch (err) {
-      console.error(err);
-    }
-  }
-  hashIDs();
-  socket.username = username;
-  socket.user = user;
-  socket.emit('user_object', user);
-  next();
-});
-
 // On Client Connecting To Server
 io.on('connection', (socket) => {
   socket.user ? socket.user.id = socket.id : socket.user = {};
   console.log(`Socket Connected With Id: `, socket.id);
   let users = [];
 
+  // Socket middleware
+  socket.use(([e, ...args], next) => {
+    const user = Object.keys(socket.user).length === 0 ? socket.handshake.auth.user : socket.user;
+    if (user) {
+      user.id = socket.id;
+    }
+    // Get session id
+    const sessionID = socket.handshake.auth.sessionID;
+
+    if (sessionID) {
+      // Check for session
+      const session = sessionStore.findSession(sessionID);
+      // Assign user from matching session
+      if (session) {
+        socket.user = session;
+        socket.user.sessionID = sessionID;
+        socket.sessionID = sessionID;
+        socket.user.id = socket.id;
+      // Save the session and assign the user as user
+      } else {
+        sessionStore.saveSession(socket.handshake.auth.sessionID, user);
+        socket.user = user;
+      }
+      socket.emit('user_object', user);
+      return next();
+    }
+    const username = socket.handshake.auth.user.username;
+    if (!username) {
+      return next(new Error('Invalid username'));
+    }
+
+    const hashIDs = async () => {
+      try {
+        const hash = await argon2.hash(username)
+        socket.handshake.auth.sessionID = hash;
+        socket.handshake.auth.userID = hash;
+        socket.sessionID = hash;
+        socket.userID = hash;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    hashIDs();
+    socket.username = username;
+    socket.user = user;
+    socket.emit('user_object', user);
+    next();
+  });
   // Print any event received by Client
   socket.onAny((e, ...args) => {
     console.log(e, args);
@@ -160,16 +158,22 @@ io.on('connection', (socket) => {
     console.log('SOCKET USER', socket.user);
     socket.emit('session', {
       sessionID: socket.handshake.auth.sessionID,
-      user: socket.user
+      user: socket.handshake.auth.user
     });
     // console.log(socket.user);
 
-    socket.on('connected', (user) => {
-      console.log(user);
-      // const session = sessionStore.findSession(sessionID.sessionID)
-      // if (session) {
-      //   socket.user = user
-      // }
+    socket.on('connected', (cookie) => {
+      const session = sessionStore.findSession(cookie.sessionID);
+      if (session) {
+        socket.user = session;
+        socket.sessionID = cookie.sessionID;
+        users.forEach(user => {
+          if (user.sessionID === cookie.sessionID) {
+            user = session;
+          }
+        })
+      }
+      io.to(socket.room).emit('users', users);
     });
   });
 
@@ -209,9 +213,9 @@ io.on('connection', (socket) => {
       socket.broadcast.emit('user disconnected', socket.userID);
       sessionStore.saveSession(socket.handshake.auth.sessionID, socket.handshake.auth.user);
     }
-    if (socket.user.host) {
-      delete rooms[socket.room];
-    }
+    // if (socket.user.host) {
+    //   delete rooms[socket.room];
+    // }
     console.log(`${socket.id} disconnected`);
   });
 

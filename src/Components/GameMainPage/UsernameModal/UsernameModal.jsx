@@ -29,8 +29,8 @@ const UsernameModal = ({ setOpenUsername }) => {
         score: 0,
       },
     };
-    socket.connect();
     let sessionID = localStorage.getItem('sessionID');
+    socket.connect();
     socket.auth.sessionID = sessionID;
     socket.emit('joinRoom', window.location.pathname);
     setOpenUsername(false);
