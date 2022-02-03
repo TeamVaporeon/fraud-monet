@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import './CreateRoom.css';
-import PromptModal from './PromptModal';
 
 var generateRandString = () => {
   var result = '';
@@ -22,7 +21,6 @@ export const hostSocket = io({
 
 var CreateRoom = (props) => {
   const [name, setName] = useState('');
-  const [openPrompt, setOpenPrompt] = useState(false);
   const navigate = useNavigate();
   const routeChange = (e) => {
     e.preventDefault();
@@ -50,7 +48,6 @@ var CreateRoom = (props) => {
   return (
     <div className='CreateGamePage'>
       <h1>Fraud Monet</h1>
-      {openPrompt ? <PromptModal setOpenPrompt={setOpenPrompt}/> : null}
       <div className='FormBox'>
         <h2>Username</h2>
         <form onSubmit={routeChange}>
@@ -68,7 +65,6 @@ var CreateRoom = (props) => {
           <br />
           <br />
           <button className='CreateButton'>Create Game</button>
-          <button onClick={()=>{setOpenPrompt(true)}}>Open Prompt</button>
         </form>
       </div>
     </div>

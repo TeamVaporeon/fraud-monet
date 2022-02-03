@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
-const PlayerList = () => {
+const PlayerList = ({setOpenPrompt}) => {
   const {
     users,
     currentUser,
@@ -33,6 +33,9 @@ const PlayerList = () => {
   const update = (e, role) => {
     setColorModal(false);
     currentUser.role = role;
+    if(role === 'qm') {
+      setOpenPrompt(true);
+    }
     if (e.target.attributes.color.value !== '#000') {
       currentUser.color = e.target.attributes.color.value;
     }

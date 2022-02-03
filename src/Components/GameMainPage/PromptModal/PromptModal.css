@@ -6,7 +6,7 @@
   padding: 0;
 }
 
-.rules {
+.prompts {
   background-color: white;
   position: fixed;
   top: 0;
@@ -24,7 +24,7 @@
   border: solid;
 }
 
-.rulesContainer {
+.promptContainer {
   position: absolute;
   top: 0;
   left: 0;
@@ -46,7 +46,7 @@
 }
 
 .promptSubmitBtn {
-  width: 40%;
+  width: 80%;
   border-radius: 3px;
   font-size: 1.5rem;
   font-weight: bold;
@@ -65,7 +65,7 @@
   align-items: center;
 }
 
-.rulesTitle {
+.promptTitle {
   margin-left: 2%;
   font-size: 2.5rem;
 }
