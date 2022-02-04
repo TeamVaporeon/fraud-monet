@@ -114,15 +114,15 @@ function App() {
         socket.auth && socket.auth.user
           ? socket.auth.user
           : {
-              username: null,
-              roomID: null,
-              color: '#000',
-              host: false,
-              fraud: false,
-              role: 'spectator',
-              score: 0,
-              id: null,
-            }
+            username: null,
+            roomID: null,
+            color: '#000',
+            host: false,
+            fraud: false,
+            role: 'spectator',
+            score: 0,
+            id: null,
+          }
       );
     }
   }, [users]);
