@@ -131,7 +131,6 @@ io.on('connection', (socket) => {
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
       rooms[socket.room].users[socket.user.username] = 1;
-      console.log(rooms[socket.room].users);
       let messages = rooms[socket.room].chats;
       socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
@@ -233,15 +232,21 @@ io.on('connection', (socket) => {
       rooms[socket.room].category = rooms[socket.room].customPrompt.category;
       rooms[socket.room].prompt = rooms[socket.room].customPrompt.prompt;
     }
-    let x = true;
-    while (x) {
-      let i = Math.floor(Math.random() * players.length);
-      if (players[i].role === 'player') {
-        players[i].fraud = true;
-        x = false;
+    let currentPlayers = [];
+    let spectators = [];
+    players.forEach((p) => {
+      if (p.role === 'player') {
+        if (p.fraud) {
+          p.fraud = false;
+        }
+        currentPlayers.push(p);
+      } else {
+        spectators.push(p);
       }
-    }
-    io.to(socket.room).emit('users', players);
+    });
+    let i = Math.floor(Math.random() * currentPlayers.length);
+    currentPlayers[i].fraud = true;
+    io.to(socket.room).emit('users', [...currentPlayers, ...spectators]);
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
 
@@ -287,9 +292,10 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
-    rooms[socket.room].colors[data.color] =
-      !rooms[socket.room].colors[data.color];
-    // console.log(rooms[socket.room].colors);
+    if (data.color !== '#000') {
+      rooms[socket.room].colors[data.color] =
+        !rooms[socket.room].colors[data.color];
+    }
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });

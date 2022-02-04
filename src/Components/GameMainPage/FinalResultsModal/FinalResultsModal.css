@@ -15,7 +15,7 @@
   --widthPLA: 100%;
   --widthPLB: calc(var(--widthPLA) - 16rem);
   width: calc(var(--widthPLB) / 4);
-  height: 620px;
+  height: 80vh;
 }
 
 .finalContainer {
@@ -31,12 +31,6 @@
 
 .finalContainer .finalScore {
   align-self: stretch;
-}
-
-.finalScore {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .finalTitle {
@@ -60,4 +54,36 @@
 .finalCloseBtn:hover {
   transform: scale(1.2);
   color: black;
+}
+
+.finalDesc {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+}
+
+.finalScore {
+  align-self: stretch;
+  font-size: 15px;
+}
+
+.score_tb {
+  width: 100%;
+}
+
+.tr {
+  margin: 2px 0;
+}
+
+.l {
+  text-align: left;
+}
+
+.m {
+  text-align: center;
+}
+
+.r {
+  text-align: end;
 }
