@@ -3,7 +3,7 @@ import { AppContext } from '../../../App.jsx';
 import './FinalResultsModal.css';
 
 const FinalResultsModal = ({ setOpenFinal }) => {
-  const { setRound, players, setStart, QM, winner, socket } =
+  const { setRound, players, setStart, QM, winner, socket, setGuess } =
     useContext(AppContext);
   return (
     <div className='finalModal'>
@@ -51,6 +51,7 @@ const FinalResultsModal = ({ setOpenFinal }) => {
             setOpenFinal(false);
             setRound(0);
             setStart(false);
+            setGuess('');
             sessionStorage.setItem('gameStarted', 'false');
             socket.emit('new_game');
           }}
