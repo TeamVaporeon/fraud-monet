@@ -28,7 +28,10 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
         {currentUser.fraud
           ? `You're the fraud! Submit your best guess for the Prompt, and vote for someone else to take the blame!`
           : `Who's the fraud? Select the player you think is the fake below.`}
-        <form className='voteForm'>
+        <form
+          className='voteForm'
+          onSubmit={handleSubmit}
+        >
           <label className='votePlayername'>
             {players.map((player) => {
               return (

@@ -8,7 +8,8 @@ const PromptModal = ({ setOpenPrompt, socket }) => {
   const [prompt, setPrompt] = useState('');
   const { setStart, users } = useContext(AppContext);
 
-  const handleSubmit = (c, p, socket, cb) => {
+  const handleSubmit = (event, c, p, socket, cb) => {
+    event.preventDefault();
     socket.emit('prompt', { category: c, prompt: p });
     setStart(true);
     socket.emit('start', users);
@@ -18,7 +19,8 @@ const PromptModal = ({ setOpenPrompt, socket }) => {
     cb(false);
   };
 
-  const randomSubmit = (cb) => {
+  const randomSubmit = (event, cb) => {
+    event.preventDefault();
     setStart(true);
     socket.emit('start', users);
     socket.emit('gameStart');
@@ -35,8 +37,8 @@ const PromptModal = ({ setOpenPrompt, socket }) => {
           <br />
           <form
             className='promptForm'
-            onSubmit={() =>
-              handleSubmit(category, prompt, socket, setOpenPrompt)
+            onSubmit={(event) =>
+              handleSubmit(event, category, prompt, socket, setOpenPrompt)
             }
           >
             <p>Pick a Category!</p>
@@ -75,7 +77,7 @@ const PromptModal = ({ setOpenPrompt, socket }) => {
             <br />
             <button
               className='promptSubmitBtn'
-              onClick={() => randomSubmit(setOpenPrompt)}
+              onClick={(event) => randomSubmit(event, setOpenPrompt)}
             >
               Random
             </button>
