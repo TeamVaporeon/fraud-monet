@@ -44,6 +44,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
                     required
                   />
                   <span
+                    className='vote_names'
                     style={{ color: player.color }}
                   >{` ${player.username}`}</span>
                 </label>
