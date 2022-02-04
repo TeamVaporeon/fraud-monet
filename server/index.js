@@ -1,15 +1,17 @@
 //-----DEPENDENCIES-----//
 const path = require('path');
 const cors = require('cors');
-const argon2 = require('argon2');
 const express = require('express');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
-const { saveUser, sessionStore, initializeUser } = require('./controllers/users');
-const cookieParser = require('cookie-parser');
+
+const argon2 = require('argon2');
 const cookie = require('cookie');
+const cookieParser = require('cookie-parser');
+
 const editFile = require('edit-json-file');
 const { defaultColors, rooms } = require('./data')
+const { saveUser, initializeUser } = require('./controllers/users');
 
 //-----DATA JSON FILE-----//
 var file = editFile(path.join(__dirname, 'data.json'));
@@ -39,7 +41,7 @@ app.get('/room/:id', (req, res) => {
   let room = `/${req.params.id}`;
   if (rooms[room]) {
     try {
-      res.status(200).send(rooms[room]);
+      res.status(200).send(JSON.stringify(rooms[room]));
     } catch(e) {
       console.error(e.message);
     }
@@ -71,13 +73,20 @@ io.use( (socket, next) => {
   socket = initializeUser(socket);
   let user = socket.handshake.auth.user;
   if (!rooms[socket.roomID]) {
-    rooms[socket.roomID] ={
+    rooms[socket.room] = {
       category: '',
       prompt: '',
       colors: Object.assign({}, defaultColors),
       chats: [],
+      users: { [socket.user.username]: 1 },
+      customPrompt: {
+        isCustom: false,
+        category: '',
+        prompt: '',
+      },
       votes: {},
       turns: 0,
+      drawing: [],
     };
     socket.emit('start', rooms[socket.room]);
   }
@@ -152,10 +161,16 @@ io.on('connection', (socket) => {
   });
 
   //-----SESSION EVENT LISTENER-----//
-  socket.on('session', (sessionID) => {
-    socket = initializeUser(socket, sessionID);
-    socket.emit('user_object', socket.user);
-  })
+    socket.on('session', async (sessionID) => {
+      socket = initializeUser(socket, sessionID);
+      let users = [];
+      let userSockets = await io.in(socket.room).fetchSockets();
+      userSockets.forEach((sock) => {
+        users.push(sock.user);
+      });
+      socket.emit('user_object', socket.user);
+      socket.emit('users', users);
+    })
 
   //------GAME EVENT LISTENERS-------//
   socket.on('mouse', (mouseData) => {

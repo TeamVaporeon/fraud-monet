@@ -54,8 +54,8 @@ const GameMain = () => {
       .then(data => {
         let sessionID = localStorage.getItem('sessionID');
         if (sessionID) {
-          socket.emit('session', sessionID);
           socket.connect();
+          socket.emit('session', sessionID);
         }
         console.log('GAMEMAIN data', data);
       })

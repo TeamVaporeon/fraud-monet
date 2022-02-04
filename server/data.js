@@ -21,5 +21,6 @@ module.exports = {
     '#D9ABD6': true, //Lilac
     '#A9B3BF': true, //Cadet Blue Crayola
   },
-  rooms: {}
+  rooms: {},
+  users: [],
 };

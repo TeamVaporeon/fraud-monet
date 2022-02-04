@@ -34,6 +34,7 @@ const Chat = ({ socket, currentUser }) => {
     });
 
     socket.on('user_object', (user) => {
+      console.log(user);
       setUsername(user.username);
     });
   }, [socket]);
