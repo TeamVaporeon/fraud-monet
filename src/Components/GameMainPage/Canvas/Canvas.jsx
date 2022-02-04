@@ -149,7 +149,6 @@ const Canvas = ({ thingy }) => {
     //draw and emitting functions
     if (
       userWithId &&
-      players[p5.getItem('turn')] &&
       userWithId.id === players[p5.getItem('turn')].id &&
       gameStarted &&
       round < 2
