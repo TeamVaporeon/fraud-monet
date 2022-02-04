@@ -3,7 +3,7 @@ import { AppContext } from '../../../App.jsx';
 import './FinalResultsModal.css';
 
 const FinalResultsModal = ({ setOpenFinal }) => {
-  const { setRound, players, setStart, QM, winner } = useContext(AppContext);
+  const { setRound, players, setStart, QM, winner, socket } = useContext(AppContext);
   return (
     <div className='finalModal'>
       <div className='finalContainer'>
