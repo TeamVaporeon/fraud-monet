@@ -77,7 +77,7 @@ const PlayerList = ({ setOpenPrompt }) => {
                 className='question-master each-player'
                 style={{ background: '#000' }}
               >
-                {QM.id === currentUser.id ? `🎨` : ''}
+                {QM.id === currentUser.id ? `🎨 ` : ''}
                 {QM.username}
                 {QM.host ? ' 👑' : ''}
                 {QM.id === currentUser.id && !gameStarted ? (
@@ -126,7 +126,7 @@ const PlayerList = ({ setOpenPrompt }) => {
                       onMouseLeave={() => scoreIsShown(false)}
                     >
                       <span key={player.id}>
-                        {`${player.id === currentUser.id ? '🎨' : ''}${
+                        {`${player.id === currentUser.id ? '🎨 ' : ''}${
                           player.username
                         } ${player.host ? ' 👑' : ''}`}
                         {isShown && player.score <= 5 ? (
