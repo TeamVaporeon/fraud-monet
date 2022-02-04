@@ -117,9 +117,11 @@ io.on('connection', (socket) => {
           users: { [socket.user.username]: 1 },
           votes: {},
           turns: 0,
+          drawing: []
         };
         socket.emit('start', rooms[socket.room]);
       }
+
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
@@ -129,6 +131,8 @@ io.on('connection', (socket) => {
       socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
     }
+    socket.emit('load_drawing', rooms[socket.room].drawing);
+    socket.broadcast.to(socket.room).emit('load_drawing', rooms[socket.room].drawing);
   });
 
   // Emit handlers
@@ -149,6 +153,7 @@ io.on('connection', (socket) => {
 
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
+    rooms[socket.room].drawing.push(mouseData);
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
@@ -208,6 +213,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('gameStart', () => {
+    rooms[socket.room].drawing = []
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
