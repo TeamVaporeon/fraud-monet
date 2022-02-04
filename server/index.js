@@ -171,6 +171,23 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('get_votes', rooms[socket.room].votes);
   });
 
+  socket.on('score', (data) => {
+    if (data.winner === 'fraud') {
+      data.users.forEach((user) => {
+        if (user.fraud || user.role === 'qm') {
+          user.score += 2;
+        }
+      });
+    } else {
+      data.users.forEach((user) => {
+        if (user.role === 'player' && !user.fraud) {
+          user.score += 1;
+        }
+      });
+    }
+    io.to(socket.room).emit('users', data.users);
+  });
+
   socket.on('new_game', () => {
     rooms[socket.room].category = '';
     rooms[socket.room].prompt = '';
@@ -215,8 +232,8 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('round', req);
   });
 
-  socket.on('judged', () => {
-    io.to(socket.room).emit('judged');
+  socket.on('judged', (char) => {
+    io.to(socket.room).emit('judged', char === 'Y' ? 'fraud' : 'player');
   });
 
   /* ----- CHATROOM Code ----- */

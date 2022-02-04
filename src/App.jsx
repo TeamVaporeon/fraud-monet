@@ -47,6 +47,7 @@ function App() {
   const [QM, setQM] = useState({});
   const [guess, setGuess] = useState('');
   const [mostVoted, setMostVoted] = useState([[]]);
+  const [winner, setWinner] = useState('');
 
   if (hostSocket.id) {
     socket = hostSocket;
@@ -146,6 +147,8 @@ function App() {
         setGuess,
         mostVoted,
         setMostVoted,
+        winner,
+        setWinner,
       }}
     >
       <div className='App'>
