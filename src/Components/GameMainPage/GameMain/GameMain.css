@@ -25,12 +25,13 @@
 .game_body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 60vh;
+  grid-auto-rows: 80vh;
   grid-template-areas: 'a b b c';
   justify-content: center;
   gap: 2rem;
   margin: 0 5rem;
   margin-bottom: 5rem;
+  max-height: 500px;
   /* height: 60vh; */
 }
 

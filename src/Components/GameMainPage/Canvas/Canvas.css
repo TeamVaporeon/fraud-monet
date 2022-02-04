@@ -1,6 +1,7 @@
 #sketchpad {
   border: solid;
   border-radius: 1.5%;
+  max-height: 500px;
 }
 
 #downloadBtn {
