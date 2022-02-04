@@ -27,8 +27,8 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
         most.length > 1 ||
         most[0][0] !== players.filter((player) => player.fraud)[0].username
       ) {
-        setWinner('fraud');
-        setJudged(true);
+        socket.emit('score', { winner: 'fraud', users: users });
+        socket.emit('judged', 'Y');
       }
       setMostVoted(most);
       revealFraud(true);
