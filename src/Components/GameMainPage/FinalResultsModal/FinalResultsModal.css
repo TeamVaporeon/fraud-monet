@@ -33,12 +33,6 @@
   align-self: stretch;
 }
 
-.finalScore {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .finalTitle {
   margin-top: 1rem;
   font-weight: bold;
@@ -60,4 +54,29 @@
 .finalCloseBtn:hover {
   transform: scale(1.2);
   color: black;
+}
+
+.finalScore {
+  align-self: stretch;
+  font-size: 15px;
+}
+
+.score_tb {
+  width: 100%;
+}
+
+.tr {
+  margin: 2px 0;
+}
+
+.l {
+  text-align: left;
+}
+
+.m {
+  text-align: center;
+}
+
+.r {
+  text-align: end;
 }
