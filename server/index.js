@@ -118,11 +118,11 @@ io.on('connection', (socket) => {
           customPrompt: {
             isCustom: false,
             category: '',
-            prompt: ''
+            prompt: '',
           },
           votes: {},
           turns: 0,
-          drawing: []
+          drawing: [],
         };
         socket.emit('start', rooms[socket.room]);
       }
@@ -137,7 +137,9 @@ io.on('connection', (socket) => {
       socket.emit('start', rooms[socket.room]);
     }
     socket.emit('load_drawing', rooms[socket.room].drawing);
-    socket.broadcast.to(socket.room).emit('load_drawing', rooms[socket.room].drawing);
+    socket.broadcast
+      .to(socket.room)
+      .emit('load_drawing', rooms[socket.room].drawing);
   });
 
   // Emit handlers
@@ -206,7 +208,7 @@ io.on('connection', (socket) => {
     rooms[socket.room].customPrompt = {
       isCustom: false,
       category: '',
-      prompt: ''
+      prompt: '',
     };
   });
 
@@ -214,7 +216,7 @@ io.on('connection', (socket) => {
     rooms[socket.room].customPrompt = {
       isCustom: true,
       category: data.category,
-      prompt: data.prompt
+      prompt: data.prompt,
     };
   });
 
@@ -244,7 +246,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('gameStart', () => {
-    rooms[socket.room].drawing = []
+    rooms[socket.room].drawing = [];
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
@@ -295,6 +297,6 @@ io.on('connection', (socket) => {
 
 // Starting The Server That Has Express and Socket.io
 const port = 8080;
-httpServer.listen(port, () => {
+httpServer.listen(process.env.PORT || port, () => {
   console.log(`Server listening at port ${port}`);
 });
