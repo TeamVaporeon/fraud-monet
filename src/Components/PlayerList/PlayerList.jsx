@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
-const PlayerList = () => {
+const PlayerList = ({setOpenPrompt}) => {
   const {
     users,
     currentUser,
@@ -20,11 +20,15 @@ const PlayerList = () => {
   const [isShown, scoreIsShown] = useState(false);
 
   const handleStart = (e) => {
-    setStart(true);
-    socket.emit('start', users);
-    socket.emit('gameStart');
-    socket.emit('round', 0);
-    socket.emit('turn', 0);
+    if(currentUser.role === 'qm') {
+      setOpenPrompt(true);
+    } else {
+      setStart(true);
+      socket.emit('start', users);
+      socket.emit('gameStart');
+      socket.emit('round', 0);
+      socket.emit('turn', 0);
+    }
   };
 
   useEffect(() => {

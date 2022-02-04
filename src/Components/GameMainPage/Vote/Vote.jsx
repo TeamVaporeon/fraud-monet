@@ -43,7 +43,7 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
                     }}
                     required
                   />
-                  <span>{player.username}</span>
+                  <span style={{color: player.color}}>{player.username}</span>
                 </div>
               );
             })}

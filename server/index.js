@@ -115,6 +115,11 @@ io.on('connection', (socket) => {
           colors: Object.assign({}, defaultColors),
           chats: [],
           users: { [socket.user.username]: 1 },
+          customPrompt: {
+            isCustom: false,
+            category: '',
+            prompt: ''
+          },
           votes: {},
           turns: 0,
           drawing: []
@@ -198,15 +203,23 @@ io.on('connection', (socket) => {
     rooms[socket.room].prompt = '';
     rooms[socket.room].votes = {};
     rooms[socket.room].turns = 0;
+    rooms[socket.room].customPrompt = {
+      isCustom: false,
+      category: '',
+      prompt: ''
+    };
   });
 
   socket.on('prompt', (data) => {
-    rooms[socket.room].category = data.category;
-    rooms[socket.room].prompt = data.prompt;
+    rooms[socket.room].customPrompt = {
+      isCustom: true,
+      category: data.category,
+      prompt: data.prompt
+    };
   });
 
   socket.on('start', async (players) => {
-    if (!rooms[socket.room].category) {
+    if (!rooms[socket.room].customPrompt.isCustom) {
       const data = await file.toObject();
       let randCat = Math.floor(Math.random() * data.categories.length);
       let category = data.categories[randCat];
@@ -215,7 +228,8 @@ io.on('connection', (socket) => {
       rooms[socket.room].category = category;
       rooms[socket.room].prompt = prompt;
     } else {
-      console.log(`${socket.room} doesn't exist`);
+      rooms[socket.room].category = rooms[socket.room].customPrompt.category;
+      rooms[socket.room].prompt = rooms[socket.room].customPrompt.prompt;
     }
     let x = true;
     while (x) {
