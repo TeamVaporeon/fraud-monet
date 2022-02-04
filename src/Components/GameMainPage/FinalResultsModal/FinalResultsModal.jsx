@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { AppContext } from '../../../App.jsx';
 import './FinalResultsModal.css';
 
