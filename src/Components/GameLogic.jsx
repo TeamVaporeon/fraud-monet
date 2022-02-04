@@ -2,7 +2,8 @@ import { useContext, useState } from 'react';
 import { AppContext } from '../App';
 
 const GameLogic = () => {
-  const { currentUser, socket, round } = useContext(AppContext);
+  const { currentUser, socket, round, players, gameStarted } =
+    useContext(AppContext);
 
   const [prompt, setPrompt] = useState('');
   const [category, setCategory] = useState('');
@@ -22,6 +23,11 @@ const GameLogic = () => {
         ) : (
           <div>{`Prompt: ${prompt}`}</div>
         )
+      ) : null}
+      {currentUser.role === 'qm' && gameStarted ? (
+        <div>{`The Fraud is ${
+          players.filter((player) => player.fraud)[0]
+        }`}</div>
       ) : null}
     </div>
   );

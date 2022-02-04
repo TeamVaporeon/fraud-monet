@@ -68,9 +68,52 @@ const PlayerList = ({ setOpenPrompt }) => {
 
   return (
     <>
-      {/* <button onClick={claim}>Claim Host</button> */}
       <div className='total-game-list'>
         <div className='players-list'>
+          <h3 className='player-title'>Question Master:</h3>
+          <div className='just-players'>
+            {QM.id ? (
+              <div
+                className='question-master each-player'
+                style={{ background: '#000' }}
+              >
+                {QM.id === currentUser.id ? `🎨` : ''}
+                {QM.username}
+                {currentUser.host ? ' 👑' : ''}
+                {QM.id === currentUser.id && !gameStarted ? (
+                  <span
+                    key={QM.id + '3'}
+                    onClick={(e) => update(e, 'spectator')}
+                    color='#000'
+                    style={{
+                      float: 'right',
+                      marginRight: '5px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ❌
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+          <Stack className='join-qm-button' direction='horizontal' gap={2}>
+            {currentUser.username &&
+            currentUser.role !== 'player' &&
+            !gameStarted &&
+            !QM.id ? (
+              <Button
+                onClick={(e) => update(e, 'qm')}
+                color='#000'
+                variant='success'
+                size='sm'
+                className='qm-btn'
+                style={{ fontSize: '1vw' }}
+              >
+                Join as Question Master
+              </Button>
+            ) : null}
+          </Stack>
           <h3 className='player-title'>Players:</h3>
           <div className='just-players'>
             {players
@@ -83,7 +126,9 @@ const PlayerList = ({ setOpenPrompt }) => {
                       onMouseLeave={() => scoreIsShown(false)}
                     >
                       <span key={player.id}>
-                        {`${player.username} ${player.host ? '👑' : ''}`}
+                        {`${player.id === currentUser.id ? '🎨' : ''}${
+                          player.username
+                        } ${player.host ? ' 👑' : ''}`}
                         {isShown && player.score <= 5 ? (
                           <span style={{ marginLeft: '5px' }}>
                             {'🏆'.repeat(player.score)}
@@ -94,29 +139,13 @@ const PlayerList = ({ setOpenPrompt }) => {
                           </span>
                         ) : null}
                       </span>
-                      {player.id === currentUser.id && !gameStarted ? (
-                        <span>
-                          <span
-                            key={player.id + '4'}
-                            onClick={(e) => update(e, 'spectator')}
-                            color='#000'
-                            style={{
-                              float: 'right',
-                              marginRight: '5px',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            ❌
-                          </span>
-                        </span>
-                      ) : (
-                        currentUser.host &&
-                        !gameStarted && (
+                      {
+                        player.id === currentUser.id && !gameStarted ? (
                           <span>
                             <span
-                              key={player.id + '6'}
-                              // onClick={kick}
-                              playerid={player.id}
+                              key={player.id + '4'}
+                              onClick={(e) => update(e, 'spectator')}
+                              color='#000'
                               style={{
                                 float: 'right',
                                 marginRight: '5px',
@@ -126,8 +155,25 @@ const PlayerList = ({ setOpenPrompt }) => {
                               ❌
                             </span>
                           </span>
-                        )
-                      )}
+                        ) : null
+                        // currentUser.host &&
+                        // !gameStarted && (
+                        //   <span>
+                        //     <span
+                        //       key={player.id + '6'}
+                        //       // onClick={kick}
+                        //       playerid={player.id}
+                        //       style={{
+                        //         float: 'right',
+                        //         marginRight: '5px',
+                        //         cursor: 'pointer',
+                        //       }}
+                        //     >
+                        //       ❌
+                        //     </span>
+                        //   </span>
+                        // )
+                      }
                     </div>
                   </div>
                 ))
@@ -224,36 +270,6 @@ const PlayerList = ({ setOpenPrompt }) => {
                 );
               })}
             </div>
-          </div>
-        ) : null}
-        <Stack className='join-qm-button' direction='horizontal' gap={2}>
-          {currentUser.username &&
-          currentUser.role !== 'player' &&
-          !gameStarted &&
-          !QM.id ? (
-            <Button
-              onClick={(e) => update(e, 'qm')}
-              color='#000'
-              variant='success'
-              size='sm'
-            >
-              Join as Question Master
-            </Button>
-          ) : null}
-        </Stack>
-        {QM.id ? (
-          <div className='question-master'>
-            {`QM: ${QM.username}`}
-            {QM.id === currentUser.id && !gameStarted ? (
-              <span
-                key={QM.id + '3'}
-                onClick={(e) => update(e, 'spectator')}
-                color='#000'
-                style={{ cursor: 'pointer' }}
-              >
-                ❌
-              </span>
-            ) : null}
           </div>
         ) : null}
       </div>

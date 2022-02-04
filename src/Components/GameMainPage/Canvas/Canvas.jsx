@@ -43,6 +43,7 @@ const Canvas = ({ thingy }) => {
     p5.background(255);
     p5.storeItem('turn', 0);
 
+    // canva.style('width', '100%');
     canva.id('sketchpad');
 
     const save = p5.createButton('Download Canvas').parent(canvasParentRef);
@@ -63,8 +64,8 @@ const Canvas = ({ thingy }) => {
         p5.stroke(item.color);
         p5.strokeWeight(10);
         p5.line(item.x, item.y, item.px, item.py);
-      })
-    })
+      });
+    });
 
     canva.mouseReleased(() => {
       let turn = p5.getItem('turn');
@@ -147,12 +148,7 @@ const Canvas = ({ thingy }) => {
 
   const mouseDragged = (p5) => {
     //draw and emitting functions
-    if (
-      userWithId &&
-      userWithId.id === players[p5.getItem('turn')].id &&
-      gameStarted &&
-      round < 2
-    ) {
+    if (!gameStarted) {
       var data = {
         x: p5.mouseX,
         y: p5.mouseY,
@@ -164,7 +160,12 @@ const Canvas = ({ thingy }) => {
       p5.stroke(currentUser.color);
       p5.strokeWeight(10);
       p5.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
-    } else if (!gameStarted) {
+    } else if (
+      userWithId &&
+      userWithId.id === players[p5.getItem('turn')].id &&
+      gameStarted &&
+      round < 2
+    ) {
       var data = {
         x: p5.mouseX,
         y: p5.mouseY,
