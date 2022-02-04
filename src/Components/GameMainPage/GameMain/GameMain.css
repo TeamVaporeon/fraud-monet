@@ -26,6 +26,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: 620px;
+  max-height: 60vh;
   margin: auto 5rem;
   margin-bottom: 5rem;
   grid-template-areas: 'a b b c';
