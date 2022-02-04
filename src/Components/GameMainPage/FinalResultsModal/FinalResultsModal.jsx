@@ -10,7 +10,9 @@ const FinalResultsModal = ({ setOpenFinal }) => {
       <div className='finalContainer'>
         <h3 className='finalTitle'>Final Results:</h3>
         <div className='finalDesc'>
-          {winner === 'fraud' ? 'The Fraud Wins!' : 'The Artists Win!'}
+          {winner === 'fraud'
+            ? '🎭 The Fraud Wins! 🎨'
+            : '🧑🏻‍🎨🧑🏾‍🎨👩🏾‍🎨 The Artists Win! 👨🏼‍🎨👩‍🎨👨‍🎨'}
         </div>
         <div className='finalScore'>
           <table className='score_tb'>

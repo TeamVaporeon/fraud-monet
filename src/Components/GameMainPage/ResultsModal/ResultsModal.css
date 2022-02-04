@@ -15,7 +15,7 @@
   --widthPLA: 100%;
   --widthPLB: calc(var(--widthPLA) - 16rem);
   width: calc(var(--widthPLB) / 4);
-  height: 620px;
+  height: 80vh;
 }
 
 .resultsContainer {

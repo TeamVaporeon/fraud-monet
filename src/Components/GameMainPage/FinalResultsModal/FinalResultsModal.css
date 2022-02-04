@@ -15,7 +15,7 @@
   --widthPLA: 100%;
   --widthPLB: calc(var(--widthPLA) - 16rem);
   width: calc(var(--widthPLB) / 4);
-  height: 620px;
+  height: 80vh;
 }
 
 .finalContainer {
@@ -58,6 +58,9 @@
 
 .finalDesc {
   font-size: 1.3rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
 
 .finalScore {

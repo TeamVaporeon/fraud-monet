@@ -118,11 +118,11 @@ io.on('connection', (socket) => {
           customPrompt: {
             isCustom: false,
             category: '',
-            prompt: ''
+            prompt: '',
           },
           votes: {},
           turns: 0,
-          drawing: []
+          drawing: [],
         };
         socket.emit('start', rooms[socket.room]);
       }
@@ -136,7 +136,9 @@ io.on('connection', (socket) => {
       socket.emit('start', rooms[socket.room]);
     }
     socket.emit('load_drawing', rooms[socket.room].drawing);
-    socket.broadcast.to(socket.room).emit('load_drawing', rooms[socket.room].drawing);
+    socket.broadcast
+      .to(socket.room)
+      .emit('load_drawing', rooms[socket.room].drawing);
   });
 
   // Emit handlers
@@ -205,7 +207,7 @@ io.on('connection', (socket) => {
     rooms[socket.room].customPrompt = {
       isCustom: false,
       category: '',
-      prompt: ''
+      prompt: '',
     };
   });
 
@@ -213,7 +215,7 @@ io.on('connection', (socket) => {
     rooms[socket.room].customPrompt = {
       isCustom: true,
       category: data.category,
-      prompt: data.prompt
+      prompt: data.prompt,
     };
   });
 
@@ -232,15 +234,15 @@ io.on('connection', (socket) => {
     }
     let currentPlayers = [];
     let spectators = [];
-    players.forEach(p => {
+    players.forEach((p) => {
       if (p.role === 'player') {
         if (p.fraud) {
           p.fraud = false;
-        };
+        }
         currentPlayers.push(p);
       } else {
         spectators.push(p);
-      };
+      }
     });
     let i = Math.floor(Math.random() * currentPlayers.length);
     currentPlayers[i].fraud = true;
@@ -249,7 +251,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('gameStart', () => {
-    rooms[socket.room].drawing = []
+    rooms[socket.room].drawing = [];
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
@@ -290,8 +292,10 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
-    rooms[socket.room].colors[data.color] =
-      !rooms[socket.room].colors[data.color];
+    if (data.color !== '#000') {
+      rooms[socket.room].colors[data.color] =
+        !rooms[socket.room].colors[data.color];
+    }
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);
   });
