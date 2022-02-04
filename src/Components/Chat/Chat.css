@@ -33,7 +33,7 @@
 .chat-container .chat-body .message-container {
   height: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   width: 100%;
 }
 .chat-container .chat-body .message-container::webkit-scrollbar {
