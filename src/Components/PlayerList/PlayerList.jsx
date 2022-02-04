@@ -90,7 +90,7 @@ const PlayerList = () => {
                           </span>
                         ) : null}
                       </span>
-                      {player.id === currentUser.id ? (
+                      {player.id === currentUser.id && !gameStarted ? (
                         <span>
                           <span
                             key={player.id + '4'}
@@ -106,7 +106,8 @@ const PlayerList = () => {
                           </span>
                         </span>
                       ) : (
-                        currentUser.host && (
+                        currentUser.host &&
+                        !gameStarted && (
                           <span>
                             <span
                               key={player.id + '6'}
@@ -237,7 +238,7 @@ const PlayerList = () => {
         {QM.id ? (
           <div className='question-master'>
             {`QM: ${QM.username}`}
-            {QM.id === currentUser.id ? (
+            {QM.id === currentUser.id && !gameStarted ? (
               <span
                 key={QM.id + '3'}
                 onClick={(e) => update(e, 'spectator')}
