@@ -7,8 +7,15 @@ import './Canvas.css';
 let canva;
 
 const Canvas = ({ thingy }) => {
-  const { socket, players, setRound, round, currentUser, gameStarted, setStart } =
-    useContext(AppContext);
+  const {
+    socket,
+    players,
+    setRound,
+    round,
+    currentUser,
+    gameStarted,
+    setStart,
+  } = useContext(AppContext);
   // const [turn, setTurn] = useState(0);
   const [userWithId, setUserWithId] = useState();
 
@@ -21,10 +28,12 @@ const Canvas = ({ thingy }) => {
   }, [currentUser]);
 
   const setup = (p5, canvasParentRef) => {
-
     const turndiv = p5.createDiv('Current turn:').parent(canvasParentRef);
     turndiv.style('font-weight', 'bold');
-    turndiv.style('text-shadow', '1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000');
+    turndiv.style(
+      'text-shadow',
+      '1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000'
+    );
     turndiv.style('color', 'rgb(72, 20, 114)');
 
     const canva = p5
@@ -49,19 +58,47 @@ const Canvas = ({ thingy }) => {
       p5.line(data.x, data.y, data.px, data.py);
     });
 
+    socket.on('load_drawing', (mouseData) => {
+      mouseData.forEach((item) => {
+        p5.stroke(item.color);
+        p5.strokeWeight(10);
+        p5.line(item.x, item.y, item.px, item.py);
+      })
+    })
+
     canva.mouseReleased(() => {
       let turn = p5.getItem('turn');
       if (
-        JSON.parse(sessionStorage.getItem('gameStarted') &&
-        socket.id === JSON.parse(sessionStorage.getItem('users'))[turn].id)
+        JSON.parse(
+          sessionStorage.getItem('gameStarted') &&
+            socket.id === JSON.parse(sessionStorage.getItem('users'))[turn].id
+        )
       ) {
         socket.emit('turn', p5.getItem('turn') + 1);
-        if (p5.getItem('turn') === JSON.parse(sessionStorage.getItem('users')).length-1) {
-          turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[0].username);
-          turndiv.style('color', JSON.parse(sessionStorage.getItem('users'))[0].color)
+        if (
+          p5.getItem('turn') ===
+          JSON.parse(sessionStorage.getItem('users')).length - 1
+        ) {
+          turndiv.html(
+            'Current turn: ' +
+              JSON.parse(sessionStorage.getItem('users'))[0].username
+          );
+          turndiv.style(
+            'color',
+            JSON.parse(sessionStorage.getItem('users'))[0].color
+          );
         } else {
-          turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn') + 1].username);
-          turndiv.style('color', JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn') + 1].color)
+          turndiv.html(
+            'Current turn: ' +
+              JSON.parse(sessionStorage.getItem('users'))[
+                p5.getItem('turn') + 1
+              ].username
+          );
+          turndiv.style(
+            'color',
+            JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn') + 1]
+              .color
+          );
         }
       }
     });
@@ -70,20 +107,41 @@ const Canvas = ({ thingy }) => {
       if (newTurn === JSON.parse(sessionStorage.getItem('users')).length) {
         p5.storeItem('turn', 0);
         socket.emit('round', Number(sessionStorage.getItem('round')) + 1);
-        turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].username);
-        turndiv.style('color', JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].color)
+        turndiv.html(
+          'Current turn: ' +
+            JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')]
+              .username
+        );
+        turndiv.style(
+          'color',
+          JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].color
+        );
       } else {
         p5.storeItem('turn', newTurn);
-        turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].username);
-        turndiv.style('color', JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].color)
+        turndiv.html(
+          'Current turn: ' +
+            JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')]
+              .username
+        );
+        turndiv.style(
+          'color',
+          JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].color
+        );
       }
     });
 
     socket.on('gameStart', () => {
-      p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight-24);
+      p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight - 24);
       p5.background(255);
-      turndiv.html('Current turn: ' + JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].username);
-      turndiv.style('color', JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].color)
+      turndiv.html(
+        'Current turn: ' +
+          JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')]
+            .username
+      );
+      turndiv.style(
+        'color',
+        JSON.parse(sessionStorage.getItem('users'))[p5.getItem('turn')].color
+      );
     });
   };
 
@@ -92,7 +150,12 @@ const Canvas = ({ thingy }) => {
     if (
       userWithId &&
       userWithId.id === players[p5.getItem('turn')].id &&
+<<<<<<< HEAD
       gameStarted
+=======
+      gameStarted &&
+      round < 2
+>>>>>>> 46473890f2e0e6f14a97ff1f6fd94baf0845a3f6
     ) {
       var data = {
         x: p5.mouseX,

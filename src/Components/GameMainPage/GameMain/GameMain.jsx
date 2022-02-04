@@ -8,6 +8,7 @@ import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
 import FinalResultsModal from '../FinalResultsModal/FinalResultsModal';
 import ResultsModal from '../ResultsModal/ResultsModal';
+import PromptModal from '../PromptModal/PromptModal.jsx';
 import Canvas from '../Canvas/Canvas.jsx';
 import Vote from '../Vote/Vote';
 import axios from 'axios';
@@ -30,6 +31,8 @@ const GameMain = () => {
   const [openResults, setOpenResults] = useState(false);
   const [openVote, setOpenVote] = useState(false);
   const [openFinal, setOpenFinal] = useState(false);
+  const [openPrompt, setOpenPrompt] = useState(false);
+
 
   useEffect(() => {
     if (round === 2) {
@@ -62,6 +65,7 @@ const GameMain = () => {
       {openUsername ? (
         <UsernameModal setOpenUsername={setOpenUsername} socket={socket} />
       ) : null}
+      {openPrompt ? <PromptModal setOpenPrompt={setOpenPrompt} socket={socket}/> : null}
       <div className='game_topbar'>
         <div>
           <GameLogic />
@@ -90,7 +94,7 @@ const GameMain = () => {
           />
         ) : null}
         <div className='game_players'>
-          <PlayerList />
+          <PlayerList setOpenPrompt={setOpenPrompt}/>
         </div>
         <div className='game_canvas' ref={ref}>
           {ref.current ? <Canvas thingy={ref.current} /> : null}

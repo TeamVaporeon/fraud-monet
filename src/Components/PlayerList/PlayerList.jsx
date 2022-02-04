@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
-const PlayerList = () => {
+const PlayerList = ({setOpenPrompt}) => {
   const {
     users,
     currentUser,
@@ -20,11 +20,15 @@ const PlayerList = () => {
   const [isShown, scoreIsShown] = useState(false);
 
   const handleStart = (e) => {
-    setStart(true);
-    socket.emit('start', users);
-    socket.emit('gameStart');
-    socket.emit('round', 0);
-    socket.emit('turn', 0);
+    if(currentUser.role === 'qm') {
+      setOpenPrompt(true);
+    } else {
+      setStart(true);
+      socket.emit('start', users);
+      socket.emit('gameStart');
+      socket.emit('round', 0);
+      socket.emit('turn', 0);
+    }
   };
 
   useEffect(() => {
@@ -72,7 +76,6 @@ const PlayerList = () => {
             {players
               ? players.map((player) => (
                   <div className='each-player' key={player.id + '1'}>
-
                     <div
                       style={{ background: player.color }}
                       key={player.id + '2'}
@@ -81,34 +84,44 @@ const PlayerList = () => {
                     >
                       <span key={player.id}>
                         {`${player.username} ${player.host ? '👑' : ''}`}
-                        {(isShown && player.score <= 5) ?
-                        <span style={{ marginLeft: '5px'}}>
-                        {'🏆'.repeat(player.score)}
-                        </span> :
-                        (isShown && player.score > 5) ?
-                        <span style={{ marginLeft: '5px'}}>
-                        {'🏆 x ' + (player.score)}
-                        </span> : null}
+                        {isShown && player.score <= 5 ? (
+                          <span style={{ marginLeft: '5px' }}>
+                            {'🏆'.repeat(player.score)}
+                          </span>
+                        ) : isShown && player.score > 5 ? (
+                          <span style={{ marginLeft: '5px' }}>
+                            {'🏆 x ' + player.score}
+                          </span>
+                        ) : null}
                       </span>
-                      {player.id === currentUser.id ? (
+                      {player.id === currentUser.id && !gameStarted ? (
                         <span>
                           <span
                             key={player.id + '4'}
                             onClick={(e) => update(e, 'spectator')}
                             color='#000'
-                            style={{ float: 'right', marginRight: '5px' }}
+                            style={{
+                              float: 'right',
+                              marginRight: '5px',
+                              cursor: 'pointer',
+                            }}
                           >
                             ❌
                           </span>
                         </span>
                       ) : (
-                        currentUser.host && (
+                        currentUser.host &&
+                        !gameStarted && (
                           <span>
                             <span
                               key={player.id + '6'}
                               // onClick={kick}
                               playerid={player.id}
-                              style={{ float: 'right', marginRight: '5px' }}
+                              style={{
+                                float: 'right',
+                                marginRight: '5px',
+                                cursor: 'pointer',
+                              }}
                             >
                               ❌
                             </span>
@@ -227,13 +240,14 @@ const PlayerList = () => {
           ) : null}
         </Stack>
         {QM.id ? (
-          <div className="question-master">
+          <div className='question-master'>
             {`QM: ${QM.username}`}
-            {QM.id === currentUser.id ? (
+            {QM.id === currentUser.id && !gameStarted ? (
               <span
                 key={QM.id + '3'}
                 onClick={(e) => update(e, 'spectator')}
                 color='#000'
+                style={{ cursor: 'pointer' }}
               >
                 ❌
               </span>

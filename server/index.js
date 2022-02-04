@@ -115,11 +115,18 @@ io.on('connection', (socket) => {
           colors: Object.assign({}, defaultColors),
           chats: [],
           users: { [socket.user.username]: 1 },
+          customPrompt: {
+            isCustom: false,
+            category: '',
+            prompt: ''
+          },
           votes: {},
           turns: 0,
+          drawing: []
         };
         socket.emit('start', rooms[socket.room]);
       }
+
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
@@ -129,6 +136,8 @@ io.on('connection', (socket) => {
       socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
     }
+    socket.emit('load_drawing', rooms[socket.room].drawing);
+    socket.broadcast.to(socket.room).emit('load_drawing', rooms[socket.room].drawing);
   });
 
   // Emit handlers
@@ -149,6 +158,7 @@ io.on('connection', (socket) => {
 
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
+    rooms[socket.room].drawing.push(mouseData);
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
@@ -171,20 +181,45 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('get_votes', rooms[socket.room].votes);
   });
 
+  socket.on('score', (data) => {
+    if (data.winner === 'fraud') {
+      data.users.forEach((user) => {
+        if (user.fraud || user.role === 'qm') {
+          user.score += 2;
+        }
+      });
+    } else {
+      data.users.forEach((user) => {
+        if (user.role === 'player' && !user.fraud) {
+          user.score += 1;
+        }
+      });
+    }
+    io.to(socket.room).emit('users', data.users);
+  });
+
   socket.on('new_game', () => {
     rooms[socket.room].category = '';
     rooms[socket.room].prompt = '';
     rooms[socket.room].votes = {};
     rooms[socket.room].turns = 0;
+    rooms[socket.room].customPrompt = {
+      isCustom: false,
+      category: '',
+      prompt: ''
+    };
   });
 
   socket.on('prompt', (data) => {
-    rooms[socket.room].category = data.category;
-    rooms[socket.room].prompt = data.prompt;
+    rooms[socket.room].customPrompt = {
+      isCustom: true,
+      category: data.category,
+      prompt: data.prompt
+    };
   });
 
   socket.on('start', async (players) => {
-    if (!rooms[socket.room].category) {
+    if (!rooms[socket.room].customPrompt.isCustom) {
       const data = await file.toObject();
       let randCat = Math.floor(Math.random() * data.categories.length);
       let category = data.categories[randCat];
@@ -193,7 +228,8 @@ io.on('connection', (socket) => {
       rooms[socket.room].category = category;
       rooms[socket.room].prompt = prompt;
     } else {
-      console.log(`${socket.room} doesn't exist`);
+      rooms[socket.room].category = rooms[socket.room].customPrompt.category;
+      rooms[socket.room].prompt = rooms[socket.room].customPrompt.prompt;
     }
     let x = true;
     while (x) {
@@ -208,6 +244,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('gameStart', () => {
+    rooms[socket.room].drawing = []
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
@@ -215,8 +252,8 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('round', req);
   });
 
-  socket.on('judged', () => {
-    io.to(socket.room).emit('judged');
+  socket.on('judged', (char) => {
+    io.to(socket.room).emit('judged', char === 'Y' ? 'fraud' : 'player');
   });
 
   /* ----- CHATROOM Code ----- */
