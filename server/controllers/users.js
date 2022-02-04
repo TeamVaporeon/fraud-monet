@@ -1,3 +1,4 @@
+const argon2 = require('argon2');
 const { InMemorySessionStore } = require('../sessionStore');
 const sessionStore = new InMemorySessionStore();
 
@@ -13,20 +14,28 @@ const sessionStore = new InMemorySessionStore();
     user.id = socket.id;
 
     if (sessionID) {
-
-      let userSession = checkForSession(sessionID)
-      if (userSession) {
-        setUser(socket, userSession);
-      } else {
-        setUser(socket, user);
-        // Save user since this is the first session
-        saveUser(sessionID, user);
-      }
-
-      setSessionID(socket, sessionID);
-      setRoomID(socket, roomID);
-      return socket;
+      return setSession(socket, sessionID, roomID, user);
+    } else {
+      getHash(user.username).then((hash) => {
+        return setSession(socket, hash, roomID, user);
+      })
     }
+    return socket;
+  }
+
+  const setSession = function(socket, sessionID, roomID, user) {
+    let userSession = checkForSession(sessionID)
+
+    if (userSession) {
+      setUser(socket, userSession);
+    } else {
+      setUser(socket, user);
+      // Save user since this is the first session
+      saveUser(sessionID, user);
+    }
+    setSessionID(socket, sessionID);
+    setRoomID(socket, roomID);
+    return socket;
   }
 
   const setUser = function(socket, user) {
@@ -60,6 +69,10 @@ const sessionStore = new InMemorySessionStore();
     } else if (user) {
       sessionStore.saveSession(user.sessiondId, user);
     }
+  }
+
+  const getHash = async function(str) {
+    return await argon2.hash(str)
   }
 
   // Checks for existing session in storage

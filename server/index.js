@@ -73,8 +73,7 @@ io.use( (socket, next) => {
   socket.on('session_created', async (username) => {
     try {
       let hash = await argon2.hash(username);
-      socket.sessionID = hash;
-      socket.handshake.auth.user.sessionID = hash;
+      saveSession(hash, user)
     } catch (e) {
       console.error(e.message);
     }
