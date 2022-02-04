@@ -3,15 +3,42 @@ import { AppContext } from '../../../App.jsx';
 import './FinalResultsModal.css';
 
 const FinalResultsModal = ({ setOpenFinal }) => {
-  const { round, setRound, socket, players, setStart } = useContext(AppContext);
+  const { setRound, players, setStart, QM, winner } = useContext(AppContext);
   return (
     <div className='finalModal'>
       <div className='finalContainer'>
         <h3 className='finalTitle'>Final Results:</h3>
-
+        <div>{winner === 'fraud' ? 'The Fraud Wins!' : 'The Artists Win!'}</div>
         <div className='finalScore'>
-          <div className='finalText'>Real Fraud Monet: Playername</div>
-          <table>PlayerScore List or Table</table>
+          <table>
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Role</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {players.length > 0
+                ? players.map((player) => {
+                    return (
+                      <tr>
+                        <td>{player.username}</td>
+                        <td>{player.fraud ? 'FRAUD' : 'Player'}</td>
+                        <td>{player.score}</td>
+                      </tr>
+                    );
+                  })
+                : null}
+              {QM.id ? (
+                <tr>
+                  <td>{QM.username}</td>
+                  <td>Question Master</td>
+                  <td>{QM.score}</td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
         </div>
         <button
           className='finalCloseBtn'

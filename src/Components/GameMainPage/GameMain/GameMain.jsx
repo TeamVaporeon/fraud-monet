@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './GameMain.css';
@@ -20,8 +18,7 @@ import { hostSocket } from '../../CreateRoom';
 const GameMain = () => {
   const ref = useRef(null);
   const navigate = useNavigate();
-  const { round, setRound, socket, users, currentUser } =
-    useContext(AppContext);
+  const { round, socket, currentUser } = useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(() => {
     if (hostSocket.id) {
@@ -49,22 +46,21 @@ const GameMain = () => {
 
   useEffect(() => {
     // If room exists, continue, else server will redirect
-    axios.get(`/room${window.location.pathname}`)
-      .catch(err => {
-        navigate('/');
-      });
+    axios.get(`/room${window.location.pathname}`).catch((err) => {
+      navigate('/');
+    });
     socket.on('start', () => {
       setOpenFinal(false);
       setOpenResults(false);
       setOpenRules(false);
       setOpenUsername(false);
       setOpenVote(false);
-    })
+    });
   }, []);
 
   return (
     <div className='game'>
-      <h1 className='game_logo'>Fraud Monet </h1>
+      <img className='game_main_logo' src='./images/fm_logo.jpg' alt='logo' />
       {openRules ? <Rules setOpenRules={setOpenRules} /> : null}
       {openUsername ? (
         <UsernameModal setOpenUsername={setOpenUsername} socket={socket} />
@@ -74,16 +70,15 @@ const GameMain = () => {
         <div>
           <GameLogic />
         </div>
-        <div className='game_round'>
-          <div>Round: {round}</div>
-          {/* <span>buttons for tests, will delete later</span> */}
-          <button onClick={() => setRound(round + 1)}>
-            Modal Test Round+1
-          </button>
+        <div
+          style={{ fontSize: '1.5rem', fontWeight: 'bold' }}
+          className='game_round'
+        >
+          <div>Round: {round !== 2 ? round + 1 : 0}</div>
         </div>
-        <div className='game_rules' onClick={() => setOpenRules(true)}>
+        <button className='game_rules' onClick={() => setOpenRules(true)}>
           Rules
-        </div>
+        </button>
       </div>
       <div className='game_body'>
         {openVote ? (

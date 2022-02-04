@@ -14,7 +14,7 @@ const defaultColors = {
   '#EA9F4E': true, //Sandy Brown
   '#a52a2a': true, //Brown
   '#ff0000': true, //Red
-  '#ffa500': true, //Orange
+  '#ff6600': true, //Orange
   '#FBE89B': true, //Green Yellow Crayola
   '#ffff00': true, //Yellow
   '#00ff00': true, //Lime
@@ -68,8 +68,8 @@ app.get('/usernames/:id', (req, res) => {
     res.json(rooms[room].users);
   } else {
     res.status(404).send();
-  };
-})
+  }
+});
 
 // Implementing Express Server With Socket.io
 const httpServer = createServer(app);
@@ -122,9 +122,11 @@ io.on('connection', (socket) => {
           },
           votes: {},
           turns: 0,
+          drawing: []
         };
         socket.emit('start', rooms[socket.room]);
       }
+
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
@@ -134,6 +136,8 @@ io.on('connection', (socket) => {
       socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
     }
+    socket.emit('load_drawing', rooms[socket.room].drawing);
+    socket.broadcast.to(socket.room).emit('load_drawing', rooms[socket.room].drawing);
   });
 
   // Emit handlers
@@ -154,6 +158,7 @@ io.on('connection', (socket) => {
 
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
+    rooms[socket.room].drawing.push(mouseData);
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
@@ -174,6 +179,23 @@ io.on('connection', (socket) => {
       rooms[socket.room].votes[data] = 1;
     }
     io.to(socket.room).emit('get_votes', rooms[socket.room].votes);
+  });
+
+  socket.on('score', (data) => {
+    if (data.winner === 'fraud') {
+      data.users.forEach((user) => {
+        if (user.fraud || user.role === 'qm') {
+          user.score += 2;
+        }
+      });
+    } else {
+      data.users.forEach((user) => {
+        if (user.role === 'player' && !user.fraud) {
+          user.score += 1;
+        }
+      });
+    }
+    io.to(socket.room).emit('users', data.users);
   });
 
   socket.on('new_game', () => {
@@ -214,7 +236,6 @@ io.on('connection', (socket) => {
       let i = Math.floor(Math.random() * players.length);
       if (players[i].role === 'player') {
         players[i].fraud = true;
-        console.log(players[i]);
         x = false;
       }
     }
@@ -223,6 +244,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('gameStart', () => {
+    rooms[socket.room].drawing = []
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
@@ -230,8 +252,8 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('round', req);
   });
 
-  socket.on('judged', () => {
-    io.to(socket.room).emit('judged');
+  socket.on('judged', (char) => {
+    io.to(socket.room).emit('judged', char === 'Y' ? 'fraud' : 'player');
   });
 
   /* ----- CHATROOM Code ----- */
@@ -248,8 +270,8 @@ io.on('connection', (socket) => {
     } else if (rooms[socket.room]) {
       if (rooms[socket.room].users[socket.user.username]) {
         delete rooms[socket.room].users[socket.user.username];
-      };
-    };
+      }
+    }
     console.log(`${socket.id} disconnected`);
   });
 

@@ -17,6 +17,7 @@ const PlayerList = ({setOpenPrompt}) => {
   } = useContext(AppContext);
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
+  const [isShown, scoreIsShown] = useState(false);
 
   const handleStart = (e) => {
     if(currentUser.role === 'qm') {
@@ -78,28 +79,52 @@ const PlayerList = ({setOpenPrompt}) => {
                     <div
                       style={{ background: player.color }}
                       key={player.id + '2'}
+                      onMouseEnter={() => scoreIsShown(true)}
+                      onMouseLeave={() => scoreIsShown(false)}
                     >
                       <span key={player.id}>
                         {`${player.username} ${player.host ? '👑' : ''}`}
+                        {isShown && player.score <= 5 ? (
+                          <span style={{ marginLeft: '5px' }}>
+                            {'🏆'.repeat(player.score)}
+                          </span>
+                        ) : isShown && player.score > 5 ? (
+                          <span style={{ marginLeft: '5px' }}>
+                            {'🏆 x ' + player.score}
+                          </span>
+                        ) : null}
                       </span>
-                      {player.id === currentUser.id ? (
-                        <span
-                          key={player.id + '3'}
-                          onClick={(e) => update(e, 'spectator')}
-                          color='#000'
-                          style={{ float: 'right', marginRight: '5px' }}
-                        >
-                          ❌
-                        </span>
-                      ) : (
-                        currentUser.host && (
+                      {player.id === currentUser.id && !gameStarted ? (
+                        <span>
                           <span
                             key={player.id + '4'}
-                            // onClick={kick}
-                            playerid={player.id}
-                            style={{ float: 'right', marginRight: '5px' }}
+                            onClick={(e) => update(e, 'spectator')}
+                            color='#000'
+                            style={{
+                              float: 'right',
+                              marginRight: '5px',
+                              cursor: 'pointer',
+                            }}
                           >
                             ❌
+                          </span>
+                        </span>
+                      ) : (
+                        currentUser.host &&
+                        !gameStarted && (
+                          <span>
+                            <span
+                              key={player.id + '6'}
+                              // onClick={kick}
+                              playerid={player.id}
+                              style={{
+                                float: 'right',
+                                marginRight: '5px',
+                                cursor: 'pointer',
+                              }}
+                            >
+                              ❌
+                            </span>
                           </span>
                         )
                       )}
@@ -162,6 +187,7 @@ const PlayerList = ({setOpenPrompt}) => {
         </div>
         {colorModal ? (
           <div className='colorModal'>
+            <div>Select your color:</div>
             {Object.keys(availColors).map((color) => {
               return availColors[color] ? (
                 <svg key={color + 'a'} width='20' height='20'>
@@ -214,19 +240,19 @@ const PlayerList = ({setOpenPrompt}) => {
           ) : null}
         </Stack>
         {QM.id ? (
-          <span>
-            {`Current QM: ${QM.username}`}
-            {QM.id === currentUser.id ? (
+          <div className='question-master'>
+            {`QM: ${QM.username}`}
+            {QM.id === currentUser.id && !gameStarted ? (
               <span
                 key={QM.id + '3'}
                 onClick={(e) => update(e, 'spectator')}
                 color='#000'
-                style={{ float: 'right', marginRight: '5px' }}
+                style={{ cursor: 'pointer' }}
               >
                 ❌
               </span>
             ) : null}
-          </span>
+          </div>
         ) : null}
       </div>
     </>
