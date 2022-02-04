@@ -123,6 +123,7 @@ io.on('connection', (socket) => {
           votes: {},
           turns: 0,
           drawing: [],
+          started: false,
         };
         socket.emit('start', rooms[socket.room]);
       }
@@ -134,11 +135,14 @@ io.on('connection', (socket) => {
       let messages = rooms[socket.room].chats;
       socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
-    }
-    socket.emit('load_drawing', rooms[socket.room].drawing);
-    socket.broadcast
-      .to(socket.room)
-      .emit('load_drawing', rooms[socket.room].drawing);
+      if (rooms[socket.room].started) {
+        socket.emit('gameStart');
+      };
+      socket.emit('load_drawing', rooms[socket.room].drawing);
+      socket.broadcast
+        .to(socket.room)
+        .emit('load_drawing', rooms[socket.room].drawing);
+    };
   });
 
   // Emit handlers
@@ -159,13 +163,14 @@ io.on('connection', (socket) => {
 
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
-    rooms[socket.room].drawing.push(mouseData);
+    if (rooms[socket.room]) {
+      rooms[socket.room].drawing.push(mouseData);
+    };
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
   socket.on('turn', (turn) => {
     rooms[socket.room].turns++;
-    // if (rooms[socket.room].turns % players)
     socket.to(socket.room).emit('turn', turn);
   });
 
@@ -209,6 +214,7 @@ io.on('connection', (socket) => {
       category: '',
       prompt: '',
     };
+    rooms[socket.room].started = false;
   });
 
   socket.on('prompt', (data) => {
@@ -238,11 +244,12 @@ io.on('connection', (socket) => {
       if (p.role === 'player') {
         if (p.fraud) {
           p.fraud = false;
-        }
+        };
         currentPlayers.push(p);
       } else {
+        p.fraud = false;
         spectators.push(p);
-      }
+      };
     });
     let i = Math.floor(Math.random() * currentPlayers.length);
     currentPlayers[i].fraud = true;
@@ -252,6 +259,7 @@ io.on('connection', (socket) => {
 
   socket.on('gameStart', () => {
     rooms[socket.room].drawing = [];
+    rooms[socket.room].started = true;
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
