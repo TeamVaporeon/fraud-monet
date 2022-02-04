@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
-const PlayerList = ({setOpenPrompt}) => {
+const PlayerList = ({ setOpenPrompt }) => {
   const {
     users,
     currentUser,
@@ -20,7 +20,7 @@ const PlayerList = ({setOpenPrompt}) => {
   const [isShown, scoreIsShown] = useState(false);
 
   const handleStart = (e) => {
-    if(currentUser.role === 'qm') {
+    if (currentUser.role === 'qm') {
       setOpenPrompt(true);
     } else {
       setStart(true);
@@ -188,40 +188,42 @@ const PlayerList = ({setOpenPrompt}) => {
         {colorModal ? (
           <div className='colorModal'>
             <div>Select your color:</div>
-            {Object.keys(availColors).map((color) => {
-              return availColors[color] ? (
-                <svg key={color + 'a'} width='20' height='20'>
-                  <rect
-                    key={color}
+            <div>
+              {Object.keys(availColors).map((color) => {
+                return availColors[color] ? (
+                  <svg key={color + 'a'} width='20' height='20'>
+                    <rect
+                      key={color}
+                      width='20'
+                      height='20'
+                      color={color}
+                      style={{
+                        fill: color,
+                        cursor: 'pointer',
+                      }}
+                      onClick={(e) => update(e, 'player')}
+                    ></rect>
+                  </svg>
+                ) : (
+                  <svg
+                    key={color + 'a'}
                     width='20'
                     height='20'
-                    color={color}
-                    style={{
-                      fill: color,
-                      cursor: 'pointer',
-                    }}
-                    onClick={(e) => update(e, 'player')}
-                  ></rect>
-                </svg>
-              ) : (
-                <svg
-                  key={color + 'a'}
-                  width='20'
-                  height='20'
-                  style={{ opacity: '30%' }}
-                >
-                  <rect
-                    key={color}
-                    width='20'
-                    height='20'
-                    color={color}
-                    style={{
-                      fill: color,
-                    }}
-                  ></rect>
-                </svg>
-              );
-            })}
+                    style={{ opacity: '30%' }}
+                  >
+                    <rect
+                      key={color}
+                      width='20'
+                      height='20'
+                      color={color}
+                      style={{
+                        fill: color,
+                      }}
+                    ></rect>
+                  </svg>
+                );
+              })}
+            </div>
           </div>
         ) : null}
         <Stack className='join-qm-button' direction='horizontal' gap={2}>
