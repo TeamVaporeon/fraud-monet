@@ -1,62 +1,63 @@
 const { InMemorySessionStore } = require('../sessionStore');
 const sessionStore = new InMemorySessionStore();
 
-module.exports = {
-  sessionStore: sessionStore,
-  initializeUser: function(socket, url, room, callback) {
-    let sessionId = socket.handshake.auth.sessionId;
-    // get user info from socket.hand.auth.user
+// Set or get user data for the socket
+// socket comes with a session id from the client
+// if session id is null it's the client's first time connecting
+// (sessionID will be created in this case in middleware)
+  const initializeUser = function(socket) {
+    let sessionId = socket.handshake.auth.sessionID;
     let user = socket.handshake.auth.user;
-    if (sessionId) {
-      // Get user info from session store
-      this.checkForSession(sessionId, (e, userInfo) => {
-        if (e) callback(e, null);
-        // get room id from session store
-        if (userInfo) {
-          // attach socket to that room
-          socket.room = userInfo.room;
-          callback(null, socket);
-        } else {
-          this.saveUser(sessionId, user, (e, sessionid, user) => {
-            if (e) callback(e, null);
-            socket.handshake.auth.sessionId = sessionid;
-            socket.handshake.auth.user = user;
-            callback(null, socket);
-          })
-        }
-      })
-    } else {
-      this.saveUser(null, user, (e, sessionid, user) => {
-        if (e) callback(e, null);
-        socket.handshake.auth.sessionId = sessionid;
-        socket.handshake.auth.user = user;
-        callback(null, socket);
-      })
-    }
 
-  },
-  checkForSession: function(sessionId, callback) {
-    let user = sessionStore.findSession(sessionId);
-    try {
-      if (user) {
-        callback(null, user);
+    user.id = socket.id;
+
+    if (sessionId) {
+
+      let userSession = checkForSession(sessionId)
+
+      if (userSession) {
+        socket.user = userSession;
+        socket.handshake.auth.user = userSession;
+        socket.room = userSession.roomID
+        return socket;
       } else {
-        callback(null, null);
+        socket.user = user;
+        socket.handshake.auth.user = user;
+        socket.room = user.roomID;
+        saveUser(sessionId, user);
+        return socket;
       }
-    } catch (err) {
-      callback(err, null)
+      socket.user.sessionID = sessionID;
+      socket.sessionID = sessionID;
+      socket.handshake.auth.sessionID = sessionID;
     }
-  },
-  saveUser: function(sessionId, user, callback) {
+    return socket;
+  }
+
+  // Save user as new session
+  const saveUser = function(sessionId, user) {
+    // If sessionId exists then use that as key
     if (sessionId && user) {
-      // store user info in sessionStore using socket.auth.sessionId
       sessionStore.saveSession(sessionId, user);
-      callback(null, sessionId, user);
+    // otherwise use the user's sessionId as key
     } else if (user) {
       sessionStore.saveSession(user.sessiondId, user);
-      callback(null, user.sessionId, user);
-    } else {
-      callback(new Error('Counl\'t save session'), null);
     }
-  },
+  }
+
+  // Checks for existing session in storage
+  const checkForSession = function(sessionId) {
+    let user = sessionStore.findSession(sessionId);
+    if (user) {
+      return user;
+    } else {
+      return null;
+    }
+  }
+
+module.exports = {
+  sessionStore: sessionStore,
+  saveUser: saveUser,
+  checkForSession: checkForSession,
+  initializeUser: initializeUser,
 }

@@ -8,29 +8,7 @@ const { saveUser, sessionStore, initializeUser } = require('./controllers/users'
 const cookieParser = require('cookie-parser');
 const cookie = require('cookie');
 const editFile = require('edit-json-file');
-const rooms = {};
-const defaultColors = {
-  '#FFCCEB': true, //Cotton Candy
-  '#DF6770': true, //Candy Pink
-  '#ff69b4': true, //Hot Pink
-  '#EA9F4E': true, //Sandy Brown
-  '#a52a2a': true, //Brown
-  '#ff0000': true, //Red
-  '#ffa500': true, //Orange
-  '#FBE89B': true, //Green Yellow Crayola
-  '#ffff00': true, //Yellow
-  '#00ff00': true, //Lime
-  '#B9E49F': true, //Granny Smith Apple
-  '#008000': true, //Green
-  '#73E5DA': true, //Turquoise
-  '#94B1E9': true, //Wild Blue Yonder
-  '#0000ff': true, //Blue
-  '#4b0082': true, //Indigo
-  '#800080': true, //Purple
-  '#AE97CD': true, //Wisteria
-  '#D9ABD6': true, //Lilac
-  '#A9B3BF': true, //Cadet Blue Crayola
-};
+const { defaultColors, rooms } = require('./data')
 
 // Data JSON File
 var file = editFile(path.join(__dirname, 'data.json'));
@@ -74,13 +52,25 @@ const io = new Server(httpServer, {
   },
 });
 
-io.on('connection', (socket) => {
-  socket.room = url;
-  socket.join(socket.room);
-  socket.user ? socket.user.id = socket.id : socket.user = {};
-  console.log(`Socket Connected With Id: `, socket.id);
+io.use( (socket, next) => {
+  initializeUser(socket);
+  let user = socket.handshake.auth.user;
+  socket.on('session_created', async (username) => {
+    try {
+      let hash = await argon2.hash(username);
+      socket.sessionID = hash;
+      socket.handshake.auth.user.sessionID = hash;
+    } catch (e) {
+      console.error(e.message);
+    }
+  });
+  socket.emit('user_object', user);
+  next();
+})
 
-  saveUser(socket)
+io.on('connection', (socket) => {
+  // socket.user ? socket.user.id = socket.id : socket.user = {};
+  console.log(`Socket Connected With Id: `, socket.id);
 
   // Print any event received by Client
   socket.onAny((e, ...args) => {
@@ -89,11 +79,9 @@ io.on('connection', (socket) => {
 
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
-    rooms[socket.room].users = [];
-    initializeUser(socket, url, rooms[url], (e, sock) => {
-      if (e) console.error(e.message);
-      socket = sock;
-    });
+    socket.url = url;
+    socket.join(socket.room);
+    let users = [];
 
     let userSockets = await io.in(socket.room).fetchSockets();
     userSockets.forEach((sock) => {

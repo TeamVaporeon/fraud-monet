@@ -16,7 +16,7 @@ const UsernameModal = ({ setOpenUsername }) => {
     setParamsBody(temp);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     socket.auth = {
       user: {
@@ -29,9 +29,16 @@ const UsernameModal = ({ setOpenUsername }) => {
         score: 0,
       },
     };
-    let sessionID = localStorage.getItem('sessionID');
+    let sessionID = localStorage.getItem('sessionID', sessionID);
+    if (sessionID) {
+      socket.sessionID = sessionID;
+    } else {
+      socket.on('session_created', (hash) => {
+        socket.sessionID = hash;
+        localStorage.setItem('sessionID', hash);
+      })
+    }
     socket.connect();
-    socket.auth.sessionID = sessionID;
     socket.emit('joinRoom', window.location.pathname);
     setOpenUsername(false);
   };
