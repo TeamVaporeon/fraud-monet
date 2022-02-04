@@ -43,6 +43,8 @@ const Canvas = ({ thingy }) => {
     p5.background(255);
     p5.storeItem('turn', 0);
 
+    // canva.style('width', '100%');
+    // canva.style('height', '100%');
     canva.id('sketchpad');
 
     const save = p5.createButton('Download Canvas').parent(canvasParentRef);
