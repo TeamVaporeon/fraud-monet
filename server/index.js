@@ -296,7 +296,7 @@ io.on('connection', (socket) => {
 });
 
 // Starting The Server That Has Express and Socket.io
-const port = 8080;
-httpServer.listen(process.env.PORT || port, () => {
+const port = process.env.PORT || 8080;
+httpServer.listen(port, () => {
   console.log(`Server listening at port ${port}`);
 });
