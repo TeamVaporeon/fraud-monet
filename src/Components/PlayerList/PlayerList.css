@@ -46,6 +46,11 @@
 
 .join-start-buttons {
   margin-top: 2%;
+  size: 32px;
+}
+
+.join-qm-button {
+  size: 32px;
 }
 
 .playercount-and-buttons {
@@ -118,4 +123,9 @@
   border-radius: 50%;
   border: 1px solid #263238;
   margin: 0.25em;
+}
+
+.qm-btn {
+  height: 32px;
+  font-size: 1vw;
 }

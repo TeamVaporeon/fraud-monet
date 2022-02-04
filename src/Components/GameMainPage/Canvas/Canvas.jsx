@@ -63,8 +63,8 @@ const Canvas = ({ thingy }) => {
         p5.stroke(item.color);
         p5.strokeWeight(10);
         p5.line(item.x, item.y, item.px, item.py);
-      })
-    })
+      });
+    });
 
     canva.mouseReleased(() => {
       let turn = p5.getItem('turn');
@@ -149,6 +149,7 @@ const Canvas = ({ thingy }) => {
     //draw and emitting functions
     if (
       userWithId &&
+      players[p5.getItem('turn')] &&
       userWithId.id === players[p5.getItem('turn')].id &&
       gameStarted &&
       round < 2
