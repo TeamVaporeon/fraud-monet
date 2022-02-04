@@ -233,7 +233,7 @@ io.on('connection', (socket) => {
     let currentPlayers = [];
     let spectators = [];
     players.forEach(p => {
-      if (p.role === 'player' || p.role === 'qm') {
+      if (p.role === 'player') {
         if (p.fraud) {
           p.fraud = false;
         };
