@@ -16,20 +16,31 @@ const sessionStore = new InMemorySessionStore();
       let userSession = checkForSession(sessionId)
 
       if (userSession) {
+        // Assign user to socket everywhere it needs to be
         socket.user = userSession;
         socket.handshake.auth.user = userSession;
         socket.room = userSession.roomID
+
+        // Set sessionId everywhere it needs to be
+        socket.user.sessionID = sessionId;
+        socket.sessionID = sessionId;
+        socket.handshake.auth.sessionID = sessionId;
+
         return socket;
       } else {
+        // Assign user to socket everywhere it needs to be
         socket.user = user;
         socket.handshake.auth.user = user;
         socket.room = user.roomID;
+
+        // Set sessionId everywhere it needs to be
+        socket.user.sessionID = sessionId;
+        socket.sessionID = sessionId;
+        socket.handshake.auth.sessionID = sessionId;
+
         saveUser(sessionId, user);
         return socket;
       }
-      socket.user.sessionID = sessionID;
-      socket.sessionID = sessionID;
-      socket.handshake.auth.sessionID = sessionID;
     }
     return socket;
   }

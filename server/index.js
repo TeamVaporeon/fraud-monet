@@ -55,6 +55,7 @@ const io = new Server(httpServer, {
 io.use( (socket, next) => {
   initializeUser(socket);
   let user = socket.handshake.auth.user;
+
   socket.on('session_created', async (username) => {
     try {
       let hash = await argon2.hash(username);
@@ -105,6 +106,7 @@ io.on('connection', (socket) => {
       }
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
+      socket.emit('', );
     } else if (rooms[socket.room]) {
       let messages = rooms[socket.room].chats;
       socket.emit('messages_for_new_users', messages);
@@ -217,15 +219,13 @@ io.on('connection', (socket) => {
 
   // On user disconnecting
   socket.on('disconnect', async () => {
+    // CONSIDER ADDING SOCKET.CONNECT() HERE !!!!!!
     const matchingSockets = await io.in(socket.room).allSockets();
     const isDisconnected = matchingSockets.size === 0;
     if (isDisconnected) {
       socket.broadcast.emit('user disconnected', socket.userID);
       sessionStore.saveSession(socket.handshake.auth.sessionID, socket.handshake.auth.user);
     }
-    // if (socket.user.host) {
-    //   delete rooms[socket.room];
-    // }
     console.log(`${socket.id} disconnected`);
   });
 

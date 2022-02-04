@@ -115,6 +115,7 @@ function App() {
       );
     }
   }, [users]);
+
   socket.on('user_object', (user) => {
     setCurrentUser(user);
   });

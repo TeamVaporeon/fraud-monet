@@ -33,10 +33,7 @@ const UsernameModal = ({ setOpenUsername }) => {
     if (sessionID) {
       socket.sessionID = sessionID;
     } else {
-      socket.on('session_created', (hash) => {
-        socket.sessionID = hash;
-        localStorage.setItem('sessionID', hash);
-      })
+      socket.emit('session_created', socket.auth.user.username);
     }
     socket.connect();
     socket.emit('joinRoom', window.location.pathname);
