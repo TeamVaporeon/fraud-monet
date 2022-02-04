@@ -36,7 +36,11 @@ app.get('/:id', (req, res) => {
 app.get('/room/:id', (req, res) => {
   let room = `/${req.params.id}`;
   if (rooms[room]) {
-    res.status(200).send(rooms[room]);
+    try {
+      res.status(200).send(rooms[room]);
+    } catch(e) {
+      console.error(e.message);
+    }
   } else {
     console.log('No room', rooms);
     res.status(301).send();
@@ -80,7 +84,6 @@ io.use( (socket, next) => {
 })
 
 io.on('connection', (socket) => {
-  // socket.user ? socket.user.id = socket.id : socket.user = {};
   console.log(`Socket Connected With Id: `, socket.id);
 
   // Print any event received by Client
