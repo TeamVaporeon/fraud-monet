@@ -63,8 +63,8 @@ const Canvas = ({ thingy }) => {
         p5.stroke(item.color);
         p5.strokeWeight(10);
         p5.line(item.x, item.y, item.px, item.py);
-      })
-    })
+      });
+    });
 
     canva.mouseReleased(() => {
       let turn = p5.getItem('turn');
