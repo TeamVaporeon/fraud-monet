@@ -21,12 +21,13 @@ const PlayerList = ({setOpenPrompt}) => {
   const handleStart = (e) => {
     if(currentUser.role === 'qm') {
       setOpenPrompt(true);
+    } else {
+      setStart(true);
+      socket.emit('start', users);
+      socket.emit('gameStart');
+      socket.emit('round', 0);
+      socket.emit('turn', 0);
     }
-    // setStart(true);
-    // socket.emit('start', users);
-    // socket.emit('gameStart');
-    // socket.emit('round', 0);
-    // socket.emit('turn', 0);
   };
 
   useEffect(() => {
