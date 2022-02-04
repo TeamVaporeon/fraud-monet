@@ -4,9 +4,8 @@ const argon2 = require('argon2');
 const express = require('express');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
+const { saveUser, sessionStore } = require('./controllers/users');
 const cookieParser = require('cookie-parser');
-const { InMemorySessionStore } = require('./sessionStore');
-const sessionStore = new InMemorySessionStore();
 const cookie = require('cookie');
 const editFile = require('edit-json-file');
 // const session = require('express-session');
@@ -82,63 +81,11 @@ io.on('connection', (socket) => {
   console.log(`Socket Connected With Id: `, socket.id);
   let users = [];
 
-  // Socket middleware
-  socket.use(([e, ...args], next) => {
-    const user = Object.keys(socket.user).length === 0 ? socket.handshake.auth.user : socket.user;
-    if (user) {
-      user.id = socket.id;
-    }
-    // Get session id
-    const sessionID = socket.handshake.auth.sessionID;
-
-    if (sessionID) {
-      // Check for session
-      const session = sessionStore.findSession(sessionID);
-      // Assign user from matching session
-      if (session) {
-        socket.user = session;
-        socket.user.sessionID = sessionID;
-        socket.sessionID = sessionID;
-        socket.user.id = socket.id;
-      // Save the session and assign the user as user
-      } else {
-        sessionStore.saveSession(socket.handshake.auth.sessionID, user);
-        socket.user = user;
-      }
-      socket.emit('user_object', user);
-      return next();
-    }
-    const username = socket.handshake.auth.user.username;
-    if (!username) {
-      return next(new Error('Invalid username'));
-    }
-
-    const hashIDs = async () => {
-      try {
-        const hash = await argon2.hash(username)
-        socket.sessionID = hash;
-        socket.userID = hash;
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    hashIDs();
-    socket.username = username;
-    socket.user = user;
-    socket.emit('user_object', user);
-    if (rooms[user.roomID]) {
-
-    } else {
-      socket.emit('noRoom');
-    };
-    next();
-  });
+  saveUser(socket)
 
   // Print any event received by Client
   socket.onAny((e, ...args) => {
     console.log(e, args);
-    console.log(sessionStore);
   });
 
   // Join a room based on room id
@@ -317,3 +264,7 @@ const port = 8080;
 httpServer.listen(port, () => {
   console.log(`Server listening at port ${port}`);
 });
+
+module.exports = {
+  io: io
+}
