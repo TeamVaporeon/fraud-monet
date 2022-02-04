@@ -15,8 +15,7 @@
   --widthPLA: 100%;
   --widthPLB: calc(var(--widthPLA) - 16rem);
   width: calc(var(--widthPLB) / 4);
-  height: 80vh;
-  /* max-height: 600px; */
+  height: 620px;
 }
 
 .voteContainer {
@@ -63,4 +62,8 @@
 .voteSubmitBtn:hover {
   transform: scale(1.1);
   color: black;
+}
+
+.vote_names {
+  text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
