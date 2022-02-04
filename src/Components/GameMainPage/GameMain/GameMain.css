@@ -25,13 +25,24 @@
 .game_body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 620px;
+  grid-auto-rows: 80vh;
   grid-template-areas: 'a b b c';
   justify-content: center;
   gap: 2rem;
   margin: 0 5rem;
   margin-bottom: 5rem;
+  max-height: 500px;
+  /* height: 60vh; */
 }
+
+/* @media (max-width: 850px) {
+  .game_body {
+    grid-auto-flow: column;
+    grid-template-columns: repeat(4, 50%);
+    grid-template-areas: 'a b b c';
+    height: 60vh;
+  }
+} */
 
 .game_players {
   grid-area: a;
@@ -50,12 +61,29 @@
   background-color: #fff;
 }
 
+.game_main_logo {
+  margin-top: 1rem;
+  width: 15%;
+  height: 100%;
+}
+
+.game_main_logo:hover {
+  transform: scale(1.1);
+}
+
 .game_rules {
-  cursor: pointer;
-  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 5px 15px;
+  font-size: 20px;
   font-weight: bold;
+  color: rgb(72, 20, 114);
+  background-color: rgb(155, 78, 155);
+  border-radius: 10%;
+  border: solid;
+  cursor: pointer;
 }
 
 .game_rules:hover {
   transform: scale(1.2);
+  color: black;
 }

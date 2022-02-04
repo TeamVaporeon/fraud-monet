@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './GameMain.css';
@@ -10,6 +8,7 @@ import UsernameModal from '../UsernameModal/UsernameModal';
 import Rules from '../Rules/Rules';
 import FinalResultsModal from '../FinalResultsModal/FinalResultsModal';
 import ResultsModal from '../ResultsModal/ResultsModal';
+import PromptModal from '../PromptModal/PromptModal.jsx';
 import Canvas from '../Canvas/Canvas.jsx';
 import Vote from '../Vote/Vote';
 import axios from 'axios';
@@ -19,8 +18,7 @@ import { hostSocket } from '../../CreateRoom';
 const GameMain = () => {
   const ref = useRef(null);
   const navigate = useNavigate();
-  const { round, setRound, socket, users, currentUser } =
-    useContext(AppContext);
+  const { round, socket, currentUser } = useContext(AppContext);
 
   const [openUsername, setOpenUsername] = useState(() => {
       if (socket.id && socket.auth.user.host) {
@@ -33,6 +31,8 @@ const GameMain = () => {
   const [openResults, setOpenResults] = useState(false);
   const [openVote, setOpenVote] = useState(false);
   const [openFinal, setOpenFinal] = useState(false);
+  const [openPrompt, setOpenPrompt] = useState(false);
+
 
   socket.on('noRoom', () => {
     // Render a room doesn't exist error page
@@ -57,33 +57,42 @@ const GameMain = () => {
           socket.emit('session', sessionID);
           socket.connect();
         }
+        console.log('GAMEMAIN data', data);
       })
       .catch(err => {
         navigate('/');
       });
+
+    socket.on('start', () => {
+      setOpenFinal(false);
+      setOpenResults(false);
+      setOpenRules(false);
+      setOpenUsername(false);
+      setOpenVote(false);
+    });
   }, []);
 
   return (
     <div className='game'>
-      <h1 className='game_logo'>Fraud Monet </h1>
+      <img className='game_main_logo' src='./images/fm_logo.jpg' alt='logo' />
       {openRules ? <Rules setOpenRules={setOpenRules} /> : null}
       {openUsername ? (
         <UsernameModal setOpenUsername={setOpenUsername} socket={socket} />
       ) : null}
+      {openPrompt ? <PromptModal setOpenPrompt={setOpenPrompt} socket={socket}/> : null}
       <div className='game_topbar'>
         <div>
           <GameLogic />
         </div>
-        <div className='game_round'>
-          <div>Round: {round}</div>
-          {/* <span>buttons for tests, will delete later</span> */}
-          <button onClick={() => setRound(round + 1)}>
-            Modal Test Round+1
-          </button>
+        <div
+          style={{ fontSize: '1.5rem', fontWeight: 'bold' }}
+          className='game_round'
+        >
+          <div>Round: {round !== 2 ? round + 1 : 0}</div>
         </div>
-        <div className='game_rules' onClick={() => setOpenRules(true)}>
+        <button className='game_rules' onClick={() => setOpenRules(true)}>
           Rules
-        </div>
+        </button>
       </div>
       <div className='game_body'>
         {openVote ? (
@@ -99,7 +108,7 @@ const GameMain = () => {
           />
         ) : null}
         <div className='game_players'>
-          <PlayerList />
+          <PlayerList setOpenPrompt={setOpenPrompt}/>
         </div>
         <div className='game_canvas' ref={ref}>
           {ref.current ? <Canvas thingy={ref.current} /> : null}

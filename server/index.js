@@ -42,8 +42,16 @@ app.get('/room/:id', (req, res) => {
       console.error(e.message);
     }
   } else {
-    console.log('No room', rooms);
     res.status(301).send();
+  }
+});
+
+app.get('/usernames/:id', (req, res) => {
+  let room = `/${req.params.id}`;
+  if (rooms[room]) {
+    res.json(rooms[room].users);
+  } else {
+    res.status(404).send();
   }
 });
 
@@ -112,18 +120,31 @@ io.on('connection', (socket) => {
           prompt: '',
           colors: Object.assign({}, defaultColors),
           chats: [],
+          users: { [socket.user.username]: 1 },
+          customPrompt: {
+            isCustom: false,
+            category: '',
+            prompt: '',
+          },
           votes: {},
           turns: 0,
+          drawing: [],
         };
         socket.emit('start', rooms[socket.room]);
       }
+
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
     } else if (rooms[socket.room]) {
+      rooms[socket.room].users[socket.user.username] = 1;
       let messages = rooms[socket.room].chats;
       socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
-    };
+    }
+    socket.emit('load_drawing', rooms[socket.room].drawing);
+    socket.broadcast
+      .to(socket.room)
+      .emit('load_drawing', rooms[socket.room].drawing);
   });
 
   socket.on('session', (sessionID) => {
@@ -134,6 +155,7 @@ io.on('connection', (socket) => {
   // Emit handlers
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
+    rooms[socket.room].drawing.push(mouseData);
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
@@ -156,20 +178,45 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('get_votes', rooms[socket.room].votes);
   });
 
+  socket.on('score', (data) => {
+    if (data.winner === 'fraud') {
+      data.users.forEach((user) => {
+        if (user.fraud || user.role === 'qm') {
+          user.score += 2;
+        }
+      });
+    } else {
+      data.users.forEach((user) => {
+        if (user.role === 'player' && !user.fraud) {
+          user.score += 1;
+        }
+      });
+    }
+    io.to(socket.room).emit('users', data.users);
+  });
+
   socket.on('new_game', () => {
     rooms[socket.room].category = '';
     rooms[socket.room].prompt = '';
     rooms[socket.room].votes = {};
     rooms[socket.room].turns = 0;
+    rooms[socket.room].customPrompt = {
+      isCustom: false,
+      category: '',
+      prompt: '',
+    };
   });
 
   socket.on('prompt', (data) => {
-    rooms[socket.room].category = data.category;
-    rooms[socket.room].prompt = data.prompt;
+    rooms[socket.room].customPrompt = {
+      isCustom: true,
+      category: data.category,
+      prompt: data.prompt,
+    };
   });
 
   socket.on('start', async (players) => {
-    if (!rooms[socket.room].category) {
+    if (!rooms[socket.room].customPrompt.isCustom) {
       const data = await file.toObject();
       let randCat = Math.floor(Math.random() * data.categories.length);
       let category = data.categories[randCat];
@@ -178,22 +225,29 @@ io.on('connection', (socket) => {
       rooms[socket.room].category = category;
       rooms[socket.room].prompt = prompt;
     } else {
-      console.log(`${socket.room} doesn't exist`);
+      rooms[socket.room].category = rooms[socket.room].customPrompt.category;
+      rooms[socket.room].prompt = rooms[socket.room].customPrompt.prompt;
     }
-    let x = true;
-    while (x) {
-      let i = Math.floor(Math.random() * players.length);
-      if (players[i].role === 'player') {
-        players[i].fraud = true;
-        console.log(players[i]);
-        x = false;
+    let currentPlayers = [];
+    let spectators = [];
+    players.forEach((p) => {
+      if (p.role === 'player') {
+        if (p.fraud) {
+          p.fraud = false;
+        }
+        currentPlayers.push(p);
+      } else {
+        spectators.push(p);
       }
-    }
-    io.to(socket.room).emit('users', players);
+    });
+    let i = Math.floor(Math.random() * currentPlayers.length);
+    currentPlayers[i].fraud = true;
+    io.to(socket.room).emit('users', [...currentPlayers, ...spectators]);
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
 
   socket.on('gameStart', () => {
+    rooms[socket.room].drawing = [];
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
   });
 
@@ -201,8 +255,8 @@ io.on('connection', (socket) => {
     io.to(socket.room).emit('round', req);
   });
 
-  socket.on('judged', () => {
-    io.to(socket.room).emit('judged');
+  socket.on('judged', (char) => {
+    io.to(socket.room).emit('judged', char === 'Y' ? 'fraud' : 'player');
   });
 
   /* ----- CHATROOM Code ----- */
@@ -214,12 +268,13 @@ io.on('connection', (socket) => {
 
   // On user disconnecting
   socket.on('disconnect', async () => {
-    // CONSIDER ADDING SOCKET.CONNECT() HERE !!!!!!
-    const matchingSockets = await io.in(socket.room).allSockets();
-    const isDisconnected = matchingSockets.size === 0;
-    if (isDisconnected) {
-      socket.broadcast.emit('user disconnected', socket.userID);
-      saveUser(socket.sessionID, socket.user);
+    saveUser(socket.sessionID, socket.user);
+    if (socket.user.host) {
+      delete rooms[socket.room];
+    } else if (rooms[socket.room]) {
+      if (rooms[socket.room].users[socket.user.username]) {
+        delete rooms[socket.room].users[socket.user.username];
+      }
     }
     console.log(`${socket.id} disconnected`);
   });
@@ -234,10 +289,14 @@ io.on('connection', (socket) => {
       }
       users.push(sock.user);
     });
-    try {
-      rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
-    } catch (err) {
-      console.log(err);
+    if (data.color !== '#000') {
+      try {
+        rooms[socket.room].colors[data.color] = !rooms[socket.room].colors[data.color];
+      } catch (err) {
+        console.log(err);
+        rooms[socket.room].colors[data.color] =
+          !rooms[socket.room].colors[data.color];
+      }
     }
     io.to(socket.room).emit('availColors', rooms[socket.room].colors);
     io.to(socket.room).emit('users', users);

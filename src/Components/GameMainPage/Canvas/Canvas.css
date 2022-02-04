@@ -1,6 +1,7 @@
 #sketchpad {
   border: solid;
   border-radius: 1.5%;
+  max-height: 500px;
 }
 
 #downloadBtn {
@@ -13,7 +14,7 @@
   border-radius: 8%;
   border: solid;
   display: block;
-  margin: 20px auto;
+  margin: 10px auto;
 }
 
 #downloadBtn:hover {

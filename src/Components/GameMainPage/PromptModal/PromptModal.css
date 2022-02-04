@@ -1,0 +1,78 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.prompts {
+  background-color: white;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  width: 880px;
+  max-width: 90%;
+  height: 600px;
+  max-height: 90%;
+  z-index: 1000;
+  color: black;
+  border-radius: 2%;
+  border: solid;
+}
+
+.promptContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px 20px 20px 20px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-around;
+}
+
+.promptTop {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.promptSubmitBtn {
+  width: 80%;
+  border-radius: 3px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.promptSubmitBtn:hover {
+  transform: scale(1.2);
+}
+
+.promptForm {
+  display: flex;
+  border-radius: 3px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.promptTitle {
+  margin-left: 2%;
+  font-size: 2.5rem;
+}
+
+p {
+  margin-top: 2%;
+  margin-bottom: 2%;
+  margin-left: 2%;
+  margin-right: 5%;
+}

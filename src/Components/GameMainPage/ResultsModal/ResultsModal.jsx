@@ -3,8 +3,17 @@ import './ResultsModal.css';
 import { AppContext } from '../../../App';
 
 const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
-  const { socket, players, guess, currentUser, QM, setMostVoted, mostVoted } =
-    useContext(AppContext);
+  const {
+    socket,
+    players,
+    guess,
+    currentUser,
+    QM,
+    setMostVoted,
+    mostVoted,
+    users,
+    setWinner,
+  } = useContext(AppContext);
   const [voteCount, setVoteCount] = useState({});
   const [fraud, revealFraud] = useState(false);
   const [judged, setJudged] = useState(false);
@@ -18,7 +27,8 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
         most.length > 1 ||
         most[0][0] !== players.filter((player) => player.fraud)[0].username
       ) {
-        setJudged(true);
+        socket.emit('score', { winner: 'fraud', users: users });
+        socket.emit('judged', 'Y');
       }
       setMostVoted(most);
       revealFraud(true);
@@ -28,14 +38,15 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
 
   const judgement = (e) => {
     if (e.target.value === 'Y') {
-      //Emit point scoring here, 2 pts for Fraud and QM
+      socket.emit('score', { winner: 'fraud', users: users });
     } else {
-      //Emit 1 pt for everyone except the Fraud and QM
+      socket.emit('score', { winner: 'player', users: users });
     }
-    socket.emit('judged');
+    socket.emit('judged', e.target.value);
   };
 
-  socket.on('judged', () => {
+  socket.on('judged', (data) => {
+    setWinner(data);
     setJudged(true);
   });
 
@@ -54,12 +65,11 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
               );
             })}
           </div>
-          {fraud ? (
-            <div style={{ color: 'red' }}>
+          {fraud && players.length > 0 ? (
+            <div style={{ color: 'crimson' }}>
               <span>
-                {`Fraud Monet: ${
-                  players.filter((player) => player.fraud)[0].username
-                }`}
+                {`Fraud Monet: ${players.filter((player) => player.fraud)[0].username
+                  }`}
               </span>
             </div>
           ) : null}
@@ -74,29 +84,21 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
         ) : null}
         {fraud ? <div>{`Fraud's Guess: ${guess}`}</div> : null}
         {fraud &&
-        (currentUser.role === 'qm' || (!QM.id && currentUser.host)) &&
-        mostVoted.length === 1 &&
-        mostVoted[0][0] ===
+          (currentUser.role === 'qm' || (!QM.id && currentUser.host)) &&
+          mostVoted.length === 1 &&
+          mostVoted[0][0] ===
           players.filter((player) => player.fraud)[0].username &&
-        !judged ? (
+          !judged ? (
           <div>
-            <span>Did the Fraud guess correctly?</span>
-            <button
-              value='Y'
-              variant='success'
-              className='judgeBtn'
-              onClick={judgement}
-            >
-              YES
-            </button>
-            <button
-              value='N'
-              variant='success'
-              className='judgeBtn'
-              onClick={judgement}
-            >
-              NO
-            </button>
+            <div>Did the Fraud guess correctly?</div>
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+              <button value='Y' className='resultsBtn' onClick={judgement}>
+                YES
+              </button>
+              <button value='N' className='resultsBtn' onClick={judgement}>
+                NO
+              </button>
+            </div>
           </div>
         ) : null}
         {fraud && judged ? (

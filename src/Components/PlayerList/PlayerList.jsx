@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import { AppContext } from '../../App';
 
-const PlayerList = () => {
+const PlayerList = ({ setOpenPrompt }) => {
   const {
     users,
     currentUser,
@@ -17,11 +17,18 @@ const PlayerList = () => {
   } = useContext(AppContext);
   const [spectators, setSpectators] = useState(null);
   const [colorModal, setColorModal] = useState(false);
+  const [isShown, scoreIsShown] = useState(false);
 
   const handleStart = (e) => {
-    setStart(true);
-    socket.emit('start', users);
-    socket.emit('gameStart');
+    if (currentUser.role === 'qm') {
+      setOpenPrompt(true);
+    } else {
+      setStart(true);
+      socket.emit('start', users);
+      socket.emit('gameStart');
+      socket.emit('round', 0);
+      socket.emit('turn', 0);
+    }
   };
 
   useEffect(() => {
@@ -72,28 +79,52 @@ const PlayerList = () => {
                     <div
                       style={{ background: player.color }}
                       key={player.id + '2'}
+                      onMouseEnter={() => scoreIsShown(true)}
+                      onMouseLeave={() => scoreIsShown(false)}
                     >
                       <span key={player.id}>
                         {`${player.username} ${player.host ? '👑' : ''}`}
+                        {isShown && player.score <= 5 ? (
+                          <span style={{ marginLeft: '5px' }}>
+                            {'🏆'.repeat(player.score)}
+                          </span>
+                        ) : isShown && player.score > 5 ? (
+                          <span style={{ marginLeft: '5px' }}>
+                            {'🏆 x ' + player.score}
+                          </span>
+                        ) : null}
                       </span>
-                      {player.id === currentUser.id ? (
-                        <span
-                          key={player.id + '3'}
-                          onClick={(e) => update(e, 'spectator')}
-                          color='#000'
-                          style={{ float: 'right', marginRight: '5px' }}
-                        >
-                          ❌
-                        </span>
-                      ) : (
-                        currentUser.host && (
+                      {player.id === currentUser.id && !gameStarted ? (
+                        <span>
                           <span
                             key={player.id + '4'}
-                            // onClick={kick}
-                            playerid={player.id}
-                            style={{ float: 'right', marginRight: '5px' }}
+                            onClick={(e) => update(e, 'spectator')}
+                            color='#000'
+                            style={{
+                              float: 'right',
+                              marginRight: '5px',
+                              cursor: 'pointer',
+                            }}
                           >
                             ❌
+                          </span>
+                        </span>
+                      ) : (
+                        currentUser.host &&
+                        !gameStarted && (
+                          <span>
+                            <span
+                              key={player.id + '6'}
+                              // onClick={kick}
+                              playerid={player.id}
+                              style={{
+                                float: 'right',
+                                marginRight: '5px',
+                                cursor: 'pointer',
+                              }}
+                            >
+                              ❌
+                            </span>
                           </span>
                         )
                       )}
@@ -156,40 +187,43 @@ const PlayerList = () => {
         </div>
         {colorModal ? (
           <div className='colorModal'>
-            {Object.keys(availColors).map((color) => {
-              return availColors[color] ? (
-                <svg key={color + 'a'} width='20' height='20'>
-                  <rect
-                    key={color}
+            <div>Select your color:</div>
+            <div>
+              {Object.keys(availColors).map((color) => {
+                return availColors[color] ? (
+                  <svg key={color + 'a'} width='20' height='20'>
+                    <rect
+                      key={color}
+                      width='20'
+                      height='20'
+                      color={color}
+                      style={{
+                        fill: color,
+                        cursor: 'pointer',
+                      }}
+                      onClick={(e) => update(e, 'player')}
+                    ></rect>
+                  </svg>
+                ) : (
+                  <svg
+                    key={color + 'a'}
                     width='20'
                     height='20'
-                    color={color}
-                    style={{
-                      fill: color,
-                      cursor: 'pointer',
-                    }}
-                    onClick={(e) => update(e, 'player')}
-                  ></rect>
-                </svg>
-              ) : (
-                <svg
-                  key={color + 'a'}
-                  width='20'
-                  height='20'
-                  style={{ opacity: '30%' }}
-                >
-                  <rect
-                    key={color}
-                    width='20'
-                    height='20'
-                    color={color}
-                    style={{
-                      fill: color,
-                    }}
-                  ></rect>
-                </svg>
-              );
-            })}
+                    style={{ opacity: '30%' }}
+                  >
+                    <rect
+                      key={color}
+                      width='20'
+                      height='20'
+                      color={color}
+                      style={{
+                        fill: color,
+                      }}
+                    ></rect>
+                  </svg>
+                );
+              })}
+            </div>
           </div>
         ) : null}
         <Stack className='join-qm-button' direction='horizontal' gap={2}>
@@ -208,19 +242,19 @@ const PlayerList = () => {
           ) : null}
         </Stack>
         {QM.id ? (
-          <span>
-            {`Current QM: ${QM.username}`}
-            {QM.id === currentUser.id ? (
+          <div className='question-master'>
+            {`QM: ${QM.username}`}
+            {QM.id === currentUser.id && !gameStarted ? (
               <span
                 key={QM.id + '3'}
                 onClick={(e) => update(e, 'spectator')}
                 color='#000'
-                style={{ float: 'right', marginRight: '5px' }}
+                style={{ cursor: 'pointer' }}
               >
                 ❌
               </span>
             ) : null}
-          </span>
+          </div>
         ) : null}
       </div>
     </>

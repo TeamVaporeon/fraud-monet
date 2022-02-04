@@ -70,19 +70,19 @@ const Chat = ({ socket, currentUser }) => {
         <input
           id='message-input'
           type='text'
-          placeholder={currentUser.role === 'player'
-            ? 'Message...'
-            : 'Chat disabled! Join game to enable.'
+          placeholder={currentUser.role === 'spectator'
+            ? 'Chat disabled! Join game to enable.'
+            : 'Message...'
           }
           aria-label='Message...'
           autoComplete='off'
-          disabled={currentUser.role === 'player' ? false : true}
+          disabled={currentUser.role === 'spectator' ? true : false}
           onKeyPress={(event) => {
             event.key === 'Enter' && sendMessage();
           }}
         />
         {
-          currentUser.role === 'player' &&
+          currentUser.role !== 'spectator' &&
           <button onClick={sendMessage}>&#9658;</button>
         }
       </div>
