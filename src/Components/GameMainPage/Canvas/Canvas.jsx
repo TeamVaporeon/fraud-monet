@@ -7,7 +7,7 @@ import './Canvas.css';
 let canva;
 
 const Canvas = ({ thingy }) => {
-  const { socket, users, setRound, round, currentUser, gameStarted, setStart } =
+  const { socket, players, setRound, round, currentUser, gameStarted, setStart } =
     useContext(AppContext);
   // const [turn, setTurn] = useState(0);
   const [userWithId, setUserWithId] = useState();
@@ -91,7 +91,7 @@ const Canvas = ({ thingy }) => {
     //draw and emitting functions
     if (
       userWithId &&
-      userWithId.id === users[p5.getItem('turn')].id &&
+      userWithId.id === players[p5.getItem('turn')].id &&
       gameStarted
     ) {
       var data = {
