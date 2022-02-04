@@ -55,7 +55,7 @@
 .logo_img {
   margin-top: 2%;
   width: 35%;
-  height: 35%;
+  height: auto;
 }
 
 .Form_username {
