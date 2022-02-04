@@ -1,3 +1,4 @@
+//-----DEPENDENCIES-----//
 const path = require('path');
 const cors = require('cors');
 const argon2 = require('argon2');
@@ -10,10 +11,10 @@ const cookie = require('cookie');
 const editFile = require('edit-json-file');
 const { defaultColors, rooms } = require('./data')
 
-// Data JSON File
+//-----DATA JSON FILE-----//
 var file = editFile(path.join(__dirname, 'data.json'));
 
-// Express Server
+//-----EXPRESS SERVER-----//
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('build'));
 
+//-----EXPRESS ENDPOINTS-----//
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '../build/index.html'));
 });
@@ -55,7 +57,7 @@ app.get('/usernames/:id', (req, res) => {
   }
 });
 
-// Implementing Express Server With Socket.io
+//-----SOCKET SERVER-----//
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
@@ -64,6 +66,7 @@ const io = new Server(httpServer, {
   },
 });
 
+//-----SOCKET MIDDLEWARE-----//
 io.use( (socket, next) => {
   socket = initializeUser(socket);
   let user = socket.handshake.auth.user;
@@ -90,15 +93,16 @@ io.use( (socket, next) => {
   next();
 })
 
+//-----INITIAL CONNECTION-----//
 io.on('connection', (socket) => {
   console.log(`Socket Connected With Id: `, socket.id);
 
-  // Print any event received by Client
+  //-----CLIENT EVENTS RECEIVED LOG-----//
   socket.onAny((e, ...args) => {
     console.log(e, args);
   });
 
-  // Join a room based on room id
+  //-----JOIN ROOM LISTENER-----//
   socket.on('joinRoom', async (url) => {
     socket.url = url;
     socket.room = url;
@@ -110,7 +114,7 @@ io.on('connection', (socket) => {
       users.push(sock.user);
     });
 
-    // Join room emitters
+    //-----JOIN ROOM EMITTERS-----//
     socket.emit('users', users);
     socket.broadcast.to(socket.room).emit('newUser', users);
     if (socket.user.host) {
@@ -147,12 +151,13 @@ io.on('connection', (socket) => {
       .emit('load_drawing', rooms[socket.room].drawing);
   });
 
+  //-----SESSION EVENT LISTENER-----//
   socket.on('session', (sessionID) => {
     socket = initializeUser(socket, sessionID);
     socket.emit('user_object', socket.user);
   })
 
-  // Emit handlers
+  //------GAME EVENT LISTENERS-------//
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
     rooms[socket.room].drawing.push(mouseData);
@@ -258,15 +263,16 @@ io.on('connection', (socket) => {
   socket.on('judged', (char) => {
     io.to(socket.room).emit('judged', char === 'Y' ? 'fraud' : 'player');
   });
+  //------End of GAME EVENT LISTENERS code-------//
 
-  /* ----- CHATROOM Code ----- */
+  // ----- CHATROOM Code ----- //
   socket.on('send_message', (userMessage) => {
     rooms[socket.room].chats.push(userMessage);
     io.to(socket.room).emit('receive_message', userMessage);
   });
-  /* ----- End of CHATROOM Code ----- */
+  // ----- End of CHATROOM Code ----- //
 
-  // On user disconnecting
+  //------ON USER DISCONNECTING-------//
   socket.on('disconnect', async () => {
     saveUser(socket.sessionID, socket.user);
     if (socket.user.host) {
