@@ -79,7 +79,7 @@ const PlayerList = ({ setOpenPrompt }) => {
               >
                 {QM.id === currentUser.id ? `🎨` : ''}
                 {QM.username}
-                {currentUser.host ? ' 👑' : ''}
+                {QM.host ? ' 👑' : ''}
                 {QM.id === currentUser.id && !gameStarted ? (
                   <span
                     key={QM.id + '3'}
