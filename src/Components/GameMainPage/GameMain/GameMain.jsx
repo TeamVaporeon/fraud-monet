@@ -69,7 +69,7 @@ const GameMain = () => {
       {openUsername ? (
         <UsernameModal setOpenUsername={setOpenUsername} socket={socket} />
       ) : null}
-      {openPrompt ? <PromptModal setOpenPrompt={setOpenPrompt}/> : null}
+      {openPrompt ? <PromptModal setOpenPrompt={setOpenPrompt} socket={socket}/> : null}
       <div className='game_topbar'>
         <div>
           <GameLogic />

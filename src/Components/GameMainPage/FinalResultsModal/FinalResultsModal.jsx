@@ -20,6 +20,7 @@ const FinalResultsModal = ({ setOpenFinal }) => {
             setRound(0);
             setStart(false);
             sessionStorage.setItem('gameStarted', 'false');
+            socket.emit('new_game');
           }}
         >
           X

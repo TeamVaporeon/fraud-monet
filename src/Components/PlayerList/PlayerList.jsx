@@ -19,11 +19,14 @@ const PlayerList = ({setOpenPrompt}) => {
   const [colorModal, setColorModal] = useState(false);
 
   const handleStart = (e) => {
-    setStart(true);
-    socket.emit('start', users);
-    socket.emit('gameStart');
-    socket.emit('round', 0);
-    socket.emit('turn', 0);
+    if(currentUser.role === 'qm') {
+      setOpenPrompt(true);
+    }
+    // setStart(true);
+    // socket.emit('start', users);
+    // socket.emit('gameStart');
+    // socket.emit('round', 0);
+    // socket.emit('turn', 0);
   };
 
   useEffect(() => {
@@ -35,9 +38,6 @@ const PlayerList = ({setOpenPrompt}) => {
   const update = (e, role) => {
     setColorModal(false);
     currentUser.role = role;
-    if(role === 'qm') {
-      setOpenPrompt(true);
-    }
     if (e.target.attributes.color.value !== '#000') {
       currentUser.color = e.target.attributes.color.value;
     }

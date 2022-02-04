@@ -1,15 +1,36 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, createContext, useEffect, useContext } from 'react';
+import { AppContext } from '../../../App';
 import './PromptModal.css';
 
-const handleSubmit = (c, p, cb) => {
-  console.log({category: c, prompt: p});
-  cb(false);
-}
 
-const PromptModal = ({ setOpenPrompt }) => {
+
+
+
+
+const PromptModal = ({ setOpenPrompt, socket }) => {
   const [category, setCategory] = useState('');
   const [prompt, setPrompt] = useState('');
+  const {setStart, users} = useContext(AppContext);
+
+  const handleSubmit = (c, p, socket, cb) => {
+    socket.emit('prompt', { category: c, prompt: p });
+    setStart(true);
+    socket.emit('start', users);
+    socket.emit('gameStart');
+    socket.emit('round', 0);
+    socket.emit('turn', 0);
+    cb(false);
+  }
+
+  const randomSubmit = (cb) => {
+    setStart(true);
+    socket.emit('start', users);
+    socket.emit('gameStart');
+    socket.emit('round', 0);
+    socket.emit('turn', 0);
+    cb(false);
+  }
   return (
     <div className='prompts'>
       <div className='promptContainer'>
@@ -17,7 +38,7 @@ const PromptModal = ({ setOpenPrompt }) => {
           <h3 className='promptTitle'>Enter a Category and Prompt!</h3>
           <br/>
           <br/>
-          <form className="promptForm" onSubmit={() => handleSubmit(category, prompt, setOpenPrompt)}>
+          <form className="promptForm" onSubmit={() => handleSubmit(category, prompt, socket, setOpenPrompt)}>
             <p>Pick a Category!</p>
             <input type="text" onChange={(e) => setCategory(e.target.value)} required/>
             <br/>
@@ -29,6 +50,8 @@ const PromptModal = ({ setOpenPrompt }) => {
             <button type="submit"className='promptSubmitBtn' >
               Submit
             </button>
+            <br/>
+            <button className='promptSubmitBtn' onClick={() => randomSubmit(setOpenPrompt)}>Random</button>
           </form>
         </div>
       </div>
