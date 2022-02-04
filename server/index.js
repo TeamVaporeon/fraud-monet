@@ -103,6 +103,11 @@ io.on('connection', (socket) => {
     socket.join(socket.room);
     let userSockets = await io.in(socket.room).fetchSockets();
     userSockets.forEach((sock) => {
+      if (rooms[socket.room] && rooms[socket.room].currentFraud) {
+        if (sock.user.id === rooms[socket.room].currentFraud.id) {
+          sock.user.fraud = true;
+        };
+      };
       users.push(sock.user);
     });
     socket.emit('users', users);
@@ -124,6 +129,7 @@ io.on('connection', (socket) => {
           turns: 0,
           drawing: [],
           started: false,
+          currentFraud: null
         };
         socket.emit('start', rooms[socket.room]);
       }
@@ -253,11 +259,13 @@ io.on('connection', (socket) => {
     });
     let i = Math.floor(Math.random() * currentPlayers.length);
     currentPlayers[i].fraud = true;
+    rooms[socket.room].currentFraud = currentPlayers[i];
     io.to(socket.room).emit('users', [...currentPlayers, ...spectators]);
     io.to(socket.room).emit('start', rooms[socket.room]);
   });
 
   socket.on('gameStart', () => {
+
     rooms[socket.room].drawing = [];
     rooms[socket.room].started = true;
     io.to(socket.room).emit('gameStart', rooms[socket.room]);
