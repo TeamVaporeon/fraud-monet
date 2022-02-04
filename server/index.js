@@ -135,13 +135,13 @@ io.on('connection', (socket) => {
       let messages = rooms[socket.room].chats;
       socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
+      if (rooms[socket.room].started) {
+        socket.emit('gameStart');
+      };
       socket.emit('load_drawing', rooms[socket.room].drawing);
       socket.broadcast
         .to(socket.room)
         .emit('load_drawing', rooms[socket.room].drawing);
-      if (rooms[socket.room].started) {
-        socket.emit('gameStart');
-      };
     };
   });
 
@@ -163,13 +163,14 @@ io.on('connection', (socket) => {
 
   socket.on('mouse', (mouseData) => {
     // Broadcast mouseData to all connected sockets
-    rooms[socket.room].drawing.push(mouseData);
+    if (rooms[socket.room]) {
+      rooms[socket.room].drawing.push(mouseData);
+    };
     socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
 
   socket.on('turn', (turn) => {
     rooms[socket.room].turns++;
-    // if (rooms[socket.room].turns % players)
     socket.to(socket.room).emit('turn', turn);
   });
 
