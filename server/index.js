@@ -295,6 +295,7 @@ io.on('connection', (socket) => {
         delete rooms[socket.room].users[socket.user.username];
       }
     }
+    io.to(socket.room).emit('hostLeft');
     console.log(`${socket.id} disconnected`);
   });
 
