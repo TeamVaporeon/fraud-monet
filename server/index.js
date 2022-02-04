@@ -290,12 +290,12 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     if (socket.user.host) {
       delete rooms[socket.room];
+      io.to(socket.room).emit('hostLeft');
     } else if (rooms[socket.room]) {
       if (rooms[socket.room].users[socket.user.username]) {
         delete rooms[socket.room].users[socket.user.username];
       }
     }
-    io.to(socket.room).emit('hostLeft');
     console.log(`${socket.id} disconnected`);
   });
 
