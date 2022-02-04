@@ -32,18 +32,20 @@ const Vote = ({ setOpenVote, setOpenResults }) => {
           <label className='votePlayername'>
             {players.map((player) => {
               return (
-                <div key={player.id}>
+                <div
+                  key={player.id}
+                  onClick={() => {
+                    setPick(player.username);
+                  }}
+                >
                   <input
                     type='radio'
                     name='ckb'
                     value={player.username}
                     id={player.id}
-                    onClick={() => {
-                      setPick(player.username);
-                    }}
                     required
                   />
-                  <span style={{color: player.color}}>{player.username}</span>
+                  <span style={{ color: player.color }}>{player.username}</span>
                 </div>
               );
             })}
