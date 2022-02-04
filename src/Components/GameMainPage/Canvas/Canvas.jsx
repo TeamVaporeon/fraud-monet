@@ -147,12 +147,7 @@ const Canvas = ({ thingy }) => {
 
   const mouseDragged = (p5) => {
     //draw and emitting functions
-    if (
-      userWithId &&
-      userWithId.id === players[p5.getItem('turn')].id &&
-      gameStarted &&
-      round < 2
-    ) {
+    if (!gameStarted) {
       var data = {
         x: p5.mouseX,
         y: p5.mouseY,
@@ -164,7 +159,12 @@ const Canvas = ({ thingy }) => {
       p5.stroke(currentUser.color);
       p5.strokeWeight(10);
       p5.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
-    } else if (!gameStarted) {
+    } else if (
+      userWithId &&
+      userWithId.id === players[p5.getItem('turn')].id &&
+      gameStarted &&
+      round < 2
+    ) {
       var data = {
         x: p5.mouseX,
         y: p5.mouseY,
