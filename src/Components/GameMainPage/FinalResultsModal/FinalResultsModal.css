@@ -56,6 +56,10 @@
   color: black;
 }
 
+.finalDesc {
+  font-size: 1.3rem;
+}
+
 .finalScore {
   align-self: stretch;
   font-size: 15px;
