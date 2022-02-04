@@ -29,9 +29,11 @@ const UsernameModal = ({ setOpenUsername }) => {
         score: 0,
       },
     };
-    let sessionID = localStorage.getItem('sessionID', sessionID);
+    let sessionID = localStorage.getItem('sessionID');
     if (sessionID) {
       socket.sessionID = sessionID;
+      // socket.user.sessionID = sessionID;
+      socket.auth.sessionID = sessionID;
     } else {
       socket.emit('session_created', socket.auth.user.username);
     }

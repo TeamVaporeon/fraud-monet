@@ -46,11 +46,18 @@ const GameMain = () => {
         setOpenVote(true);
       }
     }
-  }, [round, currentUser.role]);
+  }, [round, currentUser?.role]);
 
   useEffect(() => {
     // If room exists, continue, else server will redirect
     axios.get(`/room${window.location.pathname}`)
+      .then(data => {
+        let sessionID = localStorage.getItem('sessionID');
+        if (sessionID) {
+          socket.emit('session', sessionID);
+          socket.connect();
+        }
+      })
       .catch(err => {
         navigate('/');
       });

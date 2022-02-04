@@ -36,7 +36,7 @@ app.get('/:id', (req, res) => {
 app.get('/room/:id', (req, res) => {
   let room = `/${req.params.id}`;
   if (rooms[room]) {
-    res.status(200).send();
+    res.status(200).send(rooms[room]);
   } else {
     console.log('No room', rooms);
     res.status(301).send();
@@ -53,9 +53,19 @@ const io = new Server(httpServer, {
 });
 
 io.use( (socket, next) => {
-  initializeUser(socket);
+  socket = initializeUser(socket);
   let user = socket.handshake.auth.user;
-
+  if (!rooms[socket.roomID]) {
+    rooms[socket.roomID] ={
+      category: '',
+      prompt: '',
+      colors: Object.assign({}, defaultColors),
+      chats: [],
+      votes: {},
+      turns: 0,
+    };
+    socket.emit('start', rooms[socket.room]);
+  }
   socket.on('session_created', async (username) => {
     try {
       let hash = await argon2.hash(username);
@@ -81,6 +91,7 @@ io.on('connection', (socket) => {
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
     socket.url = url;
+    socket.room = url;
     socket.join(socket.room);
     let users = [];
 
@@ -106,35 +117,17 @@ io.on('connection', (socket) => {
       }
       socket.emit('hostConnected');
       socket.emit('user_object', socket.user);
-      socket.emit('', );
     } else if (rooms[socket.room]) {
       let messages = rooms[socket.room].chats;
       socket.emit('messages_for_new_users', messages);
       socket.emit('start', rooms[socket.room]);
     };
-
-    // Session emitter
-    console.log('SOCKET USER', socket.user);
-    socket.emit('session', {
-      sessionID: socket.handshake.auth.sessionID,
-      user: socket.handshake.auth.user
-    });
-    // console.log(socket.user);
-
-    socket.on('connected', (cookie) => {
-      const session = sessionStore.findSession(cookie.sessionID);
-      if (session) {
-        socket.user = session;
-        socket.sessionID = cookie.sessionID;
-        users.forEach(user => {
-          if (user.sessionID === cookie.sessionID) {
-            user = session;
-          }
-        })
-      }
-      io.to(socket.room).emit('users', users);
-    });
   });
+
+  socket.on('session', (sessionID) => {
+    socket = initializeUser(socket, sessionID);
+    socket.emit('user_object', socket.user);
+  })
 
   // Emit handlers
   socket.on('mouse', (mouseData) => {
@@ -224,7 +217,7 @@ io.on('connection', (socket) => {
     const isDisconnected = matchingSockets.size === 0;
     if (isDisconnected) {
       socket.broadcast.emit('user disconnected', socket.userID);
-      sessionStore.saveSession(socket.handshake.auth.sessionID, socket.handshake.auth.user);
+      saveUser(socket.sessionID, socket.user);
     }
     console.log(`${socket.id} disconnected`);
   });

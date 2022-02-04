@@ -5,43 +5,49 @@ const sessionStore = new InMemorySessionStore();
 // socket comes with a session id from the client
 // if session id is null it's the client's first time connecting
 // (sessionID will be created in this case in middleware)
-  const initializeUser = function(socket) {
-    let sessionId = socket.handshake.auth.sessionID;
-    let user = socket.handshake.auth.user;
+  const initializeUser = function(socket, user, sessionID, roomID) {
+    user = user || socket.handshake.auth.user;
+    sessionID = sessionID || socket.handshake.auth.sessionID;
+    roomID = roomID || socket.handshake.auth.user.roomID;
 
     user.id = socket.id;
 
-    if (sessionId) {
+    if (sessionID) {
 
-      let userSession = checkForSession(sessionId)
-
+      let userSession = checkForSession(sessionID)
       if (userSession) {
-        // Assign user to socket everywhere it needs to be
-        socket.user = userSession;
-        socket.handshake.auth.user = userSession;
-        socket.room = userSession.roomID
-
-        // Set sessionId everywhere it needs to be
-        socket.user.sessionID = sessionId;
-        socket.sessionID = sessionId;
-        socket.handshake.auth.sessionID = sessionId;
-
-        return socket;
+        setUser(socket, userSession);
       } else {
-        // Assign user to socket everywhere it needs to be
-        socket.user = user;
-        socket.handshake.auth.user = user;
-        socket.room = user.roomID;
-
-        // Set sessionId everywhere it needs to be
-        socket.user.sessionID = sessionId;
-        socket.sessionID = sessionId;
-        socket.handshake.auth.sessionID = sessionId;
-
-        saveUser(sessionId, user);
-        return socket;
+        setUser(socket, user);
+        // Save user since this is the first session
+        saveUser(sessionID, user);
       }
+
+      setSessionID(socket, sessionID);
+      setRoomID(socket, roomID);
+      return socket;
     }
+  }
+
+  const setUser = function(socket, user) {
+    // Assign user to socket everywhere it needs to be
+    socket.user = user;
+    socket.handshake.auth.user = user;
+    return socket;
+  };
+
+  // Set sessionId everywhere it needs to be
+  const setSessionID = function(socket, sessionID) {
+  socket.user.sessionID = sessionID;
+  socket.sessionID = sessionID;
+  socket.handshake.auth.sessionID = sessionID;
+  return socket;
+  }
+
+  const setRoomID = function(socket, roomID) {
+    socket.user.roomID = roomID;
+    socket.roomID = roomID;
+    socket.handshake.auth.roomID = roomID;
     return socket;
   }
 
