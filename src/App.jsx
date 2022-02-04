@@ -1,5 +1,6 @@
 import './App.css';
 import GameMain from './Components/GameMainPage/GameMain/GameMain.jsx';
+import { useNavigate } from 'react-router-dom';
 import { useState, createContext, useEffect } from 'react';
 import io from 'socket.io-client';
 import { hostSocket } from './Components/CreateRoom';
@@ -35,6 +36,7 @@ var socket = io({
 });
 
 function App() {
+  const navigate = useNavigate();
   const [round, setRound] = useState(0);
   const [users, setUsers] = useState(
     hostSocket.id ? [hostSocket.auth.user] : []
@@ -91,6 +93,10 @@ function App() {
 
     socket.on('guess', (guess) => {
       setGuess(guess);
+    });
+
+    socket.on('hostLeft', () => {
+      navigate('/');
     });
   }, []);
 
