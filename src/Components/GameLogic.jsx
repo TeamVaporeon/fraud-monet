@@ -24,11 +24,11 @@ const GameLogic = () => {
           <div>{`Prompt: ${prompt}`}</div>
         )
       ) : null}
-      {currentUser.role === 'qm' && gameStarted ? (
+      {/* {currentUser.role === 'qm' && gameStarted ? (
         <div>{`The Fraud is ${
           players.filter((player) => player.fraud)[0]?.username
         }`}</div>
-      ) : null}
+      ) : null} */}
     </div>
   );
 };

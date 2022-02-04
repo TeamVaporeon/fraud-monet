@@ -16,6 +16,7 @@
     "edit-json-file": "^1.7.0",
     "express": "^4.17.2",
     "http-server": "^14.1.0",
+    "nodemon": "^2.0.15",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.2",
     "react-dom": "^17.0.2",
@@ -29,7 +30,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server/index.js && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
