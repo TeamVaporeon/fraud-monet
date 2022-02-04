@@ -27,8 +27,8 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
         most.length > 1 ||
         most[0][0] !== players.filter((player) => player.fraud)[0].username
       ) {
-        setWinner('fraud');
-        setJudged(true);
+        socket.emit('score', { winner: 'fraud', users: users });
+        socket.emit('judged', 'Y');
       }
       setMostVoted(most);
       revealFraud(true);
@@ -68,9 +68,8 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
           {fraud && players.length > 0 ? (
             <div style={{ color: 'crimson' }}>
               <span>
-                {`Fraud Monet: ${
-                  players.filter((player) => player.fraud)[0].username
-                }`}
+                {`Fraud Monet: ${players.filter((player) => player.fraud)[0].username
+                  }`}
               </span>
             </div>
           ) : null}
@@ -85,11 +84,11 @@ const ResultsModal = ({ setOpenResults, setOpenVote, setOpenFinal }) => {
         ) : null}
         {fraud ? <div>{`Fraud's Guess: ${guess}`}</div> : null}
         {fraud &&
-        (currentUser.role === 'qm' || (!QM.id && currentUser.host)) &&
-        mostVoted.length === 1 &&
-        mostVoted[0][0] ===
+          (currentUser.role === 'qm' || (!QM.id && currentUser.host)) &&
+          mostVoted.length === 1 &&
+          mostVoted[0][0] ===
           players.filter((player) => player.fraud)[0].username &&
-        !judged ? (
+          !judged ? (
           <div>
             <div>Did the Fraud guess correctly?</div>
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
