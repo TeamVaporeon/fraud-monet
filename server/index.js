@@ -4,12 +4,10 @@ const argon2 = require('argon2');
 const express = require('express');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
-const { saveUser, sessionStore } = require('./controllers/users');
+const { saveUser, sessionStore, initializeUser } = require('./controllers/users');
 const cookieParser = require('cookie-parser');
 const cookie = require('cookie');
 const editFile = require('edit-json-file');
-// const session = require('express-session');
-// const { v4: uuidv4 } = require('uuid');
 const rooms = {};
 const defaultColors = {
   '#FFCCEB': true, //Cotton Candy
@@ -77,9 +75,10 @@ const io = new Server(httpServer, {
 });
 
 io.on('connection', (socket) => {
+  socket.room = url;
+  socket.join(socket.room);
   socket.user ? socket.user.id = socket.id : socket.user = {};
   console.log(`Socket Connected With Id: `, socket.id);
-  let users = [];
 
   saveUser(socket)
 
@@ -90,8 +89,11 @@ io.on('connection', (socket) => {
 
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
-    socket.room = url;
-    socket.join(socket.room);
+    rooms[socket.room].users = [];
+    initializeUser(socket, url, rooms[url], (e, sock) => {
+      if (e) console.error(e.message);
+      socket = sock;
+    });
 
     let userSockets = await io.in(socket.room).fetchSockets();
     userSockets.forEach((sock) => {
