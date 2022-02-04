@@ -72,7 +72,6 @@ const PlayerList = () => {
             {players
               ? players.map((player) => (
                   <div className='each-player' key={player.id + '1'}>
-
                     <div
                       style={{ background: player.color }}
                       key={player.id + '2'}
@@ -81,14 +80,15 @@ const PlayerList = () => {
                     >
                       <span key={player.id}>
                         {`${player.username} ${player.host ? '👑' : ''}`}
-                        {(isShown && player.score <= 5) ?
-                        <span style={{ marginLeft: '5px'}}>
-                        {'🏆'.repeat(player.score)}
-                        </span> :
-                        (isShown && player.score > 5) ?
-                        <span style={{ marginLeft: '5px'}}>
-                        {'🏆 x ' + (player.score)}
-                        </span> : null}
+                        {isShown && player.score <= 5 ? (
+                          <span style={{ marginLeft: '5px' }}>
+                            {'🏆'.repeat(player.score)}
+                          </span>
+                        ) : isShown && player.score > 5 ? (
+                          <span style={{ marginLeft: '5px' }}>
+                            {'🏆 x ' + player.score}
+                          </span>
+                        ) : null}
                       </span>
                       {player.id === currentUser.id ? (
                         <span>
@@ -96,7 +96,11 @@ const PlayerList = () => {
                             key={player.id + '4'}
                             onClick={(e) => update(e, 'spectator')}
                             color='#000'
-                            style={{ float: 'right', marginRight: '5px' }}
+                            style={{
+                              float: 'right',
+                              marginRight: '5px',
+                              cursor: 'pointer',
+                            }}
                           >
                             ❌
                           </span>
@@ -108,7 +112,11 @@ const PlayerList = () => {
                               key={player.id + '6'}
                               // onClick={kick}
                               playerid={player.id}
-                              style={{ float: 'right', marginRight: '5px' }}
+                              style={{
+                                float: 'right',
+                                marginRight: '5px',
+                                cursor: 'pointer',
+                              }}
                             >
                               ❌
                             </span>
@@ -227,13 +235,14 @@ const PlayerList = () => {
           ) : null}
         </Stack>
         {QM.id ? (
-          <div className="question-master">
+          <div className='question-master'>
             {`QM: ${QM.username}`}
             {QM.id === currentUser.id ? (
               <span
                 key={QM.id + '3'}
                 onClick={(e) => update(e, 'spectator')}
                 color='#000'
+                style={{ cursor: 'pointer' }}
               >
                 ❌
               </span>

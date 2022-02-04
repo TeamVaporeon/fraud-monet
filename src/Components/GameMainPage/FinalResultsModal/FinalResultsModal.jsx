@@ -3,12 +3,12 @@ import { AppContext } from '../../../App.jsx';
 import './FinalResultsModal.css';
 
 const FinalResultsModal = ({ setOpenFinal }) => {
-  const { setRound, players, setStart } = useContext(AppContext);
+  const { setRound, players, setStart, QM, winner } = useContext(AppContext);
   return (
     <div className='finalModal'>
       <div className='finalContainer'>
         <h3 className='finalTitle'>Final Results:</h3>
-        {/* <div></div> */}
+        <div>{winner === 'fraud' ? 'The Fraud Wins!' : 'The Artists Win!'}</div>
         <div className='finalScore'>
           <table>
             <thead>
@@ -19,15 +19,24 @@ const FinalResultsModal = ({ setOpenFinal }) => {
               </tr>
             </thead>
             <tbody>
-              {players.map((player) => {
-                return (
-                  <tr>
-                    <td>{player.username}</td>
-                    <td>{player.role}</td>
-                    <td>{player.score}</td>
-                  </tr>
-                );
-              })}
+              {players.length > 0
+                ? players.map((player) => {
+                    return (
+                      <tr>
+                        <td>{player.username}</td>
+                        <td>{player.fraud ? 'FRAUD' : 'Player'}</td>
+                        <td>{player.score}</td>
+                      </tr>
+                    );
+                  })
+                : null}
+              {QM.id ? (
+                <tr>
+                  <td>{QM.username}</td>
+                  <td>Question Master</td>
+                  <td>{QM.score}</td>
+                </tr>
+              ) : null}
             </tbody>
           </table>
         </div>
