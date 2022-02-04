@@ -124,7 +124,9 @@ const PlayerList = ({ setOpenPrompt }) => {
                       onMouseLeave={() => scoreIsShown(false)}
                     >
                       <span key={player.id}>
-                        {`${player.username} ${player.host ? '👑' : ''}`}
+                        {`${player.id === currentUser.id ? '🎨' : ''} ${
+                          player.username
+                        } ${player.host ? '👑' : ''}`}
                         {isShown && player.score <= 5 ? (
                           <span style={{ marginLeft: '5px' }}>
                             {'🏆'.repeat(player.score)}

@@ -33,10 +33,9 @@ const GameMain = () => {
   const [openFinal, setOpenFinal] = useState(false);
   const [openPrompt, setOpenPrompt] = useState(false);
 
-
   useEffect(() => {
     if (round === 2) {
-      if (currentUser.role === 'qm') {
+      if (currentUser.role === 'qm' || currentUser.role === 'spectator') {
         setOpenResults(true);
       } else {
         setOpenVote(true);
@@ -65,7 +64,9 @@ const GameMain = () => {
       {openUsername ? (
         <UsernameModal setOpenUsername={setOpenUsername} socket={socket} />
       ) : null}
-      {openPrompt ? <PromptModal setOpenPrompt={setOpenPrompt} socket={socket}/> : null}
+      {openPrompt ? (
+        <PromptModal setOpenPrompt={setOpenPrompt} socket={socket} />
+      ) : null}
       <div className='game_topbar'>
         <div>
           <GameLogic />
@@ -94,7 +95,7 @@ const GameMain = () => {
           />
         ) : null}
         <div className='game_players'>
-          <PlayerList setOpenPrompt={setOpenPrompt}/>
+          <PlayerList setOpenPrompt={setOpenPrompt} />
         </div>
         <div className='game_canvas' ref={ref}>
           {ref.current ? <Canvas thingy={ref.current} /> : null}
