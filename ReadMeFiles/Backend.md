@@ -1,0 +1,4 @@
+The support behind Fraud-Monet primarily comes from using **Socket.io** in conjunctin with **Express** serving up the actual game files and redirecting users to the approprate rooms. Socket.io allows for support up to 10 players (plus spectators) seeing live updates to the drawing canvas, as well as real-time chat. We designed a room storage system that would emit the appropriate information to every player in a particular room; This allows for multiple games to be played at the same time in autonomy. We also utilized **Redis** to store the current drawing so players and new spectators can see the complete history of the drawing as well as the chat.
+
+![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
