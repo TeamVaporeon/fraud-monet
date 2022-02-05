@@ -1,8 +1,8 @@
 # Fraud Monet
-ADD GIF HERE!
+![](fraud-monet.gif)
 
 ## Description
-A game about art fraud...after a fashion. Bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A drawing game, bootstrapped with [Create React App](https://github.com/facebook/create-react-app), about identifying the player who did not receive the prompt and who is attempting to blend in by mimicking the drawing of others.
 
 ## Table of Contents
 - Contributors
@@ -13,14 +13,14 @@ A game about art fraud...after a fashion. Bootstrapped with [Create React App](h
 ## [Contributors](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/Contributors.md)
 
 ## Components
-#### [Landing Page (by JD Corral)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/LandingPage.md)
-#### [Main Game Page (by Meilin Chen)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/MainGamePage.md)
-#### [Player List (by Salar Malik)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/PlayerList.md)
-#### [Canvas (by Gain Wang)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/Canvas.md)
-#### [Chat (by Wisdom Ibole)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/Chat.md)
-#### [Game Logic (by John Razi)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/GameLogic.md)
-#### [User Interface (by Kavita Poduri)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/UI.md)
-#### [Backend: Server and DB (by Kenneth Bakke & Thanh Ha)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/Backend.md)
+- [Landing Page (by JD Corral)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/LandingPage.md)
+- [Main Game Page (by Meilin Chen)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/MainGamePage.md)
+- [Player List (by Salar Malik)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/PlayerList.md)
+- [Canvas (by Gain Wang)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/Canvas.md)
+- [Chat (by Wisdom Ibole)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/Chat.md)
+- [Game Logic (by John Razi)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/GameLogic.md)
+- [User Interface (by Kavita Poduri)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/UI.md)
+- [Backend: Server and DB (by Kenneth Bakke & Thanh Ha)](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/Backend.md)
 
 ## [Setup/Scripts](https://github.com/TeamVaporeon/fraud-monet/tree/main/ReadMeFiles/Setup_Scripts.md)
 
