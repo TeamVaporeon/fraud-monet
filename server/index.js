@@ -101,6 +101,7 @@ io.on('connection', (socket) => {
     // users.push(socket.username);
     socket.room = url;
     socket.join(socket.room);
+    console.log(adapter.rooms);
     let userSockets = await io.in(socket.room).fetchSockets();
     userSockets.forEach((sock) => {
       if (rooms[socket.room] && rooms[socket.room].currentFraud) {
