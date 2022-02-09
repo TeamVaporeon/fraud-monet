@@ -12,6 +12,19 @@ module.exports = {
         });
       }
 
+      socket.on('mouse', (mouseData, callback) => {
+        // Broadcast mouseData to all connected sockets
+        if (rooms[socket.room]) {
+          rooms[socket.room].drawing.push(mouseData);
+        };
+
+        try {
+          saveDrawing(socket.room, mouseData);
+          sendDrawing(socket.room);
+        } catch(e) {
+          console.error(e);
+        }
+      });
     })
   }
 }
