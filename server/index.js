@@ -3,9 +3,12 @@ const cors = require('cors');
 const express = require('express');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
-const cookieParser = require('cookie-parser');
+const { createClient } = require('redis');
+const { createAdapter } = require('@socket.io/redis-adapter');
 const cookie = require('cookie');
+const cookieParser = require('cookie-parser');
 const editFile = require('edit-json-file');
+const { log } = require('console');
 const rooms = {};
 const defaultColors = {
   '#FFCCEB': true, //Cotton Candy
@@ -80,11 +83,39 @@ const io = new Server(httpServer, {
   },
 });
 
+// Redis Adapter
+const pubClient = createClient({ host: 'localhost', port: 6379 });
+const subClient = pubClient.duplicate();
+
+Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+  io.adapter(createAdapter(pubClient, subClient));
+  logUser();
+  io.listen(5000);
+});
+
+async function saveUser(user) {
+  await pubClient.publish('users', JSON.stringify(user));
+};
+async function logUser() {
+  await subClient.subscribe('users', (userDetails) => {
+    console.log('Received message', userDetails);
+  });
+};
+
+async function updateUser(user) {
+  // Add logic to update instead of just add another user.
+  await pubClient.publish('users', JSON.stringify(user));
+}
+
 // Persistent Session
 io.use((socket, next) => {
   const user = socket.handshake.auth.user;
   user.id = socket.id;
   socket.user = user;
+
+  // subscribe to a channel [roomID]
+  saveUser(socket.user);
+
   socket.emit('user_object', user);
   next();
 });
@@ -92,15 +123,20 @@ io.use((socket, next) => {
 // On Client Connecting To Server
 io.on('connection', (socket) => {
   socket.user.id = socket.id;
+  io.of('/').adapter.sockets(new Set()).then(sockets => {
+    console.log(sockets);
+  })
   console.log(`Socket Connected With Id: `, socket.id);
   socket.user.id = socket.id;
   let users = [];
 
   // Join a room based on room id
   socket.on('joinRoom', async (url) => {
-    // users.push(socket.username);
     socket.room = url;
     socket.join(socket.room);
+    socket.onAny((e, ...args) => {
+      console.log(e, args);
+    })
     let userSockets = await io.in(socket.room).fetchSockets();
     userSockets.forEach((sock) => {
       if (rooms[socket.room] && rooms[socket.room].currentFraud) {
@@ -323,3 +359,8 @@ const port = process.env.PORT || 8080;
 httpServer.listen(port, () => {
   console.log(`Server listening at port ${port}`);
 });
+
+module.exports = {
+  pubClient: pubClient,
+  subClient: subClient,
+}
