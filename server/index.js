@@ -96,6 +96,7 @@ Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
 async function saveUser(user) {
   await pubClient.publish('users', JSON.stringify(user));
 };
+
 async function logUser() {
   await subClient.subscribe('users', (userDetails) => {
     console.log('Received message', userDetails);
@@ -105,6 +106,18 @@ async function logUser() {
 async function updateUser(user) {
   // Add logic to update instead of just add another user.
   await pubClient.publish('users', JSON.stringify(user));
+}
+
+async function saveDrawing(socket, coordinates) {
+  await pubClient.publish('drawing', JSON.stringify(coordinates));
+  sendDrawing(socket);
+}
+
+async function sendDrawing(socket) {
+  await subClient.subscribe('drawing', (coords) => {
+    console.log(coords);
+    socket.broadcast.to(socket.room).emit('get_drawing', coords);
+  })
 }
 
 // Persistent Session
@@ -208,8 +221,13 @@ io.on('connection', (socket) => {
     if (rooms[socket.room]) {
       rooms[socket.room].drawing.push(mouseData);
     };
-    socket.broadcast.to(socket.room).emit('mouse', mouseData);
+    saveDrawing(socket, mouseData);
+    // socket.broadcast.to(socket.room).emit('mouse', mouseData);
   });
+
+  socket.on('get_drawing', () => {
+    sendDrawing(socket);
+  })
 
   socket.on('turn', (turn) => {
     rooms[socket.room].turns++;

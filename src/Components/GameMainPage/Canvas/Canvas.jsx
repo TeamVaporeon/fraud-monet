@@ -184,6 +184,10 @@ const Canvas = ({ thingy }) => {
   const windowResized = (p5) => {
     p5.resizeCanvas(thingy.offsetWidth, thingy.offsetHeight - 24);
     p5.background(255);
+    socket.emit('get_drawing');
+    socket.on('get_drawing', (coords) => {
+      console.log(coords);
+    })
   };
 
   //on start, clear canvas and only pass mouseDragged to current player (also increment round on start)
