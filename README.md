@@ -2,7 +2,7 @@
 ![](fraud-monet.gif)
 
 ## Description
-A drawing game, bootstrapped with [Create React App](https://github.com/facebook/create-react-app), about identifying the player who did not receive the prompt and who is attempting to blend in by mimicking the drawing of others.
+A game of artistic deception! Players (artists) must identify the player who did not receive the prompt (the fraud), while the fraud masquerades as a player by mimicking the artists. Bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Table of Contents
 - Contributors
