@@ -51,21 +51,6 @@ const PlayerList = ({ setOpenPrompt }) => {
     socket.emit('prompt', { category, prompt });
   };
 
-  // const kick = (e) => {
-  //   setColorModal(false);
-  //   let kickedPlayer = users.filter(
-  //     (player) => player.id === e.target.attributes.playerid.value
-  //   );
-  //   console.log(kickedPlayer[0]);
-  //   kickedPlayer[0].role = 'spectator';
-  //   socket.emit('update', kickedPlayer[0]);
-  // };
-
-  // const claim = () => {
-  //   currentUser.host = true;
-  //   socket.emit('update', currentUser);
-  // };
-
   return (
     <>
       <div className='total-game-list'>
@@ -156,23 +141,6 @@ const PlayerList = ({ setOpenPrompt }) => {
                             </span>
                           </span>
                         ) : null
-                        // currentUser.host &&
-                        // !gameStarted && (
-                        //   <span>
-                        //     <span
-                        //       key={player.id + '6'}
-                        //       // onClick={kick}
-                        //       playerid={player.id}
-                        //       style={{
-                        //         float: 'right',
-                        //         marginRight: '5px',
-                        //         cursor: 'pointer',
-                        //       }}
-                        //     >
-                        //       ❌
-                        //     </span>
-                        //   </span>
-                        // )
                       }
                     </div>
                   </div>
